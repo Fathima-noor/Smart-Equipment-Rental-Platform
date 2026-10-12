@@ -1,0 +1,510 @@
+<div class="vendor-bookings-page">
+
+  <!-- Header -->
+  <div class="page-header">
+
+    <div>
+      <div class="eyebrow">
+        Vendor Management
+      </div>
+
+      <h1>Bookings</h1>
+
+      <p>
+        Review and manage bookings for your equipment.
+      </p>
+    </div>
+
+  </div>
+
+
+  <!-- Success -->
+  <div
+    *ngIf="successMessage"
+    class="alert alert-success"
+  >
+    <i class="bi bi-check-circle me-2"></i>
+    {{ successMessage }}
+  </div>
+
+
+  <!-- Error -->
+  <div
+    *ngIf="errorMessage"
+    class="alert alert-danger"
+  >
+    <i class="bi bi-exclamation-triangle me-2"></i>
+    {{ errorMessage }}
+  </div>
+
+
+  <!-- Statistics -->
+  <div
+    *ngIf="!loading"
+    class="stats-grid"
+  >
+
+    <div class="stat-card">
+
+      <div class="stat-icon total-icon">
+        <i class="bi bi-calendar3"></i>
+      </div>
+
+      <div>
+        <span>Total Bookings</span>
+        <strong>{{ bookings.length }}</strong>
+      </div>
+
+    </div>
+
+
+    <div class="stat-card">
+
+      <div class="stat-icon pending-icon">
+        <i class="bi bi-clock"></i>
+      </div>
+
+      <div>
+        <span>Pending</span>
+        <strong>{{ getPendingCount() }}</strong>
+      </div>
+
+    </div>
+
+
+    <div class="stat-card">
+
+      <div class="stat-icon approved-icon">
+        <i class="bi bi-check-circle"></i>
+      </div>
+
+      <div>
+        <span>Approved</span>
+        <strong>{{ getApprovedCount() }}</strong>
+      </div>
+
+    </div>
+
+
+    <div class="stat-card">
+
+      <div class="stat-icon completed-icon">
+        <i class="bi bi-check2-all"></i>
+      </div>
+
+      <div>
+        <span>Completed</span>
+        <strong>{{ getCompletedCount() }}</strong>
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- Filters -->
+  <div
+    *ngIf="!loading"
+    class="filter-card"
+  >
+
+    <div class="search-box">
+
+      <i class="bi bi-search"></i>
+
+      <input
+        type="text"
+        [(ngModel)]="searchText"
+        (input)="onSearchChange()"
+        placeholder="Search by equipment or booking ID..."
+      />
+
+    </div>
+
+
+    <select
+      class="form-select status-filter"
+      [(ngModel)]="selectedStatus"
+      (change)="onStatusChange()"
+    >
+
+      <option value="">
+        All Statuses
+      </option>
+
+      <option value="pending">
+        Pending
+      </option>
+
+      <option value="approved">
+        Approved
+      </option>
+
+      <option value="rejected">
+        Rejected
+      </option>
+
+      <option value="completed">
+        Completed
+      </option>
+
+      <option value="cancelled">
+        Cancelled
+      </option>
+
+    </select>
+
+  </div>
+
+
+  <!-- Loading -->
+  <div
+    *ngIf="loading"
+    class="loading-container"
+  >
+
+    <div class="spinner-border text-primary"></div>
+
+    <p>
+      Loading bookings...
+    </p>
+
+  </div>
+
+
+  <!-- Empty -->
+  <div
+    *ngIf="
+      !loading &&
+      bookings.length === 0
+    "
+    class="empty-card"
+  >
+
+    <div class="empty-icon">
+      <i class="bi bi-calendar-x"></i>
+    </div>
+
+    <h3>No Bookings Yet</h3>
+
+    <p>
+      Customer bookings for your equipment
+      will appear here.
+    </p>
+
+  </div>
+
+
+  <!-- No Filter Results -->
+  <div
+    *ngIf="
+      !loading &&
+      bookings.length > 0 &&
+      filteredBookings.length === 0
+    "
+    class="empty-card"
+  >
+
+    <div class="empty-icon">
+      <i class="bi bi-search"></i>
+    </div>
+
+    <h3>No Matching Bookings</h3>
+
+    <p>
+      Try changing your search or status filter.
+    </p>
+
+  </div>
+
+
+  <!-- Booking Cards -->
+  <div
+    *ngIf="
+      !loading &&
+      filteredBookings.length > 0
+    "
+    class="booking-list"
+  >
+
+    <div
+      *ngFor="let booking of filteredBookings"
+      class="booking-card"
+    >
+
+      <!-- Card Header -->
+      <div class="booking-header">
+
+        <div class="booking-title">
+
+          <div class="equipment-icon">
+            <i class="bi bi-box-seam"></i>
+          </div>
+
+          <div>
+
+            <span class="booking-number">
+              Booking ID: {{ booking.id }}
+            </span>
+
+            <h3>
+              {{ booking.equipment_name || 'Equipment' }}
+            </h3>
+
+            <small>
+              {{ booking.equipment_category || 'Equipment' }}
+            </small>
+
+          </div>
+
+        </div>
+
+
+        <span
+          class="badge"
+          [ngClass]="getStatusClass(booking.status)"
+        >
+          {{ formatStatus(booking.status) }}
+        </span>
+
+      </div>
+
+
+      <!-- Details -->
+      <div class="booking-details">
+
+
+        <div class="detail-item">
+
+          <span class="detail-label">
+            <i class="bi bi-calendar-event"></i>
+            Rental Period
+          </span>
+
+          <strong>
+            {{ booking.start_date }}
+            →
+            {{ booking.end_date }}
+          </strong>
+
+        </div>
+
+
+        <div class="detail-item">
+
+          <span class="detail-label">
+            <i class="bi bi-cash-stack"></i>
+            Rental Amount
+          </span>
+
+          <strong>
+            ₹{{ formatAmount(booking.total_amount) }}
+          </strong>
+
+        </div>
+
+
+        <div class="detail-item">
+
+          <span class="detail-label">
+            <i class="bi bi-shield-check"></i>
+            Security Deposit
+          </span>
+
+          <strong>
+            ₹{{ formatAmount(booking.deposit) }}
+          </strong>
+
+        </div>
+
+
+        <div class="detail-item">
+
+          <span class="detail-label">
+            <i class="bi bi-credit-card"></i>
+            Payment
+          </span>
+
+          <span
+            class="badge"
+            [ngClass]="
+              getPaymentStatusClass(
+                booking.payment_status
+              )
+            "
+          >
+            {{ formatStatus(booking.payment_status) }}
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <!-- Customer -->
+      <div class="customer-section">
+
+        <div class="customer-icon">
+          <i class="bi bi-person"></i>
+        </div>
+
+        <div>
+
+          <span>
+            Customer
+          </span>
+
+          <strong>
+            {{
+              booking.customer_name ||
+              booking.customer_username ||
+              'Customer'
+            }}
+          </strong>
+
+        </div>
+
+      </div>
+
+      <!-- Customer Return Condition -->
+     <div class="return-condition-section">
+
+       <div class="return-condition-icon">
+        <i class="bi bi-clipboard-check"></i>
+      </div>
+
+      <div>
+
+       <span>
+         Customer Return Condition
+       </span>
+
+       <strong
+         *ngIf="booking.equipment_condition_after === 'good'"
+         class="text-success"
+        >
+         <i class="bi bi-check-circle-fill me-1"></i>
+         Good Condition
+       </strong>
+
+       <strong
+         *ngIf="booking.equipment_condition_after === 'damaged'"
+         class="text-danger"
+        >
+         <i class="bi bi-exclamation-triangle-fill me-1"></i>
+          Damaged
+       </strong>
+
+       <strong
+          *ngIf="
+            !booking.equipment_condition_after &&
+            booking.status !== 'completed'
+          "
+          class="text-muted"
+        >
+          Not Returned Yet
+       </strong>
+
+    </div>
+
+  </div>
+
+
+      <!-- Actions -->
+      <div
+        *ngIf="booking.status === 'pending'"
+        class="booking-actions"
+      >
+
+        <button
+          type="button"
+          class="btn btn-success"
+          [disabled]="processingBookingId === booking.id"
+          (click)="approveBooking(booking)"
+        >
+
+          <span
+            *ngIf="
+              processingBookingId === booking.id
+            "
+            class="spinner-border spinner-border-sm me-2"
+          ></span>
+
+          <i
+            *ngIf="
+              processingBookingId !== booking.id
+            "
+            class="bi bi-check-lg me-1"
+          ></i>
+
+          Approve
+
+        </button>
+
+
+        <button
+          type="button"
+          class="btn btn-outline-danger"
+          [disabled]="processingBookingId === booking.id"
+          (click)="rejectBooking(booking)"
+        >
+
+          <i class="bi bi-x-lg me-1"></i>
+
+          Reject
+
+        </button>
+
+      </div>
+
+
+      <!-- Approved message -->
+      <div
+        *ngIf="booking.status === 'approved'"
+        class="status-message approved-message"
+      >
+
+        <i class="bi bi-check-circle-fill"></i>
+
+        <span>
+          This booking has been approved.
+        </span>
+
+      </div>
+
+
+      <!-- Completed message -->
+      <div
+        *ngIf="booking.status === 'completed'"
+        class="status-message completed-message"
+      >
+
+        <i class="bi bi-check2-all"></i>
+
+        <span>
+          Equipment has been returned and
+          the rental is completed.
+        </span>
+
+      </div>
+
+
+      <!-- Rejected message -->
+      <div
+        *ngIf="booking.status === 'rejected'"
+        class="status-message rejected-message"
+      >
+
+        <i class="bi bi-x-circle-fill"></i>
+
+        <span>
+          This booking was rejected.
+        </span>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

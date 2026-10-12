@@ -1,0 +1,283 @@
+<div class="workflow-page">
+
+  <!-- Page Header -->
+  <div class="page-header">
+    <div>
+      <h2>Equipment Workflow</h2>
+      <p>
+        Manage equipment receiving, handover, inspection and return.
+      </p>
+    </div>
+  </div>
+
+  <!-- Success Message -->
+  <div
+    *ngIf="successMessage"
+    class="alert alert-success"
+  >
+    {{ successMessage }}
+  </div>
+
+  <!-- Error Message -->
+  <div
+    *ngIf="errorMessage"
+    class="alert alert-danger"
+  >
+    {{ errorMessage }}
+  </div>
+
+  <!-- Loading -->
+  <div
+    *ngIf="loading"
+    class="text-center py-5"
+  >
+    <div
+      class="spinner-border"
+      role="status"
+    ></div>
+
+    <p class="mt-2">
+      Loading bookings...
+    </p>
+  </div>
+
+  <!-- No Bookings -->
+  <div
+    *ngIf="!loading && bookings.length === 0"
+    class="empty-state"
+  >
+    <i class="bi bi-box-seam"></i>
+
+    <h4>No Bookings Found</h4>
+
+    <p>
+      There are currently no bookings to process.
+    </p>
+  </div>
+
+  <!-- Bookings List -->
+  <div
+    *ngIf="!loading && bookings.length > 0"
+    class="workflow-list"
+  >
+
+    <div
+      *ngFor="let booking of bookings"
+      class="workflow-card"
+    >
+
+      <!-- Workflow Header -->
+      <div class="workflow-header">
+        <div>
+          <h5>
+            {{ booking.equipment_name }}
+          </h5>
+
+          <small>
+            Booking ID : {{ booking.id }}
+          </small>
+        </div>
+
+        <span class="status-badge">
+          {{
+            getStatusLabel(
+              booking.equipment_workflow_status
+            )
+          }}
+        </span>
+      </div>
+
+      <!-- Workflow Information -->
+      <div class="workflow-info">
+
+        <div>
+          <small>Customer</small>
+          <strong>
+            {{ booking.customer_name || booking.customer }}
+          </strong>
+        </div>
+
+        <div>
+          <small>Start Date</small>
+          <strong>
+            {{ booking.start_date }}
+          </strong>
+        </div>
+
+        <div>
+          <small>End Date</small>
+          <strong>
+            {{ booking.end_date }}
+          </strong>
+        </div>
+
+      </div>
+
+      <!-- Workflow Actions -->
+      <div class="workflow-actions">
+
+        <!-- Receive Equipment -->
+        <button
+          *ngIf="
+            booking.status === 'approved' &&
+            booking.equipment_workflow_status === 'booked'
+          "
+          class="btn btn-primary"
+          [disabled]="processingBookingId !== null"
+          (click)="receiveEquipment(booking)"
+        >
+
+          <span
+            *ngIf="processingBookingId === booking.id"
+            class="spinner-border spinner-border-sm me-1"
+          ></span>
+
+          <i
+            *ngIf="processingBookingId !== booking.id"
+            class="bi bi-box-arrow-in-down me-1"
+          ></i>
+
+          Receive Equipment
+        </button>
+
+        <!-- Handover Equipment -->
+        <button
+          *ngIf="
+            booking.status === 'approved' &&
+            booking.equipment_workflow_status === 'received' &&
+            booking.payment_status === 'paid'
+          "
+          class="btn btn-success"
+          [disabled]="processingBookingId !== null"
+          (click)="handoverEquipment(booking)"
+        >
+
+          <i class="bi bi-person-check me-1"></i>
+
+          Handover to Customer
+        </button>
+
+        <!-- No Damage -->
+        <button
+          *ngIf="
+            booking.equipment_workflow_status === 'awaiting_inspection'
+          "
+          class="btn btn-success"
+          [disabled]="processingBookingId !== null"
+          (click)="inspectEquipment(booking, 'no_damage')"
+        >
+
+          <i class="bi bi-check-circle me-1"></i>
+
+          No Damage
+        </button>
+
+        <!-- Damaged -->
+        <button
+          *ngIf="
+            booking.equipment_workflow_status === 'awaiting_inspection' &&
+            selectedBookingId !== booking.id
+          "
+          class="btn btn-danger"
+          [disabled]="processingBookingId !== null"
+          (click)="openDamageForm(booking)"
+        >
+
+          <i class="bi bi-exclamation-triangle me-1"></i>
+
+          Damaged
+        </button>
+
+        <!-- Damage Description Form -->
+        <div
+          *ngIf="selectedBookingId === booking.id"
+          class="form-group w-100 mt-3"
+        >
+
+          <label for="damageDescription-{{ booking.id }}">
+            Damage Description
+          </label>
+
+          <textarea
+            id="damageDescription-{{ booking.id }}"
+            class="form-control"
+            rows="4"
+            [(ngModel)]="damageDescription"
+            placeholder="Describe the damage to the equipment..."
+          ></textarea>
+
+          <div class="mt-2">
+
+            <!-- Submit Damage Report -->
+            <button
+              type="button"
+              class="btn btn-danger me-2"
+              [disabled]="
+                !damageDescription.trim() ||
+                processingBookingId !== null
+              "
+              (click)="submitDamagedInspection(booking)"
+            >
+
+              <span
+                *ngIf="processingBookingId === booking.id"
+                class="spinner-border spinner-border-sm me-1"
+              ></span>
+
+              <i
+                *ngIf="processingBookingId !== booking.id"
+                class="bi bi-exclamation-triangle me-1"
+              ></i>
+
+              Submit Damage Report
+            </button>
+
+            <!-- Cancel -->
+            <button
+              type="button"
+              class="btn btn-secondary"
+              [disabled]="processingBookingId !== null"
+              (click)="closeDamageForm()"
+            >
+              Cancel
+            </button>
+
+          </div>
+        </div>
+
+        <!-- Return to Vendor -->
+        <button
+          *ngIf="
+            booking.equipment_workflow_status === 'no_damage'
+          "
+          class="btn btn-dark"
+          [disabled]="processingBookingId !== null"
+          (click)="returnToVendor(booking)"
+        >
+
+          <i class="bi bi-arrow-return-left me-1"></i>
+
+          Return to Vendor
+        </button>
+
+        <!-- Complete Damaged Return -->
+        <button
+          *ngIf="
+            booking.status === 'approved' &&
+            booking.equipment_workflow_status === 'damaged' &&
+            booking.maintenance_status === 'completed'
+          "
+          class="btn btn-warning"
+          [disabled]="processingBookingId !== null"
+          (click)="completeDamagedEquipment(booking)"
+        >
+
+          <i class="bi bi-check2-circle me-1"></i>
+
+          Completed Damaged Equipment Return to vendor
+        </button>
+
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,50 @@
+<div class="sidebar">
+
+  <div class="sidebar-menu">
+
+    @for (item of menuItems; track item.route) {
+      <a
+        [routerLink]="item.route"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        class="sidebar-link">
+
+        <i class="bi {{ item.icon }}"></i>
+
+        <span>{{ item.label }}</span>
+
+      </a>
+    }
+
+  </div>
+
+  <div class="sidebar-bottom">
+
+    <a
+      routerLink="/profile"
+      routerLinkActive="active"
+      class="sidebar-link">
+
+      <i class="bi bi-person"></i>
+      <span>Profile</span>
+
+    </a>
+
+    
+
+
+
+    
+
+    <a
+      routerLink="/login"
+      class="sidebar-link logout-link">
+
+      <i class="bi bi-box-arrow-right"></i>
+      <span>Logout</span>
+
+    </a>
+
+  </div>
+
+</div>

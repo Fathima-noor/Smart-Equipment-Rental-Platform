@@ -1,0 +1,164 @@
+<div class="vendor-request-page">
+
+  <div class="vendor-request-card">
+
+    <!-- Header -->
+
+    <div class="request-header">
+
+      <div class="header-icon">
+
+        <i class="bi bi-shop"></i>
+
+      </div>
+
+      <h2>Become a Vendor</h2>
+
+      <p>
+        Apply to list your equipment on EquipRent.
+      </p>
+
+    </div>
+
+
+    <!-- Error Message -->
+
+    @if (errorMessage) {
+
+      <div class="alert alert-danger">
+
+        {{ errorMessage }}
+
+      </div>
+
+    }
+
+
+    <!-- Success Message -->
+
+    @if (successMessage) {
+
+      <div class="alert alert-success">
+
+        {{ successMessage }}
+
+      </div>
+
+    }
+
+
+    <!-- Request Form -->
+
+    <form (ngSubmit)="submitRequest()">
+
+      <!-- Reason -->
+
+      <div class="form-group">
+
+        <label for="reason">
+          Why do you want to become a vendor?
+        </label>
+
+        <textarea
+          id="reason"
+          name="reason"
+          [(ngModel)]="reason"
+          rows="4"
+          placeholder="Explain why you want to become a vendor..."
+          required>
+        </textarea>
+
+      </div>
+
+
+      <!-- Equipment Category -->
+
+      <div class="form-group">
+
+        <label for="equipment_category">
+          Equipment Category
+        </label>
+
+        <select
+          id="equipment_category"
+          name="equipment_category"
+          [(ngModel)]="equipment_category"
+          required>
+
+          <option value="">
+            Select equipment category
+          </option>
+
+          <option value="camera">
+            Camera
+          </option>
+
+          <option value="laptop">
+            Laptop
+          </option>
+
+          <option value="projector">
+            Projector
+          </option>
+
+          <option value="drone">
+            Drone
+          </option>
+
+          <option value="other">
+            Other
+          </option>
+
+        </select>
+
+      </div>
+
+
+      <!-- Additional Details -->
+
+      <div class="form-group">
+
+        <label for="additional_details">
+          Additional Details (Optional)
+        </label>
+
+        <textarea
+          id="additional_details"
+          name="additional_details"
+          [(ngModel)]="additional_details"
+          rows="3"
+          placeholder="Tell us about the equipment you want to rent out...">
+        </textarea>
+
+      </div>
+
+
+      <!-- Buttons -->
+
+      <div class="form-actions">
+
+        <a
+          routerLink="/customer"
+          class="btn btn-secondary">
+
+          Cancel
+
+        </a>
+
+        <button
+          type="submit"
+          class="btn btn-primary">
+
+          <i class="bi bi-send me-2"></i>
+
+          Submit Request
+
+        </button>
+
+      </div>
+
+    </form>
+
+  </div>
+
+</div>

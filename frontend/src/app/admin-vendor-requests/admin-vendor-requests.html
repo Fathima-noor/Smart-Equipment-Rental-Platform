@@ -1,0 +1,266 @@
+
+<div class="vendor-requests-page">
+
+  <!-- Page Header -->
+  <div class="page-header">
+    <div>
+      <h1>Vendor Requests</h1>
+      <p>Review and manage customer vendor applications.</p>
+    </div>
+  </div>
+
+  <!-- Messages -->
+  <div class="success-message" *ngIf="successMessage">
+    {{ successMessage }}
+  </div>
+
+  <div class="error-message" *ngIf="errorMessage">
+    {{ errorMessage }}
+  </div>
+
+  <!-- Statistics -->
+  <div class="stats-grid">
+
+    <div class="stat-card">
+      <h3>Total Requests</h3>
+      <p>{{ vendorRequests.length }}</p>
+    </div>
+
+    <div class="stat-card pending-card">
+      <h3>Pending</h3>
+      <p>
+        {{ vendorRequests.filter(r => r.status === 'pending').length }}
+      </p>
+    </div>
+
+    <div class="stat-card approved-card">
+      <h3>Approved</h3>
+      <p>
+        {{ vendorRequests.filter(r => r.status === 'approved').length }}
+      </p>
+    </div>
+
+    <div class="stat-card rejected-card">
+      <h3>Rejected</h3>
+      <p>
+        {{ vendorRequests.filter(r => r.status === 'rejected').length }}
+      </p>
+    </div>
+
+  </div>
+
+  <!-- Filters -->
+  <div class="filters-section">
+
+    <input
+      type="text"
+      placeholder="Search by name, email, reason..."
+      [(ngModel)]="searchText"
+      (input)="onSearch()"
+    />
+
+    <select
+      [(ngModel)]="selectedStatus"
+      (change)="onFilterChange()"
+    >
+      <option value="all">All Statuses</option>
+      <option value="pending">Pending</option>
+      <option value="approved">Approved</option>
+      <option value="rejected">Rejected</option>
+    </select>
+
+    <button
+      type="button"
+      class="clear-button"
+      (click)="clearFilters()"
+    >
+      Clear
+    </button>
+
+  </div>
+
+  <!-- Loading -->
+  <div class="loading-message" *ngIf="loading">
+    Loading vendor requests...
+  </div>
+
+  <!-- Requests Table -->
+  <div class="table-container" *ngIf="!loading">
+
+    <table *ngIf="filteredVendorRequests.length > 0; else noRequests">
+
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>User</th>
+          <th>Email</th>
+          <th>Category</th>
+          <th>Created Date</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+
+      <tbody>
+
+        <tr *ngFor="let request of filteredVendorRequests">
+
+          <td>#{{ request.id }}</td>
+
+          <td>{{ request.user_name || 'N/A' }}</td>
+
+          <td>{{ request.user_email || 'N/A' }}</td>
+
+          <td>
+            {{ request.equipment_category || 'N/A' }}
+          </td>
+
+          <td>
+            {{ formatDate(request.created_at) }}
+          </td>
+
+          <td>
+            <span
+              class="status-badge"
+              [ngClass]="getStatusClass(request.status)"
+            >
+              {{ request.status | titlecase }}
+            </span>
+          </td>
+
+          <td class="actions-cell">
+
+            <button
+              type="button"
+              class="details-button"
+              (click)="openDetails(request)"
+            >
+              Details
+            </button>
+
+            <button
+              *ngIf="request.status === 'pending'"
+              type="button"
+              class="approve-button"
+              [disabled]="processing"
+              (click)="updateVendorRequestStatus(request, 'approve')"
+            >
+              Approve
+            </button>
+
+            <button
+              *ngIf="request.status === 'pending'"
+              type="button"
+              class="reject-button"
+              [disabled]="processing"
+              (click)="updateVendorRequestStatus(request, 'reject')"
+            >
+              Reject
+            </button>
+
+          </td>
+
+        </tr>
+
+      </tbody>
+
+    </table>
+
+    <ng-template #noRequests>
+      <div class="no-requests">
+        No vendor requests found.
+      </div>
+    </ng-template>
+
+  </div>
+
+  <!-- Details Modal -->
+  <div
+    class="modal-overlay"
+    *ngIf="showDetails && selectedRequest"
+    (click)="closeDetails()"
+  >
+
+    <div
+      class="details-modal"
+      (click)="$event.stopPropagation()"
+    >
+
+      <div class="modal-header">
+        <h2>Vendor Request Details</h2>
+
+        <button
+          type="button"
+          class="close-button"
+          (click)="closeDetails()"
+        >
+          ×
+        </button>
+      </div>
+
+      <div class="modal-body">
+
+        <p>
+          <strong>Request ID:</strong>
+          #{{ selectedRequest.id }}
+        </p>
+
+        <p>
+          <strong>User:</strong>
+          {{ selectedRequest.user_name || 'N/A' }}
+        </p>
+
+        <p>
+          <strong>Email:</strong>
+          {{ selectedRequest.user_email || 'N/A' }}
+        </p>
+
+        <p>
+          <strong>Equipment Category:</strong>
+          {{ selectedRequest.equipment_category || 'N/A' }}
+        </p>
+
+        <p>
+          <strong>Reason:</strong>
+          {{ selectedRequest.reason || 'N/A' }}
+        </p>
+
+        <p>
+          <strong>Additional Details:</strong>
+          {{ selectedRequest.additional_details || 'N/A' }}
+        </p>
+
+        <p>
+          <strong>Status:</strong>
+          {{ selectedRequest.status | titlecase }}
+        </p>
+
+        <p>
+          <strong>Created At:</strong>
+          {{ formatDateTime(selectedRequest.created_at) }}
+        </p>
+
+        <p>
+          <strong>Updated At:</strong>
+          {{ formatDateTime(selectedRequest.updated_at) }}
+        </p>
+
+      </div>
+
+      <div class="modal-footer">
+
+        <button
+          type="button"
+          class="close-modal-button"
+          (click)="closeDetails()"
+        >
+          Close
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

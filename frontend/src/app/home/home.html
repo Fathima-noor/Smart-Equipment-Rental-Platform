@@ -1,0 +1,496 @@
+
+<div class="landing-page">
+
+  <!-- NAVBAR -->
+  <header class="navbar">
+    <a class="brand" routerLink="/">
+      <span class="brand-icon">◇</span>
+      <span>Equip<span class="brand-highlight">Rent</span></span>
+    </a>
+
+    <nav class="nav-links">
+      <a href="#home">Home</a>
+      <a href="#categories">Categories</a>
+      <a href="#how-it-works">How It Works</a>
+      <a href="#about">About</a>
+    </nav>
+
+    <div class="nav-actions">
+      <a routerLink="/login" class="login-link">Log In</a>
+      <a routerLink="/register" class="nav-button">
+        Get Started <span>↗</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- HERO SECTION -->
+  <section class="hero" id="home">
+    <div class="hero-content">
+
+      <div class="eyebrow">
+        <span class="eyebrow-dot"></span>
+        RENT SMART. CREATE MORE.
+      </div>
+
+      <h1>
+        The Equipment You Need,
+        <span>All in One Place.</span>
+      </h1>
+
+      <p class="hero-description">
+        From professional cameras and laptops to projectors and drones,
+        find the equipment you need and make every project possible
+        with EquipRent.
+      </p>
+
+      <div class="hero-actions">
+        <a routerLink="/register" class="primary-button">
+          Explore Equipment <span>↗</span>
+        </a>
+
+        <a routerLink="/login" class="secondary-button">
+          Sign In <span>→</span>
+        </a>
+      </div>
+
+      <div class="hero-note">
+        <span class="note-check">✓</span>
+        Easy booking
+        <span class="note-divider">·</span>
+        Secure payments
+        <span class="note-divider">·</span>
+        Flexible rentals
+      </div>
+
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <strong>Flexible</strong>
+          <span>Rental periods</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="hero-stat">
+          <strong>Simple</strong>
+          <span>Online booking</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="hero-stat">
+          <strong>Secure</strong>
+          <span>Payments</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- HERO EQUIPMENT VISUAL -->
+    <div class="hero-visual">
+
+      <div class="visual-orbit orbit-one"></div>
+      <div class="visual-orbit orbit-two"></div>
+      <div class="visual-glow"></div>
+
+      <div class="visual-top-label">
+        <span class="live-dot"></span>
+        EQUIPMENT FOR EVERY IDEA
+      </div>
+
+      <div class="main-equipment-card">
+
+        <div class="equipment-card-top">
+          <span class="equipment-tag">FEATURED EQUIPMENT</span>
+          <span class="equipment-arrow">↗</span>
+        </div>
+
+        <div class="hero-camera">
+          <svg viewBox="0 0 360 250" role="img" aria-label="Professional camera">
+            <defs>
+              <linearGradient id="cameraBody" x1="0" y1="0" x2="0.9" y2="1">
+                <stop offset="0%" stop-color="#dce6f5"/>
+                <stop offset="45%" stop-color="#9eacc3"/>
+                <stop offset="100%" stop-color="#65758f"/>
+              </linearGradient>
+              <linearGradient id="cameraLens" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#52617e"/>
+                <stop offset="50%" stop-color="#1c2944"/>
+                <stop offset="100%" stop-color="#090f20"/>
+              </linearGradient>
+              <linearGradient id="lensGlass" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#74d9ff"/>
+                <stop offset="45%" stop-color="#355c9c"/>
+                <stop offset="100%" stop-color="#111b36"/>
+              </linearGradient>
+            </defs>
+
+            <ellipse cx="180" cy="210" rx="112" ry="15" fill="#050d1c" opacity=".35"/>
+
+            <path d="M93 76 L119 52 H165 L183 76 Z"
+                  fill="#aab8ce" stroke="#d7e2f3" stroke-width="3"/>
+            <rect x="72" y="75" width="216" height="116" rx="17"
+                  fill="url(#cameraBody)" stroke="#e1eafa" stroke-width="4"/>
+
+            <rect x="88" y="88" width="184" height="91" rx="10"
+                  fill="#34435e"/>
+            <rect x="99" y="97" width="162" height="73" rx="7"
+                  fill="#53627d"/>
+
+            <rect x="108" y="62" width="48" height="15" rx="5" fill="#d8e2f1"/>
+            <rect x="218" y="63" width="28" height="11" rx="4" fill="#7d8da8"/>
+
+            <circle cx="180" cy="132" r="57" fill="#8998b1"/>
+            <circle cx="180" cy="132" r="48" fill="#34425f"/>
+            <circle cx="180" cy="132" r="39" fill="url(#cameraLens)"/>
+            <circle cx="180" cy="132" r="29" fill="url(#lensGlass)"/>
+            <circle cx="180" cy="132" r="19" fill="#172642"/>
+            <circle cx="169" cy="119" r="9" fill="#b8efff" opacity=".65"/>
+            <circle cx="193" cy="146" r="5" fill="#77b9ff" opacity=".5"/>
+
+            <rect x="242" y="92" width="20" height="10" rx="3" fill="#d5e1f3"/>
+            <circle cx="250" cy="146" r="5" fill="#6ee7c0"/>
+            <rect x="88" y="181" width="184" height="7" rx="3" fill="#52627d"/>
+          </svg>
+        </div>
+
+        <div class="equipment-info">
+          <div>
+            <h3>Professional Camera</h3>
+            <p>Capture every moment</p>
+          </div>
+          <span class="equipment-category">CAMERA</span>
+        </div>
+      </div>
+
+      <!-- FLOATING LAPTOP CARD -->
+      <div class="floating-card laptop-card">
+        <div class="floating-icon">
+          <svg viewBox="0 0 64 64" role="img" aria-label="Laptop">
+            <rect x="13" y="10" width="38" height="31" rx="3"
+                  fill="none" stroke="currentColor" stroke-width="3"/>
+            <rect x="17" y="14" width="30" height="23" rx="1"
+                  fill="currentColor" opacity=".2"/>
+            <path d="M7 47 H57 L53 53 H11 Z"
+                  fill="currentColor" opacity=".75"/>
+            <path d="M25 47 H39" stroke="#102442" stroke-width="2"
+                  stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div>
+          <strong>Laptops</strong>
+          <small>Work without limits</small>
+        </div>
+      </div>
+
+      <!-- FLOATING DRONE CARD -->
+      <div class="floating-card drone-card">
+        <div class="floating-icon">
+          <svg viewBox="0 0 64 64" role="img" aria-label="Drone">
+            <g fill="none" stroke="currentColor" stroke-width="2.8"
+               stroke-linecap="round" stroke-linejoin="round">
+              <path d="M32 27 L17 16 M32 27 L47 16 M32 35 L17 46 M32 35 L47 46"/>
+              <rect x="23" y="25" width="18" height="14" rx="4"
+                    fill="currentColor" fill-opacity=".2"/>
+              <path d="M17 16 H9 M47 16 H55 M17 46 H9 M47 46 H55"/>
+              <ellipse cx="12" cy="16" rx="9" ry="3"/>
+              <ellipse cx="52" cy="16" rx="9" ry="3"/>
+              <ellipse cx="12" cy="46" rx="9" ry="3"/>
+              <ellipse cx="52" cy="46" rx="9" ry="3"/>
+              <path d="M27 39 L23 45 M37 39 L41 45"/>
+              <circle cx="32" cy="32" r="3" fill="currentColor"/>
+            </g>
+          </svg>
+        </div>
+        <div>
+          <strong>Drones</strong>
+          <small>See a new perspective</small>
+        </div>
+      </div>
+
+      <div class="visual-bottom-label">
+        <span class="bottom-star">✦</span>
+        Make your next idea happen
+      </div>
+
+      <div class="visual-index">01 / 04</div>
+    </div>
+  </section>
+
+  <!-- TRUST STRIP -->
+  <section class="trust-strip">
+    <div class="trust-item">
+      <span class="trust-icon">✦</span>
+      <span>Equipment for every project</span>
+    </div>
+    <div class="trust-item">
+      <span class="trust-icon">◷</span>
+      <span>Flexible rental periods</span>
+    </div>
+    <div class="trust-item">
+      <span class="trust-icon">⌑</span>
+      <span>Simple booking experience</span>
+    </div>
+    <div class="trust-item">
+      <span class="trust-icon">✓</span>
+      <span>Secure online payments</span>
+    </div>
+  </section>
+
+  <!-- CATEGORIES -->
+  <section class="categories-section" id="categories">
+
+    <div class="section-heading">
+      <div>
+        <span class="section-kicker">EXPLORE OUR COLLECTION</span>
+        <h2>Find the gear for <span>your next big idea.</span></h2>
+        <p>Everything you need to create, work, and explore.</p>
+      </div>
+
+      <a routerLink="/login" class="text-link">
+        Browse Equipment <span>↗</span>
+      </a>
+    </div>
+
+    <div class="category-grid">
+
+      <!-- CAMERA -->
+      <a routerLink="/login" class="category-card">
+        <div class="category-image camera-bg">
+          <span class="category-number">01</span>
+          <svg class="category-illustration" viewBox="0 0 120 90"
+               role="img" aria-label="Camera">
+            <rect x="18" y="25" width="84" height="48" rx="8"
+                  fill="#d6e0f0"/>
+            <path d="M32 25 L42 15 H62 L70 25" fill="#b6c7df"/>
+            <rect x="25" y="32" width="70" height="34" rx="5"
+                  fill="#52647f"/>
+            <circle cx="60" cy="49" r="20" fill="#aab8ce"/>
+            <circle cx="60" cy="49" r="15" fill="#34435e"/>
+            <circle cx="60" cy="49" r="10" fill="#16233d"/>
+            <circle cx="56" cy="44" r="4" fill="#91dfff"/>
+            <rect x="79" y="35" width="9" height="5" rx="2" fill="#edf4ff"/>
+          </svg>
+          <span class="image-caption">Capture every detail</span>
+        </div>
+        <div class="category-details">
+          <div>
+            <h3>Cameras</h3>
+            <p>Capture your vision</p>
+          </div>
+          <span class="category-arrow">↗</span>
+        </div>
+      </a>
+
+      <!-- LAPTOP -->
+      <a routerLink="/login" class="category-card">
+        <div class="category-image laptop-bg">
+          <span class="category-number">02</span>
+          <svg class="category-illustration" viewBox="0 0 120 90"
+               role="img" aria-label="Laptop">
+            <rect x="25" y="12" width="70" height="51" rx="5"
+                  fill="#d6e2f5"/>
+            <rect x="30" y="17" width="60" height="40" rx="2"
+                  fill="#3c9be9"/>
+            <path d="M30 20 H90 V57 H30 Z" fill="#36b7ee"/>
+            <path d="M30 57 H90 L101 70 Q102 74 96 74 H24 Q18 74 20 70 Z"
+                  fill="#aab9d1"/>
+            <path d="M42 63 H78 L82 68 H38 Z" fill="#7185a5"/>
+            <path d="M20 70 H100" stroke="#e6efff" stroke-width="2"/>
+          </svg>
+          <span class="image-caption">Power your productivity</span>
+        </div>
+        <div class="category-details">
+          <div>
+            <h3>Laptops</h3>
+            <p>Power your productivity</p>
+          </div>
+          <span class="category-arrow">↗</span>
+        </div>
+      </a>
+
+      <!-- PROJECTOR -->
+      <a routerLink="/login" class="category-card">
+        <div class="category-image projector-bg">
+          <span class="category-number">03</span>
+          <svg class="category-illustration" viewBox="0 0 120 90"
+               role="img" aria-label="Projector">
+            <circle cx="39" cy="27" r="17" fill="none"
+                    stroke="#c4d2e7" stroke-width="6"/>
+            <circle cx="39" cy="27" r="8" fill="#435577"/>
+            <circle cx="76" cy="25" r="20" fill="none"
+                    stroke="#aabbd5" stroke-width="6"/>
+            <circle cx="76" cy="25" r="10" fill="#394968"/>
+            <rect x="25" y="38" width="62" height="32" rx="7"
+                  fill="#cbd7e9"/>
+            <rect x="32" y="44" width="48" height="20" rx="4"
+                  fill="#647794"/>
+            <rect x="88" y="43" width="17" height="23" rx="4"
+                  fill="#354766"/>
+            <circle cx="76" cy="54" r="4" fill="#6be0bc"/>
+            <path d="M30 73 H83" stroke="#8fa2bf" stroke-width="4"
+                  stroke-linecap="round"/>
+          </svg>
+          <span class="image-caption">Bring ideas to the screen</span>
+        </div>
+        <div class="category-details">
+          <div>
+            <h3>Projectors</h3>
+            <p>Bring ideas to the screen</p>
+          </div>
+          <span class="category-arrow">↗</span>
+        </div>
+      </a>
+
+      <!-- DRONE -->
+      <a routerLink="/login" class="category-card">
+        <div class="category-image drone-bg">
+          <span class="category-number">04</span>
+          <svg class="category-illustration category-drone"
+               viewBox="0 0 120 90" role="img" aria-label="Drone">
+            <g fill="none" stroke="#a9d4ff" stroke-width="3"
+               stroke-linecap="round" stroke-linejoin="round">
+              <path d="M60 38 L32 20 M60 38 L88 20 M60 47 L32 66 M60 47 L88 66"/>
+              <rect x="45" y="33" width="30" height="21" rx="6"
+                    fill="#5a9bd5" fill-opacity=".35"/>
+              <path d="M32 20 H17 M88 20 H103 M32 66 H17 M88 66 H103"/>
+              <ellipse cx="24" cy="20" rx="13" ry="4"/>
+              <ellipse cx="96" cy="20" rx="13" ry="4"/>
+              <ellipse cx="24" cy="66" rx="13" ry="4"/>
+              <ellipse cx="96" cy="66" rx="13" ry="4"/>
+              <path d="M51 54 L45 64 M69 54 L75 64"/>
+              <circle cx="60" cy="43" r="4" fill="#6ed6ff"/>
+            </g>
+          </svg>
+          <span class="image-caption">Explore new heights</span>
+        </div>
+        <div class="category-details">
+          <div>
+            <h3>Drones</h3>
+            <p>Explore new heights</p>
+          </div>
+          <span class="category-arrow">↗</span>
+        </div>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="how-section" id="how-it-works">
+
+    <div class="how-heading">
+      <span class="section-kicker">SIMPLE BY DESIGN</span>
+      <h2>Rent equipment in <span>three easy steps.</span></h2>
+      <p>Get the equipment you need without the hassle of ownership.</p>
+    </div>
+
+    <div class="steps-grid">
+
+      <div class="step-card">
+        <span class="step-number">01</span>
+        <div class="step-icon">
+          <svg viewBox="0 0 48 48" role="img" aria-label="Search">
+            <circle cx="21" cy="21" r="12" fill="none"
+                    stroke="currentColor" stroke-width="3"/>
+            <path d="M30 30 L40 40" stroke="currentColor"
+                  stroke-width="3" stroke-linecap="round"/>
+            <path d="M17 21 H25 M21 17 V25" stroke="currentColor"
+                  stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <h3>Discover</h3>
+        <p>Browse equipment and find the right gear for your needs.</p>
+      </div>
+
+      <div class="step-card">
+        <span class="step-number">02</span>
+        <div class="step-icon">
+          <svg viewBox="0 0 48 48" role="img" aria-label="Booking">
+            <rect x="9" y="12" width="30" height="28" rx="4"
+                  fill="none" stroke="currentColor" stroke-width="3"/>
+            <path d="M16 8 V16 M32 8 V16 M9 21 H39"
+                  stroke="currentColor" stroke-width="3"
+                  stroke-linecap="round"/>
+            <path d="M17 29 L22 34 L32 25"
+                  fill="none" stroke="currentColor" stroke-width="3"
+                  stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <h3>Book</h3>
+        <p>Select your rental dates and complete your secure booking.</p>
+      </div>
+
+      <div class="step-card">
+        <span class="step-number">03</span>
+        <div class="step-icon">
+          <svg viewBox="0 0 48 48" role="img" aria-label="Get creating">
+            <path d="M24 5 L29 18 L42 23 L29 28 L24 41 L19 28 L6 23 L19 18 Z"
+                  fill="none" stroke="currentColor" stroke-width="3"
+                  stroke-linejoin="round"/>
+            <path d="M36 6 V13 M32.5 9.5 H39.5"
+                  stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round"/>
+          </svg>
+        </div>
+        <h3>Get Creating</h3>
+        <p>Receive your equipment and bring your ideas to life.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ABOUT / CTA -->
+  <section class="cta-section" id="about">
+    <div class="cta-content">
+      <span class="section-kicker">YOUR NEXT PROJECT STARTS HERE</span>
+      <h2>Big ideas deserve <span>the right equipment.</span></h2>
+      <p>
+        Join EquipRent and discover a simple way to rent
+        the equipment you need, whenever you need it.
+      </p>
+      <a routerLink="/register" class="primary-button">
+        Get Started <span>↗</span>
+      </a>
+    </div>
+
+    <div class="cta-decoration">E</div>
+    <div class="cta-orb cta-orb-one"></div>
+    <div class="cta-orb cta-orb-two"></div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+
+    <div class="footer-main">
+      <div class="footer-brand-area">
+        <a class="brand footer-brand" routerLink="/">
+          <span class="brand-icon">◇</span>
+          <span>Equip<span class="brand-highlight">Rent</span></span>
+        </a>
+        <p>Making equipment rental simple and accessible.</p>
+      </div>
+
+      <div class="footer-column">
+        <h4>Explore</h4>
+        <a href="#home">Home</a>
+        <a href="#categories">Categories</a>
+        <a href="#how-it-works">How It Works</a>
+      </div>
+
+      <div class="footer-column">
+        <h4>Account</h4>
+        <a routerLink="/login">Log In</a>
+        <a routerLink="/register">Create Account</a>
+      </div>
+
+      <div class="footer-column">
+        <h4>Discover</h4>
+        <a href="#about">About EquipRent</a>
+        <a href="#categories">Our Equipment</a>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <span>© 2026 EquipRent. All rights reserved.</span>
+      <a href="#home">Back to Top ↑</a>
+    </div>
+
+  </footer>
+
+</div>
+```

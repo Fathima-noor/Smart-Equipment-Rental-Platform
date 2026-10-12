@@ -1,0 +1,358 @@
+<div class="vendor-page">
+
+  <!-- Page Header -->
+  <div class="page-header">
+
+    <div>
+      <h1>Vendor Dashboard</h1>
+
+      <p>
+        Manage your equipment, bookings and damage reports.
+      </p>
+    </div>
+
+    <a
+      routerLink="/vendor/equipment"
+      class="btn btn-primary"
+    >
+      <i class="bi bi-plus-lg me-2"></i>
+      Manage Equipment
+    </a>
+
+  </div>
+
+
+  <!-- Loading -->
+  <div
+    *ngIf="loading"
+    class="loading-container"
+  >
+    <div
+      class="spinner-border text-primary"
+      role="status"
+    ></div>
+
+    <p>Loading dashboard...</p>
+  </div>
+
+
+  <!-- Error -->
+  <div
+    *ngIf="!loading && errorMessage"
+    class="alert alert-danger"
+  >
+    <i class="bi bi-exclamation-triangle me-2"></i>
+
+    {{ errorMessage }}
+  </div>
+
+
+  <!-- Dashboard -->
+  <div *ngIf="!loading && !errorMessage">
+
+
+    <!-- Statistics -->
+    <div class="stats-grid">
+
+
+      <!-- Equipment -->
+      <div class="stat-card">
+
+        <div class="stat-icon equipment-icon">
+          <i class="bi bi-box-seam"></i>
+        </div>
+
+        <div class="stat-content">
+
+          <span>My Equipment</span>
+
+          <h2>{{ equipment.length }}</h2>
+
+        </div>
+
+      </div>
+
+
+      <!-- Pending Bookings -->
+      <div class="stat-card">
+
+        <div class="stat-icon pending-icon">
+          <i class="bi bi-clock-history"></i>
+        </div>
+
+        <div class="stat-content">
+
+          <span>Pending Bookings</span>
+
+          <h2>{{ getPendingBookings() }}</h2>
+
+        </div>
+
+      </div>
+
+
+      <!-- Approved -->
+      <div class="stat-card">
+
+        <div class="stat-icon approved-icon">
+          <i class="bi bi-check-circle"></i>
+        </div>
+
+        <div class="stat-content">
+
+          <span>Approved Bookings</span>
+
+          <h2>{{ getApprovedBookings() }}</h2>
+
+        </div>
+
+      </div>
+
+
+      <!-- Damage Reports -->
+      <div class="stat-card">
+
+        <div class="stat-icon damage-icon">
+          <i class="bi bi-exclamation-triangle"></i>
+        </div>
+
+        <div class="stat-content">
+
+          <span>Open Damage Reports</span>
+
+          <h2>{{ getPendingDamageReports() }}</h2>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- Quick Actions -->
+    <div class="section-card">
+
+      <div class="section-title">
+
+        <div>
+          <h3>Quick Actions</h3>
+
+          <p>
+            Quickly access your vendor tools.
+          </p>
+        </div>
+
+      </div>
+
+
+      <div class="quick-actions">
+
+
+        <a
+          routerLink="/vendor/equipment"
+          class="quick-action"
+        >
+
+          <div class="quick-icon">
+            <i class="bi bi-camera"></i>
+          </div>
+
+          <div>
+            <strong>My Equipment</strong>
+
+            <span>
+              Add and manage your equipment
+            </span>
+          </div>
+
+          <i class="bi bi-chevron-right arrow"></i>
+
+        </a>
+
+
+        <a
+          routerLink="/vendor/bookings"
+          class="quick-action"
+        >
+
+          <div class="quick-icon">
+            <i class="bi bi-calendar-check"></i>
+          </div>
+
+          <div>
+            <strong>Bookings</strong>
+
+            <span>
+              Review customer bookings
+            </span>
+          </div>
+
+          <i class="bi bi-chevron-right arrow"></i>
+
+        </a>
+
+
+        <a
+          routerLink="/vendor/damage-reports"
+          class="quick-action"
+        >
+
+          <div class="quick-icon">
+            <i class="bi bi-exclamation-diamond"></i>
+          </div>
+
+          <div>
+            <strong>Damage Reports</strong>
+
+            <span>
+              Review equipment damage
+            </span>
+          </div>
+
+          <i class="bi bi-chevron-right arrow"></i>
+
+        </a>
+
+      </div>
+
+    </div>
+
+
+    <!-- Recent Bookings -->
+    <div class="section-card">
+
+      <div class="section-header">
+
+        <div>
+          <h3>Recent Bookings</h3>
+
+          <p>
+            Latest bookings for your equipment.
+          </p>
+        </div>
+
+        <a
+          routerLink="/vendor/bookings"
+          class="view-all"
+        >
+          View All
+          <i class="bi bi-arrow-right ms-1"></i>
+        </a>
+
+      </div>
+
+
+      <!-- No bookings -->
+      <div
+        *ngIf="getRecentBookings().length === 0"
+        class="empty-state"
+      >
+
+        <i class="bi bi-calendar-x"></i>
+
+        <h5>No bookings yet</h5>
+
+        <p>
+          Customer bookings for your equipment
+          will appear here.
+        </p>
+
+      </div>
+
+
+      <!-- Booking list -->
+      <div
+        *ngIf="getRecentBookings().length > 0"
+        class="booking-list"
+      >
+
+        <div
+          *ngFor="let booking of getRecentBookings()"
+          class="booking-row"
+        >
+
+          <div class="booking-main">
+
+            <div class="booking-icon">
+              <i class="bi bi-box"></i>
+            </div>
+
+            <div>
+
+              <h5>
+                {{ booking.equipment_name || 'Equipment' }}
+              </h5>
+
+              <p>
+                {{ booking.start_date }}
+                →
+                {{ booking.end_date }}
+              </p>
+
+            </div>
+
+          </div>
+
+
+          <div class="booking-info">
+
+            <strong>
+              ₹{{ formatAmount(booking.total_amount) }}
+            </strong>
+
+            <span
+              class="badge"
+              [ngClass]="getBookingStatusClass(booking.status)"
+            >
+              {{ formatStatus(booking.status) }}
+            </span>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- Summary -->
+    <div class="summary-card">
+
+      <div class="summary-item">
+
+        <span>Total Bookings</span>
+
+        <strong>
+          {{ bookings.length }}
+        </strong>
+
+      </div>
+
+
+      <div class="summary-item">
+
+        <span>Completed Rentals</span>
+
+        <strong>
+          {{ getCompletedBookings() }}
+        </strong>
+
+      </div>
+
+
+      <div class="summary-item">
+
+        <span>Damage Reports</span>
+
+        <strong>
+          {{ damageReports.length }}
+        </strong>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

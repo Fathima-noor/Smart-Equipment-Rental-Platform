@@ -1,0 +1,675 @@
+<div class="admin-bookings-page">
+
+  <!-- HEADER -->
+  <div class="page-header">
+
+    <div>
+      <h1>Bookings</h1>
+      <p>Manage and monitor all equipment bookings.</p>
+    </div>
+
+    <button
+      class="refresh-btn"
+      type="button"
+      (click)="loadBookings()"
+      [disabled]="loading || processing">
+
+      <span>↻</span>
+      Refresh
+    </button>
+
+  </div>
+
+
+  <!-- MESSAGES -->
+
+  <div
+    class="alert success-alert"
+    *ngIf="successMessage">
+
+    {{ successMessage }}
+
+  </div>
+
+  <div
+    class="alert error-alert"
+    *ngIf="errorMessage">
+
+    {{ errorMessage }}
+
+  </div>
+
+
+  <!-- FILTER SECTION -->
+
+  <div class="filter-card">
+
+    <div class="search-box">
+
+      <span class="search-icon">⌕</span>
+
+      <input
+        type="text"
+        placeholder="Search by booking ID, customer or equipment..."
+        [(ngModel)]="searchText"
+        (input)="onSearch()"
+        autocomplete="off">
+
+    </div>
+
+
+    <div class="filter-group">
+
+      <label>Booking Status</label>
+
+      <select
+        [(ngModel)]="selectedStatus"
+        (change)="applyFilters()">
+
+        <option value="all">All Statuses</option>
+        <option value="pending">Pending</option>
+        <option value="approved">Approved</option>
+        <option value="rejected">Rejected</option>
+        <option value="completed">Completed</option>
+        <option value="cancelled">Cancelled</option>
+
+      </select>
+
+    </div>
+
+
+    <div class="filter-group">
+
+      <label>Payment Status</label>
+
+      <select
+        [(ngModel)]="selectedPaymentStatus"
+        (change)="applyFilters()">
+
+        <option value="all">All Payments</option>
+        <option value="pending">Pending</option>
+        <option value="paid">Paid</option>
+        <option value="failed">Failed</option>
+
+      </select>
+
+    </div>
+
+  </div>
+
+
+  <!-- SUMMARY -->
+
+  <div class="summary-row">
+
+    <div class="summary-item">
+      <span>Total</span>
+      <strong>{{ bookings.length }}</strong>
+    </div>
+
+    <div class="summary-item pending">
+      <span>Pending</span>
+      <strong>
+        {{
+          bookings.filter(b => b.status === 'pending').length
+        }}
+      </strong>
+    </div>
+
+    <div class="summary-item approved">
+      <span>Approved</span>
+      <strong>
+        {{
+          bookings.filter(b => b.status === 'approved').length
+        }}
+      </strong>
+    </div>
+
+    <div class="summary-item completed">
+      <span>Completed</span>
+      <strong>
+        {{
+          bookings.filter(b => b.status === 'completed').length
+        }}
+      </strong>
+    </div>
+
+  </div>
+
+
+  <!-- LOADING -->
+
+  <div class="loading-container" *ngIf="loading">
+
+    <div class="spinner"></div>
+
+    <p>Loading bookings...</p>
+
+  </div>
+
+
+  <!-- EMPTY -->
+
+  <div
+    class="empty-state"
+    *ngIf="!loading && filteredBookings.length === 0">
+
+    <div class="empty-icon">📋</div>
+
+    <h3>No bookings found</h3>
+
+    <p>
+      No bookings match your current search or filters.
+    </p>
+
+  </div>
+
+
+  <!-- DESKTOP TABLE -->
+
+  <div
+    class="table-card"
+    *ngIf="!loading && filteredBookings.length > 0">
+
+    <div class="table-wrapper">
+
+      <table>
+
+        <thead>
+
+          <tr>
+
+            <th>ID</th>
+
+            <th>Customer</th>
+
+            <th>Equipment</th>
+
+            <th>Rental Period</th>
+
+            <th>Total</th>
+
+            <th>Status</th>
+
+            <th>Payment</th>
+
+            <th>Action</th>
+
+          </tr>
+
+        </thead>
+
+        <tbody>
+
+          <tr *ngFor="let booking of filteredBookings; let i = index">
+
+            <td>
+              <span class="booking-id">
+                {{ booking.id }}
+              </span>
+            </td>
+
+            <td>
+
+              <div class="customer-cell">
+
+                <div class="avatar">
+                  {{ getCustomerName(booking).charAt(0).toUpperCase() }}
+                </div>
+
+                <div class="customer-info">
+
+                <span  class="customer-name">
+                  {{ getCustomerName(booking) }}
+                </span>
+
+                
+
+                </div>
+
+              </div>
+
+            </td>
+
+            <td>
+
+              <div class="equipment-cell">
+
+                <strong>
+                  {{ booking.equipment_name || 'Equipment' }}
+                </strong>
+
+                <small>
+                  {{ booking.equipment_category || '' }}
+                </small>
+
+              </div>
+
+            </td>
+
+            <td>
+
+              <div class="date-cell">
+
+                <span>
+                  {{ formatDate(booking.start_date) }}
+                </span>
+
+                <span class="date-arrow">→</span>
+
+                <span>
+                  {{ formatDate(booking.end_date) }}
+                </span>
+
+              </div>
+
+            </td>
+
+            <td>
+
+              <strong class="amount">
+                ₹{{ formatAmount(booking.total_amount) }}
+              </strong>
+
+            </td>
+
+            <td>
+
+              <span
+                class="status-badge"
+                [ngClass]="getStatusClass(booking.status)">
+
+                {{ getStatusLabel(booking.status) }}
+
+              </span>
+
+            </td>
+
+            <td>
+
+              <span
+                class="payment-badge"
+                [ngClass]="getPaymentStatusClass(booking.payment_status)">
+
+                {{ getPaymentStatusLabel(booking.payment_status) }}
+
+              </span>
+
+            </td>
+
+            <td>
+
+              <button
+                class="view-btn"
+                type="button"
+                (click)="viewBooking(booking)">
+
+                View
+
+              </button>
+
+            </td>
+
+          </tr>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- DETAILS MODAL -->
+
+<div
+  class="modal-backdrop"
+  *ngIf="showDetailsModal"
+  (click)="closeDetails()">
+
+  <div
+    class="details-modal"
+    (click)="$event.stopPropagation()">
+
+
+    <!-- MODAL HEADER -->
+
+    <div class="modal-header">
+
+      <div>
+
+        <span class="modal-label">
+          Booking
+        </span>
+
+        <h2>
+          #{{ selectedBooking?.id }}
+        </h2>
+
+      </div>
+
+      <button
+        class="close-btn"
+        type="button"
+        (click)="closeDetails()"
+        [disabled]="processing">
+
+        ×
+
+      </button>
+
+    </div>
+
+
+    <!-- MODAL BODY -->
+
+    <div class="modal-body"
+         *ngIf="selectedBooking">
+
+
+      <!-- STATUS -->
+
+      <div class="booking-status-header">
+
+        <span
+          class="status-badge large"
+          [ngClass]="getStatusClass(selectedBooking.status)">
+
+          {{ getStatusLabel(selectedBooking.status) }}
+
+        </span>
+
+        <span
+          class="payment-badge large"
+          [ngClass]="getPaymentStatusClass(selectedBooking.payment_status)">
+
+          Payment:
+          {{ getPaymentStatusLabel(selectedBooking.payment_status) }}
+
+        </span>
+
+      </div>
+
+
+      <!-- CUSTOMER -->
+
+      <div class="detail-section">
+
+        <h3>Customer Information</h3>
+
+        <div class="detail-grid">
+
+          <div class="detail-item">
+
+            <span class="detail-label">
+              Customer
+            </span>
+
+            <strong>
+              {{ getCustomerName(selectedBooking) }}
+            </strong>
+
+          </div>
+
+          <div class="detail-item">
+
+            <span class="detail-label">
+              Customer ID
+            </span>
+
+            <strong>
+              #{{ selectedBooking.customer }}
+            </strong>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- EQUIPMENT -->
+
+      <div class="detail-section">
+
+        <h3>Equipment Information</h3>
+
+        <div class="detail-grid">
+
+          <div class="detail-item">
+
+            <span class="detail-label">
+              Equipment
+            </span>
+
+            <strong>
+              {{ selectedBooking.equipment_name }}
+            </strong>
+
+          </div>
+
+          <div class="detail-item">
+
+            <span class="detail-label">
+              Category
+            </span>
+
+            <strong>
+              {{ selectedBooking.equipment_category || '-' }}
+            </strong>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- RENTAL -->
+
+      <div class="detail-section">
+
+        <h3>Rental Details</h3>
+
+        <div class="detail-grid">
+
+          <div class="detail-item">
+
+            <span class="detail-label">
+              Start Date
+            </span>
+
+            <strong>
+              {{ formatDate(selectedBooking.start_date) }}
+            </strong>
+
+          </div>
+
+          <div class="detail-item">
+
+            <span class="detail-label">
+              End Date
+            </span>
+
+            <strong>
+              {{ formatDate(selectedBooking.end_date) }}
+            </strong>
+
+          </div>
+
+          <div class="detail-item">
+
+            <span class="detail-label">
+              Total Amount
+            </span>
+
+            <strong class="detail-amount">
+              ₹{{ formatAmount(selectedBooking.total_amount) }}
+            </strong>
+
+          </div>
+
+          <div class="detail-item">
+
+            <span class="detail-label">
+              Security Deposit
+            </span>
+
+            <strong>
+              ₹{{ formatAmount(selectedBooking.deposit) }}
+            </strong>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- CONDITION -->
+
+      <div class="detail-section">
+
+        <h3>Equipment Condition</h3>
+
+        <div class="condition-row">
+
+          <div>
+
+            <span class="detail-label">
+              Before Rental
+            </span>
+
+            <strong>
+              {{ getStatusLabel(selectedBooking.equipment_condition_before) }}
+            </strong>
+
+          </div>
+
+          <div>
+
+            <span class="detail-label">
+              After Rental
+            </span>
+
+            <strong>
+              {{
+                selectedBooking.equipment_condition_after
+                  ? getStatusLabel(selectedBooking.equipment_condition_after)
+                  : 'Not returned'
+              }}
+            </strong>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- ACTIONS -->
+
+      <div class="action-section">
+
+        <h3>Booking Actions</h3>
+      <div class="debug-info">
+        Status: {{ selectedBooking?.status }} |
+        Payment: {{ selectedBooking?.payment_status }} |
+        Payment ID: {{ selectedBooking?.payment_id }} |
+        Refund Status: {{ selectedBooking?.refund_status }}
+      </div>
+
+        <div class="action-buttons">
+
+          <button
+            *ngIf="canApprove(selectedBooking)"
+            type="button"
+            class="action-btn approve-btn"
+            (click)="updateStatus(selectedBooking, 'approved')"
+            [disabled]="processing">
+
+            Approve
+
+          </button>
+
+          <button
+            *ngIf="canReject(selectedBooking)"
+            type="button"
+            class="action-btn reject-btn"
+            (click)="updateStatus(selectedBooking, 'rejected')"
+            [disabled]="processing">
+
+            Reject
+
+          </button>
+
+          <button
+            *ngIf="canCancel(selectedBooking)"
+            type="button"
+            class="action-btn cancel-btn"
+            (click)="updateStatus(selectedBooking, 'cancelled')"
+            [disabled]="processing">
+
+            Cancel
+
+          </button>
+
+        </div>
+
+          <!-- DEPOSIT REFUND -->
+
+          <div class="refund-action"
+               *ngIf="canRefundDeposit(selectedBooking)">
+
+            <div class="refund-info">
+              <strong>Security Deposit Refund</strong>
+
+              <p>
+                Return the remaining security deposit to the customer.
+              </p>
+
+              <span class="refund-amount">
+                Refund Amount: ₹{{ formatAmount(getRefundAmount(selectedBooking)) }}
+              </span>
+            </div>
+
+            <button
+              type="button"
+              class="action-btn refund-btn"
+              (click)="refundDeposit(selectedBooking)"
+              [disabled]="processing">
+
+              <span *ngIf="processing">Processing...</span>
+              <span *ngIf="!processing">Pay Balance Deposit to Customer</span>
+
+            </button>
+
+          </div>
+
+        </div>
+
+       
+
+
+    <!-- MODAL FOOTER -->
+
+    <div class="modal-footer">
+
+      <button
+        type="button"
+        class="close-modal-btn"
+        (click)="closeDetails()"
+        [disabled]="processing">
+
+        Close
+
+      </button>
+
+    </div>
+
+  </div>
+
+</div>

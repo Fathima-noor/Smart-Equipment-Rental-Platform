@@ -1,0 +1,80 @@
+<div class="maintenance-page">
+
+  <div class="page-header">
+
+    <div>
+      <h2>Maintenance Dashboard</h2>
+      <p>
+        Manage equipment maintenance and repair reports.
+      </p>
+    </div>
+
+  </div>
+
+
+  <div
+    *ngIf="loading"
+    class="text-center py-5"
+  >
+
+    <div
+      class="spinner-border"
+      role="status"
+    ></div>
+
+    <p class="mt-2">
+      Loading maintenance reports...
+    </p>
+
+  </div>
+
+
+  <div
+    *ngIf="!loading"
+    class="dashboard-cards"
+  >
+
+    <div class="dashboard-card">
+
+      <div class="card-icon">
+        <i class="bi bi-hourglass-split"></i>
+      </div>
+
+      <div>
+        <h3>{{ getCount('pending') }}</h3>
+        <p>Pending Reports</p>
+      </div>
+
+    </div>
+
+
+    <div class="dashboard-card">
+
+      <div class="card-icon">
+        <i class="bi bi-tools"></i>
+      </div>
+
+      <div>
+        <h3>{{ getCount('in_progress') }}</h3>
+        <p>In Progress</p>
+      </div>
+
+    </div>
+
+
+    <div class="dashboard-card">
+
+      <div class="card-icon">
+        <i class="bi bi-check-circle"></i>
+      </div>
+
+      <div>
+        <h3>{{ getCount('completed') }}</h3>
+        <p>Completed Reports</p>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

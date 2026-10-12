@@ -1,0 +1,416 @@
+.equipment-page {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+
+/* Page Header */
+
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+
+/* Filter */
+
+.filter-card {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.search-box {
+  position: relative;
+}
+
+.search-box i {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #6c757d;
+  z-index: 2;
+}
+
+.search-box input {
+  padding-left: 42px;
+  height: 44px;
+  border-radius: 8px;
+}
+
+.category-buttons {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.category-buttons .btn {
+  border-radius: 7px;
+  font-size: 14px;
+}
+
+
+/* Equipment Card */
+
+.equipment-card {
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.equipment-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+
+/* Image */
+
+.equipment-image {
+  height: 190px;
+  background: #f1f3f5;
+  position: relative;
+  overflow: hidden;
+}
+
+.equipment-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.image-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #eef3f8;
+}
+
+.image-placeholder i {
+  font-size: 55px;
+  color: #adb5bd;
+}
+
+
+/* Availability */
+
+.availability-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+}
+
+.availability-badge .badge {
+  padding: 7px 10px;
+  border-radius: 20px;
+  font-weight: 500;
+}
+
+
+/* Content */
+
+.equipment-content {
+  display: flex;
+  flex-direction: column;
+  min-height: 220px;
+}
+
+.category-label {
+  color: #0d6efd;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.equipment-name {
+  font-size: 18px;
+  font-weight: 600;
+  color: #212529;
+}
+
+.equipment-description {
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.equipment-footer {
+  margin-top: auto;
+  padding-top: 15px;
+  border-top: 1px solid #f1f3f5;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.price {
+  font-size: 18px;
+  font-weight: 700;
+  color: #212529;
+}
+
+
+/* Loading */
+
+.loading-container {
+  min-height: 350px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+
+/* Empty State */
+
+.empty-state {
+  min-height: 350px;
+  background: #ffffff;
+  border: 1px solid #e9ecef;
+  border-radius: 12px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  text-align: center;
+  padding: 40px;
+}
+
+.empty-icon {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background: #e7f1ff;
+  color: #0d6efd;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.empty-icon i {
+  font-size: 28px;
+}
+
+
+/* Responsive */
+
+@media (max-width: 992px) {
+
+  .category-buttons {
+    justify-content: flex-start;
+  }
+
+}
+
+
+@media (max-width: 576px) {
+
+  .equipment-page {
+    width: 100%;
+  }
+
+  .equipment-image {
+    height: 210px;
+  }
+
+  .category-buttons {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    padding-bottom: 4px;
+  }
+
+  .category-buttons .btn {
+    flex-shrink: 0;
+  }
+
+  .equipment-footer {
+    align-items: flex-end;
+  }
+
+}
+
+
+/* =========================================
+   CUSTOMER EQUIPMENT - DARK THEME
+   ========================================= */
+
+/* Equipment Page */
+:host-context(.dark-theme) .equipment-page {
+  color: #e5efff;
+}
+
+/* Page Header */
+:host-context(.dark-theme) .page-header h2 {
+  color: #ffffff !important;
+}
+
+:host-context(.dark-theme) .page-header p {
+  color: #b7c8df !important;
+}
+
+/* =========================================
+   FILTER SECTION
+   ========================================= */
+
+:host-context(.dark-theme) .filter-card {
+  background: #1e2d47 !important;
+  border-color: #304563 !important;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.18);
+}
+
+/* Search Input */
+:host-context(.dark-theme) .search-box i {
+  color: #9eb2cc;
+}
+
+:host-context(.dark-theme) .search-box input {
+  background: #183554 !important;
+  color: #f1f6ff !important;
+  border-color: #496384 !important;
+}
+
+:host-context(.dark-theme) .search-box input::placeholder {
+  color: #9eb2cc !important;
+}
+
+:host-context(.dark-theme) .search-box input:focus {
+  background: #183554 !important;
+  color: #ffffff !important;
+  border-color: #4d9aff !important;
+  box-shadow: 0 0 0 0.2rem rgba(77, 154, 255, 0.2);
+}
+
+/* Category Buttons */
+:host-context(.dark-theme) .category-buttons .btn-light {
+  background: #1e2d47 !important;
+  border-color: #496384 !important;
+  color: #c2d1e5 !important;
+}
+
+:host-context(.dark-theme) .category-buttons .btn-light:hover {
+  background: #263b5b !important;
+  color: #ffffff !important;
+}
+
+:host-context(.dark-theme) .category-buttons .btn-primary {
+  background: #3478d4 !important;
+  border-color: #3478d4 !important;
+  color: #ffffff !important;
+}
+
+/* =========================================
+   EQUIPMENT CARDS
+   ========================================= */
+
+:host-context(.dark-theme) .equipment-card {
+  background: #1e2d47 !important;
+  border-color: #304563 !important;
+  color: #e5efff !important;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.18);
+}
+
+:host-context(.dark-theme) .equipment-card:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+/* Image Area */
+:host-context(.dark-theme) .equipment-image,
+:host-context(.dark-theme) .image-placeholder {
+  background: #263b5b !important;
+}
+
+:host-context(.dark-theme) .image-placeholder i {
+  color: #9eb2cc !important;
+}
+
+/* Equipment Content */
+:host-context(.dark-theme) .equipment-content {
+  background: #1e2d47 !important;
+}
+
+/* Category */
+:host-context(.dark-theme) .category-label {
+  color: #78b4ff !important;
+}
+
+/* Equipment Name */
+:host-context(.dark-theme) .equipment-name {
+  color: #f1f6ff !important;
+}
+
+/* Description */
+:host-context(.dark-theme) .equipment-description,
+:host-context(.dark-theme) .equipment-card .text-muted {
+  color: #b7c8df !important;
+}
+
+/* Price */
+:host-context(.dark-theme) .price {
+  color: #ffffff !important;
+}
+
+/* Footer */
+:host-context(.dark-theme) .equipment-footer {
+  border-top-color: #304563 !important;
+}
+
+/* Rent Button */
+:host-context(.dark-theme) .equipment-card .btn-primary {
+  background: #3478d4 !important;
+  border-color: #3478d4 !important;
+  color: #ffffff !important;
+}
+
+:host-context(.dark-theme) .equipment-card .btn-primary:hover {
+  background: #4d9aff !important;
+  border-color: #4d9aff !important;
+}
+
+/* Unavailable Button */
+:host-context(.dark-theme) .equipment-card .btn-light {
+  background: #34445c !important;
+  border-color: #496384 !important;
+  color: #d5e2f3 !important;
+}
+
+/* =========================================
+   LOADING
+   ========================================= */
+
+:host-context(.dark-theme) .loading-container {
+  color: #e5efff;
+}
+
+/* =========================================
+   EMPTY STATE
+   ========================================= */
+
+:host-context(.dark-theme) .empty-state {
+  background: #1e2d47 !important;
+  border-color: #304563 !important;
+  color: #e5efff !important;
+}
+
+:host-context(.dark-theme) .empty-state h5 {
+  color: #ffffff !important;
+}
+
+:host-context(.dark-theme) .empty-state p {
+  color: #b7c8df !important;
+}
+
+:host-context(.dark-theme) .empty-icon {
+  background: #163b5d !important;
+  color: #9bcaff !important;
+}

@@ -1,0 +1,599 @@
+
+<div class="settings-page">
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+
+    <div>
+      <span class="page-label">SYSTEM</span>
+
+      <h1>Settings</h1>
+
+      <p>
+        Manage your administrator account and platform preferences.
+      </p>
+    </div>
+
+  </div>
+
+
+  <!-- SUCCESS MESSAGE -->
+  <div
+    class="message success-message"
+    *ngIf="successMessage">
+
+    <i class="bi bi-check-circle-fill"></i>
+
+    <span>
+      {{ successMessage }}
+    </span>
+
+    <button
+      type="button"
+      (click)="resetMessages()">
+
+      <i class="bi bi-x"></i>
+
+    </button>
+
+  </div>
+
+
+  <!-- ERROR MESSAGE -->
+  <div
+    class="message error-message"
+    *ngIf="errorMessage">
+
+    <i class="bi bi-exclamation-circle-fill"></i>
+
+    <span>
+      {{ errorMessage }}
+    </span>
+
+    <button
+      type="button"
+      (click)="resetMessages()">
+
+      <i class="bi bi-x"></i>
+
+    </button>
+
+  </div>
+
+
+  <!-- SETTINGS LAYOUT -->
+  <div class="settings-layout">
+
+
+    <!-- SETTINGS SIDEBAR -->
+    <aside class="settings-navigation">
+
+      <button
+        type="button"
+        class="settings-nav-item"
+        [class.active]="activeSection === 'profile'"
+        (click)="selectSection('profile')">
+
+        <span class="nav-icon">
+          <i class="bi bi-person"></i>
+        </span>
+
+        <span class="nav-text">
+          <strong>Profile</strong>
+          <small>Personal information</small>
+        </span>
+
+        <i class="bi bi-chevron-right"></i>
+
+      </button>
+
+
+      <button
+        type="button"
+        class="settings-nav-item"
+        [class.active]="activeSection === 'notifications'"
+        (click)="selectSection('notifications')">
+
+        <span class="nav-icon">
+          <i class="bi bi-bell"></i>
+        </span>
+
+        <span class="nav-text">
+          <strong>Notifications</strong>
+          <small>Notification preferences</small>
+        </span>
+
+        <i class="bi bi-chevron-right"></i>
+
+      </button>
+
+
+      <button
+        type="button"
+        class="settings-nav-item"
+        [class.active]="activeSection === 'security'"
+        (click)="selectSection('security')">
+
+        <span class="nav-icon">
+          <i class="bi bi-shield-lock"></i>
+        </span>
+
+        <span class="nav-text">
+          <strong>Security</strong>
+          <small>Password management</small>
+        </span>
+
+        <i class="bi bi-chevron-right"></i>
+
+      </button>
+
+
+      <button
+        type="button"
+        class="settings-nav-item"
+        [class.active]="activeSection === 'system'"
+        (click)="selectSection('system')">
+
+        <span class="nav-icon">
+          <i class="bi bi-gear"></i>
+        </span>
+
+        <span class="nav-text">
+          <strong>System</strong>
+          <small>Platform information</small>
+        </span>
+
+        <i class="bi bi-chevron-right"></i>
+
+      </button>
+
+    </aside>
+
+
+    <!-- SETTINGS CONTENT -->
+    <section class="settings-content">
+
+
+      <!-- PROFILE SETTINGS -->
+      <div
+        class="settings-card"
+        *ngIf="activeSection === 'profile'">
+
+        <div class="card-header">
+
+          <div class="header-icon blue">
+            <i class="bi bi-person"></i>
+          </div>
+
+          <div>
+            <h2>Profile Settings</h2>
+
+            <p>
+              Update your administrator account information.
+            </p>
+          </div>
+
+        </div>
+
+
+        <form
+          (ngSubmit)="saveProfile()"
+          #profileForm="ngForm">
+
+          <div class="form-group">
+
+            <label for="adminName">
+              Full Name
+            </label>
+
+            <input
+              id="adminName"
+              type="text"
+              name="adminName"
+              [(ngModel)]="adminName"
+              required
+              class="form-control"
+              placeholder="Enter your name">
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label for="adminEmail">
+              Email Address
+            </label>
+
+            <input
+              id="adminEmail"
+              type="email"
+              name="adminEmail"
+              [(ngModel)]="adminEmail"
+              required
+              class="form-control"
+              placeholder="Enter your email">
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label for="adminPhone">
+              Phone Number
+            </label>
+
+            <input
+              id="adminPhone"
+              type="tel"
+              name="adminPhone"
+              [(ngModel)]="adminPhone"
+              class="form-control"
+              placeholder="Enter your phone number">
+
+          </div>
+
+
+          <div class="form-actions">
+
+            <button
+              type="submit"
+              class="save-btn"
+              [disabled]="profileForm.invalid || isSavingProfile">
+
+              <i 
+              class="bi"
+              [class.bi-check-lg]="!isSavingProfile"
+              [class.bi-arrow-repeat]="isSavingProfile"></i>
+
+              {{ isSavingProfile ? 'Saving...' : 'Save Changes' }}
+
+            </button>
+
+          </div>
+
+        </form>
+
+      </div>
+
+
+      <!-- NOTIFICATION SETTINGS -->
+      <div
+        class="settings-card"
+        *ngIf="activeSection === 'notifications'">
+
+        <div class="card-header">
+
+          <div class="header-icon purple">
+            <i class="bi bi-bell"></i>
+          </div>
+
+          <div>
+            <h2>Notification Settings</h2>
+
+            <p>
+              Choose the notifications you want to receive.
+            </p>
+          </div>
+
+        </div>
+
+
+        <div class="preference-list">
+
+
+          <div class="preference-item">
+
+            <div class="preference-info">
+
+              <strong>Email Notifications</strong>
+
+              <span>
+                Receive important platform updates by email.
+              </span>
+
+            </div>
+
+            <label class="switch">
+
+              <input
+                type="checkbox"
+                [(ngModel)]="emailNotifications">
+
+              <span class="slider"></span>
+
+            </label>
+
+          </div>
+
+
+          <div class="preference-item">
+
+            <div class="preference-info">
+
+              <strong>Booking Notifications</strong>
+
+              <span>
+                Receive updates about new booking activities.
+              </span>
+
+            </div>
+
+            <label class="switch">
+
+              <input
+                type="checkbox"
+                [(ngModel)]="bookingNotifications">
+
+              <span class="slider"></span>
+
+            </label>
+
+          </div>
+
+
+          <div class="preference-item">
+
+            <div class="preference-info">
+
+              <strong>Damage Notifications</strong>
+
+              <span>
+                Receive updates about damage reports and issues.
+              </span>
+
+            </div>
+
+            <label class="switch">
+
+              <input
+                type="checkbox"
+                [(ngModel)]="damageNotifications">
+
+              <span class="slider"></span>
+
+            </label>
+
+          </div>
+
+        </div>
+
+
+        <div class="form-actions">
+
+          <button
+            type="button"
+            class="save-btn"
+            [disabled]="isSavingNotifications"
+            (click)="saveNotifications()">
+
+           <i
+             class="bi"
+             [class.bi-check-lg]="!isSavingNotifications"
+             [class.bi-arrow-repeat]="isSavingNotifications">
+          </i>
+
+          {{ isSavingNotifications ? 'Saving...' : 'Save Preferences' }}
+
+          </button>
+        </div>
+
+      </div>
+
+
+      <!-- SECURITY SETTINGS -->
+      <div
+        class="settings-card"
+        *ngIf="activeSection === 'security'">
+
+        <div class="card-header">
+
+          <div class="header-icon orange">
+            <i class="bi bi-shield-lock"></i>
+          </div>
+
+          <div>
+            <h2>Security Settings</h2>
+
+            <p>
+              Update your administrator account password.
+            </p>
+          </div>
+
+        </div>
+
+
+        <form
+          (ngSubmit)="changePassword()"
+          #passwordForm="ngForm">
+
+          <div class="form-group">
+
+            <label for="currentPassword">
+              Current Password
+            </label>
+
+            <input
+              id="currentPassword"
+              type="password"
+              name="currentPassword"
+              [(ngModel)]="currentPassword"
+              required
+              class="form-control"
+              placeholder="Enter current password">
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label for="newPassword">
+              New Password
+            </label>
+
+            <input
+              id="newPassword"
+              type="password"
+              name="newPassword"
+              [(ngModel)]="newPassword"
+              required
+              minlength="8"
+              class="form-control"
+              placeholder="Enter new password">
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label for="confirmPassword">
+              Confirm New Password
+            </label>
+
+            <input
+              id="confirmPassword"
+              type="password"
+              name="confirmPassword"
+              [(ngModel)]="confirmPassword"
+              required
+              class="form-control"
+              placeholder="Confirm new password">
+
+          </div>
+
+
+          <div class="password-note">
+
+            <i class="bi bi-info-circle"></i>
+
+            <span>
+              Use a strong password with at least 8 characters.
+            </span>
+
+          </div>
+
+
+          <div class="form-actions">
+
+            <button
+              type="submit"
+              class="save-btn"
+              [disabled]="passwordForm.invalid || isChangingPassword">
+
+              <i  
+              class="bi"
+              [class.bi-shield-check]="!isChangingPassword"
+              [class.bi-arrow-repeat]="isChangingPassword"></i>
+
+              {{ isChangingPassword ? 'Updating...' : 'Update Password' }}
+
+
+
+              
+
+            </button>
+
+          </div>
+
+        </form>
+
+      </div>
+
+
+      <!-- SYSTEM SETTINGS -->
+      <div
+        class="settings-card"
+        *ngIf="activeSection === 'system'">
+
+        <div class="card-header">
+
+          <div class="header-icon green">
+            <i class="bi bi-gear"></i>
+          </div>
+
+          <div>
+            <h2>System Information</h2>
+
+            <p>
+              Information about your rental platform.
+            </p>
+          </div>
+
+        </div>
+
+
+        <div class="system-information">
+
+          <div class="system-row">
+
+            <span>Platform Name</span>
+
+            <strong>EquipRent</strong>
+
+          </div>
+
+
+          <div class="system-row">
+
+            <span>Application Type</span>
+
+            <strong>Equipment Rental Platform</strong>
+
+          </div>
+
+
+          <div class="system-row">
+
+            <span>Backend</span>
+
+            <strong>Django REST Framework</strong>
+
+          </div>
+
+
+          <div class="system-row">
+
+            <span>Frontend</span>
+
+            <strong>Angular</strong>
+
+          </div>
+
+
+          <div class="system-row">
+
+            <span>Database</span>
+
+            <strong>MySQL</strong>
+
+          </div>
+
+
+          <div class="system-row">
+
+            <span>Account Type</span>
+
+            <strong>Administrator</strong>
+
+          </div>
+
+        </div>
+
+
+        <div class="system-note">
+
+          <i class="bi bi-info-circle"></i>
+
+          <span>
+            These details are for information only.
+          </span>
+
+        </div>
+
+      </div>
+
+
+    </section>
+
+  </div>
+
+</div>

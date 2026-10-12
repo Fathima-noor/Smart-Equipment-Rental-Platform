@@ -1,0 +1,376 @@
+
+.reports-page {
+  padding: 25px;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 25px;
+}
+
+.page-header h2 {
+  margin-bottom: 5px;
+  font-weight: 600;
+}
+
+.page-header p {
+  margin: 0;
+  color: #6c757d;
+}
+
+
+/* =========================================
+   DAMAGED BOOKINGS SECTION
+   ========================================= */
+
+.damaged-bookings-section {
+  margin-bottom: 30px;
+}
+
+.damaged-bookings-section h4 {
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.damaged-bookings-section > p {
+  color: #6c757d;
+  margin-bottom: 20px;
+}
+
+
+/* =========================================
+   FORM STYLING
+   ========================================= */
+
+.form-group {
+  margin-bottom: 18px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 7px;
+  font-weight: 500;
+}
+
+.form-control {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ced4da;
+  border-radius: 7px;
+}
+
+.form-actions {
+  display: flex;
+  gap: 10px;
+}
+
+
+/* =========================================
+   MODAL POP-UP
+   ========================================= */
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  z-index: 9999;
+}
+
+.modal-content {
+  width: 100%;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow-y: auto;
+  background: #ffffff;
+  color: #212529;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.25);
+  animation: modalFadeIn 0.2s ease-out;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  padding: 20px 25px;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.modal-header h4 {
+  margin: 0;
+  font-weight: 600;
+}
+
+.modal-close {
+  border: none;
+  background: transparent;
+  color: #6c757d;
+  font-size: 30px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0 5px;
+}
+
+.modal-close:hover {
+  color: #212529;
+}
+
+.modal-body {
+  padding: 25px;
+}
+
+.modal-body .form-group:last-child {
+  margin-bottom: 0;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 18px 25px;
+  border-top: 1px solid #e9ecef;
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+/* =========================================
+   REPORTS LIST
+   ========================================= */
+
+.reports-list {
+  display: grid;
+  gap: 20px;
+}
+
+.report-card {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 22px;
+}
+
+.report-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.report-header h5 {
+  margin-bottom: 4px;
+  font-weight: 600;
+}
+
+.report-header small {
+  color: #6c757d;
+}
+
+.status-badge {
+  background: #e9ecef;
+  color: #343a40;
+  padding: 7px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.report-info {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.report-info div {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.report-info small {
+  color: #6c757d;
+}
+
+.report-info strong {
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+
+.report-actions {
+  padding-top: 18px;
+  border-top: 1px solid #e9ecef;
+}
+
+
+/* =========================================
+   EMPTY STATE
+   ========================================= */
+
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+}
+
+.empty-state i {
+  font-size: 45px;
+  display: block;
+  margin-bottom: 15px;
+}
+
+.empty-state p {
+  color: #6c757d;
+}
+
+
+/* =========================================
+   RESPONSIVE DESIGN
+   ========================================= */
+
+@media (max-width: 768px) {
+
+  .reports-page {
+    padding: 15px;
+  }
+
+  .page-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .report-info {
+    grid-template-columns: 1fr;
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .form-actions button {
+    width: 100%;
+  }
+
+  .modal-overlay {
+    padding: 12px;
+  }
+
+  .modal-content {
+    max-width: 100%;
+    max-height: 95vh;
+  }
+
+  .modal-header,
+  .modal-body,
+  .modal-footer {
+    padding: 18px;
+  }
+
+  .modal-footer {
+    flex-direction: column;
+  }
+
+  .modal-footer button {
+    width: 100%;
+  }
+
+}
+
+
+/* =========================================
+   DARK THEME
+   ========================================= */
+
+:host-context(.dark-theme) .reports-page {
+  color: #e5efff;
+}
+
+:host-context(.dark-theme) .page-header p,
+:host-context(.dark-theme) .damaged-bookings-section > p {
+  color: #b7c8df;
+}
+
+:host-context(.dark-theme) .report-card,
+:host-context(.dark-theme) .empty-state {
+  background: #1e2d47;
+  border-color: #304563;
+  color: #e5efff;
+}
+
+:host-context(.dark-theme) .report-header small,
+:host-context(.dark-theme) .report-info small,
+:host-context(.dark-theme) .empty-state p {
+  color: #b7c8df;
+}
+
+:host-context(.dark-theme) .form-control {
+  background: #16243a;
+  border-color: #405574;
+  color: #e5efff;
+}
+
+:host-context(.dark-theme) .form-control::placeholder {
+  color: #8fa4bf;
+}
+
+:host-context(.dark-theme) .report-actions {
+  border-top-color: #304563;
+}
+
+:host-context(.dark-theme) .status-badge {
+  background: #263b5b;
+  color: #e5efff;
+}
+
+
+/* =========================================
+   DARK THEME MODAL
+   ========================================= */
+
+:host-context(.dark-theme) .modal-content {
+  background: #1e2d47;
+  border-color: #304563;
+  color: #e5efff;
+}
+
+:host-context(.dark-theme) .modal-header,
+:host-context(.dark-theme) .modal-footer {
+  border-color: #304563;
+}
+
+:host-context(.dark-theme) .modal-close {
+  color: #b7c8df;
+}
+
+:host-context(.dark-theme) .modal-close:hover {
+  color: #ffffff;
+}
+
+:host-context(.dark-theme) .modal-body .form-text {
+  color: #b7c8df;
+}

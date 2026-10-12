@@ -1,0 +1,729 @@
+<div class="admin-issues-page">
+
+  <!-- ================= HEADER ================= -->
+
+  <div class="page-header">
+
+    <div>
+      <h1>Damage Issues</h1>
+      <p>Review and manage customer issues related to damage reports.</p>
+    </div>
+
+    <button
+      class="refresh-btn"
+      type="button"
+      (click)="loadIssues()"
+      [disabled]="loading || processing">
+
+      <span class="refresh-icon">↻</span>
+      Refresh
+    </button>
+
+  </div>
+
+
+  <!-- ================= ERROR MESSAGE ================= -->
+
+  <div
+    class="alert-message error-message"
+    *ngIf="errorMessage">
+
+    <span>⚠</span>
+    <span>{{ errorMessage }}</span>
+
+    <button
+      type="button"
+      (click)="errorMessage = ''">
+      ×
+    </button>
+
+  </div>
+
+
+  <!-- ================= SUCCESS MESSAGE ================= -->
+
+  <div
+    class="alert-message success-message"
+    *ngIf="successMessage">
+
+    <span>✓</span>
+    <span>{{ successMessage }}</span>
+
+    <button
+      type="button"
+      (click)="successMessage = ''">
+      ×
+    </button>
+
+  </div>
+
+
+  <!-- ================= STATISTICS ================= -->
+
+  <div class="stats-grid">
+
+    <div class="stat-card">
+
+      <div class="stat-icon total-icon">
+        <span>!</span>
+      </div>
+
+      <div class="stat-content">
+        <span class="stat-label">Total Issues</span>
+        <strong>{{ totalIssues }}</strong>
+      </div>
+
+    </div>
+
+
+    <div class="stat-card">
+
+      <div class="stat-icon pending-icon">
+        <span>◷</span>
+      </div>
+
+      <div class="stat-content">
+        <span class="stat-label">Pending</span>
+        <strong>{{ pendingIssues }}</strong>
+      </div>
+
+    </div>
+
+
+    <div class="stat-card">
+
+      <div class="stat-icon reviewed-icon">
+        <span>◉</span>
+      </div>
+
+      <div class="stat-content">
+        <span class="stat-label">Reviewed</span>
+        <strong>{{ reviewedIssues }}</strong>
+      </div>
+
+    </div>
+
+
+    <div class="stat-card">
+
+      <div class="stat-icon resolved-icon">
+        <span>✓</span>
+      </div>
+
+      <div class="stat-content">
+        <span class="stat-label">Resolved</span>
+        <strong>{{ resolvedIssues }}</strong>
+      </div>
+
+    </div>
+
+
+    <div class="stat-card">
+
+      <div class="stat-icon rejected-icon">
+        <span>×</span>
+      </div>
+
+      <div class="stat-content">
+        <span class="stat-label">Rejected</span>
+        <strong>{{ rejectedIssues }}</strong>
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- ================= FILTER BAR ================= -->
+
+  <div class="filter-card">
+
+    <div class="search-box">
+
+      <span class="search-icon">⌕</span>
+
+      <input
+        type="text"
+        [(ngModel)]="searchText"
+        (input)="onSearch()"
+        placeholder="Search by customer, equipment, issue or report ID..."
+        autocomplete="off">
+
+    </div>
+
+
+    <div class="status-filter">
+
+      <label for="issueStatus">Status</label>
+
+      <select
+        id="issueStatus"
+        [(ngModel)]="selectedStatus"
+        (change)="onStatusChange()">
+
+        <option value="all">All Issues</option>
+        <option value="pending">Pending</option>
+        <option value="reviewed">Reviewed</option>
+        <option value="resolved">Resolved</option>
+        <option value="rejected">Rejected</option>
+
+      </select>
+
+    </div>
+
+
+    <button
+      type="button"
+      class="clear-btn"
+      *ngIf="searchText || selectedStatus !== 'all'"
+      (click)="clearFilters()">
+
+      Clear Filters
+
+    </button>
+
+  </div>
+
+
+  <!-- ================= LOADING ================= -->
+
+  <div
+    class="loading-container"
+    *ngIf="loading">
+
+    <div class="spinner"></div>
+
+    <p>Loading damage issues...</p>
+
+  </div>
+
+
+  <!-- ================= EMPTY ================= -->
+
+  <div
+    class="empty-state"
+    *ngIf="!loading && filteredIssues.length === 0">
+
+    <div class="empty-icon">
+      !
+    </div>
+
+    <h3>No damage issues found</h3>
+
+    <p *ngIf="searchText || selectedStatus !== 'all'">
+      Try changing your search or filter.
+    </p>
+
+    <p *ngIf="!searchText && selectedStatus === 'all'">
+      Customer issues will appear here when they are submitted.
+    </p>
+
+  </div>
+
+
+  <!-- ================= TABLE ================= -->
+
+  <div
+    class="table-card"
+    *ngIf="!loading && filteredIssues.length > 0">
+
+    <div class="table-header">
+
+      <div>
+        <h2>Customer Issues</h2>
+        <span>
+          {{ filteredIssues.length }}
+          {{ filteredIssues.length === 1 ? 'issue' : 'issues' }}
+        </span>
+      </div>
+
+    </div>
+
+
+    <div class="table-wrapper">
+
+      <table>
+
+        <thead>
+
+          <tr>
+
+            <th class="serial-column">
+              SL No.
+            </th>
+
+            <th>
+              Customer
+            </th>
+
+            <th>
+              Equipment
+            </th>
+
+            <th>
+              Issue Type
+            </th>
+
+            <th>
+              Submitted
+            </th>
+
+            <th>
+              Status
+            </th>
+
+            <th class="action-column">
+              Action
+            </th>
+
+          </tr>
+
+        </thead>
+
+
+        <tbody>
+
+          <tr
+            *ngFor="let issue of filteredIssues; let i = index">
+
+            <!-- SERIAL NUMBER -->
+
+            <td class="serial-number">
+              {{ i + 1 }}
+            </td>
+
+
+            <!-- CUSTOMER -->
+
+            <td>
+
+              <div class="customer-cell">
+
+                <div class="avatar">
+                  {{ getCustomerName(issue).charAt(0).toUpperCase() }}
+                </div>
+
+                <div class="customer-info">
+
+                  <strong>
+                    {{ getCustomerName(issue) }}
+                  </strong>
+
+                  <small>
+                    Damage Report ID : {{ issue.damage_report_id }}
+                  </small>
+
+                </div>
+
+              </div>
+
+            </td>
+
+
+            <!-- EQUIPMENT -->
+
+            <td>
+
+              <div class="equipment-cell">
+
+                <strong>
+                  {{ getEquipmentName(issue) }}
+                </strong>
+
+                <small>
+                  Issue ID : {{ issue.id }}
+                </small>
+
+              </div>
+
+            </td>
+
+
+            <!-- ISSUE TYPE -->
+
+            <td>
+
+              <span class="issue-type">
+                {{ getIssueTypeLabel(issue.issue_type) }}
+              </span>
+
+            </td>
+
+
+            <!-- DATE -->
+
+            <td>
+
+              <span class="date-text">
+                {{ formatDate(issue.created_at) }}
+              </span>
+
+            </td>
+
+
+            <!-- STATUS -->
+
+            <td>
+
+              <span
+                class="status-badge"
+                [ngClass]="getStatusClass(issue.status)">
+
+                <span class="status-dot"></span>
+
+                {{ getStatusLabel(issue.status) }}
+
+              </span>
+
+            </td>
+
+
+            <!-- ACTION -->
+
+            <td class="action-column">
+
+              <button
+                type="button"
+                class="view-btn"
+                (click)="openDetails(issue)">
+
+                View Details
+
+              </button>
+
+            </td>
+
+          </tr>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+
+<!-- ===================================================== -->
+<!-- DETAILS POPUP -->
+<!-- ===================================================== -->
+
+<div
+  class="modal-backdrop"
+  *ngIf="showDetails && selectedIssue"
+  (click)="closeDetails()">
+
+
+  <div
+    class="details-modal"
+    (click)="$event.stopPropagation()">
+
+
+    <!-- MODAL HEADER -->
+
+    <div class="modal-header">
+
+      <div>
+
+        <span class="modal-label">
+          CUSTOMER ISSUE
+        </span>
+
+        <h2>
+          Issue #{{ selectedIssue.id }}
+        </h2>
+
+      </div>
+
+
+      <button
+        type="button"
+        class="close-btn"
+        (click)="closeDetails()"
+        [disabled]="processing">
+
+        ×
+
+      </button>
+
+    </div>
+
+
+    <!-- MODAL BODY -->
+
+    <div class="modal-body">
+
+
+      <!-- STATUS -->
+
+      <div class="modal-status-row">
+
+        <span
+          class="status-badge large-status"
+          [ngClass]="getStatusClass(selectedIssue.status)">
+
+          <span class="status-dot"></span>
+
+          {{ getStatusLabel(selectedIssue.status) }}
+
+        </span>
+
+      </div>
+
+
+      <!-- CUSTOMER + EQUIPMENT -->
+
+      <div class="info-grid">
+
+
+        <div class="info-box">
+
+          <span class="info-label">
+            CUSTOMER
+          </span>
+
+          <strong>
+            {{ getCustomerName(selectedIssue) }}
+          </strong>
+
+          <small>
+            Damage Report #{{ selectedIssue.damage_report_id }}
+          </small>
+
+        </div>
+
+
+        <div class="info-box">
+
+          <span class="info-label">
+            EQUIPMENT
+          </span>
+
+          <strong>
+            {{ getEquipmentName(selectedIssue) }}
+          </strong>
+
+          <small>
+            Issue submitted {{ formatDate(selectedIssue.created_at) }}
+          </small>
+
+        </div>
+
+
+      </div>
+
+
+      <!-- ISSUE TYPE -->
+
+      <div class="detail-section">
+
+        <span class="section-label">
+          ISSUE TYPE
+        </span>
+
+        <div class="issue-type-box">
+
+          {{ getIssueTypeLabel(selectedIssue.issue_type) }}
+
+        </div>
+
+      </div>
+
+
+      <!-- CUSTOMER DESCRIPTION -->
+
+      <div class="detail-section">
+
+        <span class="section-label">
+          CUSTOMER DESCRIPTION
+        </span>
+
+        <div class="description-box">
+
+          {{ selectedIssue.description || 'No description provided.' }}
+
+        </div>
+
+      </div>
+
+
+      <!-- EXISTING RESOLUTION -->
+
+      <div
+        class="detail-section"
+        *ngIf="selectedIssue.resolution_note">
+
+        <span class="section-label">
+          EXISTING RESOLUTION NOTE
+        </span>
+
+        <div class="resolution-existing">
+
+          {{ selectedIssue.resolution_note }}
+
+        </div>
+
+      </div>
+
+
+      <!-- UPDATE SECTION -->
+
+      <div class="update-section">
+
+        <div class="section-heading">
+
+          <div>
+
+            <span class="section-label">
+              UPDATE ISSUE
+            </span>
+
+            <p>
+              Change the issue status and add a resolution note.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <!-- STATUS SELECT -->
+
+        <div class="form-group">
+
+          <label for="newIssueStatus">
+            Status
+          </label>
+
+          <select
+            id="newIssueStatus"
+            [(ngModel)]="selectedNewStatus"
+            [disabled]="
+              processing ||
+              selectedIssue.status === 'resolved' ||
+              selectedIssue.status === 'rejected'
+            ">
+
+            <option value="pending">
+              Pending
+            </option>
+
+            <option value="reviewed">
+              Reviewed
+            </option>
+
+            <option value="resolved">
+              Resolved
+            </option>
+
+            <option value="rejected">
+              Rejected
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <!-- RESOLUTION NOTE -->
+
+        <div class="form-group">
+
+          <label for="resolutionNote">
+            Resolution Note
+          </label>
+
+          <textarea
+            id="resolutionNote"
+            [(ngModel)]="resolutionNote"
+            rows="4"
+            placeholder="Enter a note for the customer..."
+            [disabled]="
+              processing ||
+              selectedIssue.status === 'resolved' ||
+              selectedIssue.status === 'rejected'
+            "
+            autocomplete="off">
+          </textarea>
+
+        </div>
+
+
+        <!-- MODAL ERROR -->
+
+        <div
+          class="modal-error"
+          *ngIf="errorMessage">
+
+          {{ errorMessage }}
+
+        </div>
+
+
+        <!-- MODAL SUCCESS -->
+
+        <div
+          class="modal-success"
+          *ngIf="successMessage">
+
+          {{ successMessage }}
+
+        </div>
+
+
+        <!-- RESOLVED / REJECTED INFO -->
+
+        <div
+          class="locked-message"
+          *ngIf="
+            selectedIssue.status === 'resolved' ||
+            selectedIssue.status === 'rejected'
+          ">
+
+          <span>🔒</span>
+
+          <span>
+            This issue is {{ getStatusLabel(selectedIssue.status).toLowerCase() }}
+            and can no longer be changed.
+          </span>
+
+        </div>
+
+
+        <!-- SAVE BUTTON -->
+
+        <button
+          type="button"
+          class="update-btn"
+          (click)="updateStatus()"
+          [disabled]="
+            processing ||
+            selectedIssue.status === 'resolved' ||
+            selectedIssue.status === 'rejected'
+          ">
+
+          <span
+            class="button-spinner"
+            *ngIf="processing">
+          </span>
+
+          <span *ngIf="!processing">
+            Update Issue
+          </span>
+
+          <span *ngIf="processing">
+            Updating...
+          </span>
+
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

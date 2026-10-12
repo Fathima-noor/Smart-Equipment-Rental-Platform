@@ -1,0 +1,153 @@
+
+<div class="login-page">
+
+  <!-- Left Branding Section -->
+  <div class="login-brand">
+
+    <div class="brand-content">
+
+      <div class="brand-logo">
+        <i class="bi bi-box-seam"></i>
+        <span>EquipRent</span>
+      </div>
+
+      <div class="brand-message">
+        <p class="brand-label">SMART EQUIPMENT RENTAL</p>
+
+        <h1>
+          Everything you need.
+          <br>
+          <span>One platform.</span>
+        </h1>
+
+        <p class="brand-description">
+          Rent cameras, laptops, projectors and more.
+          Manage your equipment easily with EquipRent.
+        </p>
+      </div>
+
+      <div class="brand-footer">
+        <i class="bi bi-check-circle"></i>
+        <span>Simple. Reliable. Convenient.</span>
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- Right Login Section -->
+  <div class="login-section">
+
+    <div class="login-card">
+
+      <div class="mobile-logo">
+        <i class="bi bi-box-seam"></i>
+        <span>EquipRent</span>
+      </div>
+
+      <div class="login-heading">
+        <p class="welcome-text">WELCOME BACK</p>
+
+        <h2>Sign in to your account</h2>
+
+        <p class="login-subtitle">
+          Enter your details to continue.
+        </p>
+      </div>
+
+
+      <form (ngSubmit)="login()" #loginForm="ngForm">
+
+        <!-- Username -->
+        <div class="form-group">
+
+          <label for="username">Username</label>
+
+          <div class="input-wrapper">
+
+            <i class="bi bi-person"></i>
+
+            <input
+              id="username"
+              type="text"
+              [(ngModel)]="username"
+              name="username"
+              placeholder="Enter your username"
+              required
+              autocomplete="username"
+            >
+
+          </div>
+
+        </div>
+
+
+        <!-- Password -->
+        <div class="form-group">
+
+          <label for="password">Password</label>
+
+          <div class="input-wrapper">
+
+            <i class="bi bi-lock"></i>
+
+            <input
+              id="password"
+              type="password"
+              [(ngModel)]="password"
+              name="password"
+              placeholder="Enter your password"
+              required
+              autocomplete="current-password"
+            >
+
+          </div>
+
+        </div>
+
+
+        <!-- Error Message -->
+        @if (errorMessage) {
+
+          <div class="error-message">
+
+            <i class="bi bi-exclamation-circle"></i>
+
+            <span>{{ errorMessage }}</span>
+
+          </div>
+
+        }
+
+
+        <!-- Login Button -->
+        <button
+          type="submit"
+          class="login-button"
+          [disabled]="loginForm.invalid"
+        >
+
+          Sign In
+
+          <i class="bi bi-arrow-right"></i>
+
+        </button>
+
+      </form>
+
+
+      <div class="login-bottom">
+
+        <p>
+          Don't have an account?
+          <a routerLink="/register">Create an account</a>
+        </p>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

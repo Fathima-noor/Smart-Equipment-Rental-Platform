@@ -1,0 +1,971 @@
+.container-fluid {
+
+  max-width: 1500px;
+
+}
+
+.stat-card {
+
+  background: #ffffff;
+
+  border-radius: 16px;
+
+  padding: 20px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 15px;
+
+  height: 100%;
+
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+
+}
+
+.stat-card small {
+
+  color: #6c757d;
+
+}
+
+.stat-card h4 {
+
+  margin: 3px 0 0;
+
+  font-weight: 700;
+
+}
+
+.stat-icon {
+
+  width: 48px;
+
+  height: 48px;
+
+  border-radius: 12px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  background: #e8f0ff;
+
+  color: #0d6efd;
+
+  font-size: 21px;
+
+}
+
+.stat-icon.warning {
+
+  background: #fff3cd;
+
+  color: #997404;
+
+}
+
+.stat-icon.info {
+
+  background: #cff4fc;
+
+  color: #087990;
+
+}
+
+.stat-icon.success {
+
+  background: #d1e7dd;
+
+  color: #146c43;
+
+}
+
+.report-card {
+
+  border-radius: 18px;
+
+  overflow: hidden;
+
+  transition: 0.2s ease;
+
+}
+
+.report-card:hover {
+
+  transform: translateY(-4px);
+
+}
+
+.info-row {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+
+  margin-bottom: 18px;
+
+}
+
+.info-icon {
+
+  width: 40px;
+
+  height: 40px;
+
+  border-radius: 10px;
+
+  background: #f1f3f5;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  color: #0d6efd;
+
+}
+
+.description-box {
+
+  background: #f8f9fa;
+
+  border-radius: 12px;
+
+  padding: 15px;
+
+  margin-top: 10px;
+
+}
+
+.description-box p {
+
+  color: #343a40;
+
+  line-height: 1.5;
+
+}
+
+.amount-box {
+
+  margin-top: 18px;
+
+  padding: 16px;
+
+  border-radius: 12px;
+
+  background: #fff5f5;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+}
+
+.amount-box > i {
+
+  font-size: 30px;
+
+  color: #dc3545;
+
+}
+
+.settlement-box {
+
+  border-radius: 12px;
+
+  padding: 15px;
+
+  background: #f8f9fa;
+
+  border: 1px solid #e9ecef;
+
+}
+
+.settlement-title {
+
+  font-weight: 600;
+
+  margin-bottom: 10px;
+
+}
+
+.settlement-row {
+
+  display: flex;
+
+  justify-content: space-between;
+
+  padding: 7px 0;
+
+  border-top: 1px solid #e9ecef;
+
+}
+
+.resolved-message {
+
+  padding: 12px;
+
+  border-radius: 10px;
+
+  background: #d1e7dd;
+
+  color: #146c43;
+
+  font-size: 14px;
+
+  font-weight: 500;
+
+}
+
+.empty-state {
+
+  background: #ffffff;
+
+  border-radius: 16px;
+
+  padding: 70px 20px;
+
+  text-align: center;
+
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+
+}
+
+.empty-state i {
+
+  font-size: 55px;
+
+  color: #adb5bd;
+
+}
+
+
+/* =========================================
+   CUSTOMER ISSUES
+   ========================================= */
+
+.customer-issues-section {
+
+  border-radius: 16px;
+
+  overflow: hidden;
+
+}
+
+.issue-resolution-panel {
+
+  border-radius: 14px;
+
+  overflow: hidden;
+
+}
+
+
+/* =========================================
+   DARK THEME
+   ========================================= */
+
+:host-context(.dark-theme) .container-fluid {
+
+  color: #e5efff;
+
+}
+
+
+/* =========================================
+   STATISTICS
+   ========================================= */
+
+:host-context(.dark-theme) .stat-card {
+
+  background: #1e2d47;
+
+  border: 1px solid #304563;
+
+  color: #e5efff;
+
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.18);
+
+}
+
+:host-context(.dark-theme) .stat-card small {
+
+  color: #9eb2cc;
+
+}
+
+:host-context(.dark-theme) .stat-card h4 {
+
+  color: #f1f6ff;
+
+}
+
+
+/* Statistics Icons */
+
+:host-context(.dark-theme) .stat-icon {
+
+  background: #163b5d;
+
+  color: #9bcaff;
+
+}
+
+:host-context(.dark-theme) .stat-icon.warning {
+
+  background: #493817;
+
+  color: #ffda75;
+
+}
+
+:host-context(.dark-theme) .stat-icon.info {
+
+  background: #163f52;
+
+  color: #8bdcf5;
+
+}
+
+:host-context(.dark-theme) .stat-icon.success {
+
+  background: #164d43;
+
+  color: #8af0c9;
+
+}
+
+
+/* =========================================
+   DAMAGE REPORT CARD
+   ========================================= */
+
+:host-context(.dark-theme) .report-card {
+
+  background: #1e2d47;
+
+  border-color: #304563;
+
+  color: #e5efff;
+
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.18);
+
+}
+
+:host-context(.dark-theme) .report-card:hover {
+
+  box-shadow: 0 7px 22px rgba(0, 0, 0, 0.28);
+
+}
+
+
+/* =========================================
+   INFORMATION ROWS
+   ========================================= */
+
+:host-context(.dark-theme) .info-row {
+
+  color: #c2d1e5;
+
+}
+
+:host-context(.dark-theme) .info-icon {
+
+  background: #263b5b;
+
+  color: #9bcaff;
+
+}
+
+
+/* =========================================
+   DESCRIPTION
+   ========================================= */
+
+:host-context(.dark-theme) .description-box {
+
+  background: #263b5b;
+
+  color: #e5efff;
+
+}
+
+:host-context(.dark-theme) .description-box p {
+
+  color: #d5e2f3;
+
+}
+
+
+/* =========================================
+   DAMAGE AMOUNT
+   ========================================= */
+
+:host-context(.dark-theme) .amount-box {
+
+  background: #451f2a;
+
+  color: #f1f6ff;
+
+}
+
+:host-context(.dark-theme) .amount-box > i {
+
+  color: #ff9eaa;
+
+}
+
+
+/* =========================================
+   SETTLEMENT
+   ========================================= */
+
+:host-context(.dark-theme) .settlement-box {
+
+  background: #263b5b;
+
+  border-color: #3b506c;
+
+  color: #e5efff;
+
+}
+
+:host-context(.dark-theme) .settlement-title {
+
+  color: #f1f6ff;
+
+}
+
+:host-context(.dark-theme) .settlement-row {
+
+  border-top-color: #3b506c;
+
+  color: #c2d1e5;
+
+}
+
+:host-context(.dark-theme) .settlement-row strong {
+
+  color: #f1f6ff;
+
+}
+
+
+/* =========================================
+   RESOLVED MESSAGE
+   ========================================= */
+
+:host-context(.dark-theme) .resolved-message {
+
+  background: #164d43;
+
+  border: 1px solid #237b69;
+
+  color: #8af0c9;
+
+}
+
+
+/* =========================================
+   EMPTY STATE
+   ========================================= */
+
+:host-context(.dark-theme) .empty-state {
+
+  background: #1e2d47;
+
+  color: #c2d1e5;
+
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.18);
+
+}
+
+:host-context(.dark-theme) .empty-state i {
+
+  color: #9eb2cc;
+
+}
+
+
+/* =========================================
+   GENERAL MUTED TEXT
+   ========================================= */
+
+:host-context(.dark-theme) .text-muted {
+
+  color: #9eb2cc !important;
+
+}
+
+
+/* =========================================================
+   CUSTOMER ISSUES - DARK THEME
+   ========================================================= */
+
+:host-context(.dark-theme) .customer-issues-section {
+
+  background: #1e2d47 !important;
+
+  border: 1px solid #304563 !important;
+
+  border-radius: 16px !important;
+
+  overflow: hidden;
+
+  color: #e5efff;
+
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18) !important;
+
+}
+
+
+/* Header */
+
+:host-context(.dark-theme) .customer-issues-section
+
+.card-header {
+
+  background: linear-gradient(
+
+    135deg,
+
+    #1e3555,
+
+    #243d60
+
+  ) !important;
+
+  border-bottom: 1px solid #3b506c !important;
+
+  color: #f1f6ff !important;
+
+  padding: 28px 30px !important;
+
+}
+
+
+/* Header title */
+
+:host-context(.dark-theme) .customer-issues-section
+
+.card-header h4 {
+
+  color: #ffffff !important;
+
+  font-weight: 700;
+
+}
+
+:host-context(.dark-theme) .customer-issues-section
+
+.card-header h4 i {
+
+  color: #78b4ff !important;
+
+}
+
+
+/* Header description */
+
+:host-context(.dark-theme) .customer-issues-section
+
+.card-header p {
+
+  color: #a9c2e2 !important;
+
+}
+
+
+/* Search and filter area */
+
+:host-context(.dark-theme) .customer-issues-section
+
+.card-body {
+
+  background: #102442 !important;
+
+  color: #e5efff;
+
+}
+
+
+/* Input and dropdown */
+
+:host-context(.dark-theme) .customer-issues-section
+
+.form-control,
+
+:host-context(.dark-theme) .customer-issues-section
+
+.form-select {
+
+  background: #1b3859 !important;
+
+  color: #f1f6ff !important;
+
+  border: 1px solid #496384 !important;
+
+  border-radius: 10px;
+
+}
+
+
+/* Placeholder */
+
+:host-context(.dark-theme) .customer-issues-section
+
+.form-control::placeholder {
+
+  color: #91a9c7 !important;
+
+}
+
+
+/* Focus */
+
+:host-context(.dark-theme) .customer-issues-section
+
+.form-control:focus,
+
+:host-context(.dark-theme) .customer-issues-section
+
+.form-select:focus {
+
+  background: #203f63 !important;
+
+  color: #ffffff !important;
+
+  border-color: #4d9aff !important;
+
+  box-shadow: 0 0 0 3px rgba(77, 154, 255, 0.15) !important;
+
+}
+
+
+/* Search icon */
+
+:host-context(.dark-theme) .customer-issues-section
+
+.input-group-text {
+
+  background: #263f60 !important;
+
+  color: #b9d7f7 !important;
+
+  border: 1px solid #496384 !important;
+
+}
+
+
+/* Empty state */
+
+:host-context(.dark-theme) .customer-issues-section
+
+.text-center.py-5 {
+
+  background: #102442 !important;
+
+  color: #e5efff;
+
+}
+
+:host-context(.dark-theme) .customer-issues-section
+
+.text-center.py-5 i {
+
+  color: #8eafd4 !important;
+
+}
+
+:host-context(.dark-theme) .customer-issues-section
+
+.text-center.py-5 h5 {
+
+  color: #ffffff !important;
+
+}
+
+:host-context(.dark-theme) .customer-issues-section
+
+.text-center.py-5 p {
+
+  color: #a9c2e2 !important;
+
+}
+
+
+/* Individual issue cards */
+
+:host-context(.dark-theme) .customer-issues-section
+
+.row.g-4.p-4 > div > .card {
+
+  background: #1e2d47 !important;
+
+  border: 1px solid #304563 !important;
+
+  border-radius: 14px !important;
+
+  overflow: hidden;
+
+  color: #e5efff;
+
+}
+
+
+/* Issue card header */
+
+:host-context(.dark-theme) .customer-issues-section
+
+.row.g-4.p-4 .card-header {
+
+  background: #243956 !important;
+
+  border-bottom: 1px solid #3b506c !important;
+
+}
+
+
+/* Issue card body and footer */
+
+:host-context(.dark-theme) .customer-issues-section
+
+.row.g-4.p-4 .card-body,
+
+:host-context(.dark-theme) .customer-issues-section
+
+.row.g-4.p-4 .card-footer {
+
+  background: #1e2d47 !important;
+
+  color: #e5efff !important;
+
+}
+
+:host-context(.dark-theme) .customer-issues-section
+
+.row.g-4.p-4 .card-footer {
+
+  border-top: 1px solid #304563 !important;
+
+}
+
+
+/* Text */
+
+:host-context(.dark-theme) .customer-issues-section
+
+.text-muted {
+
+  color: #9eb2cc !important;
+
+}
+
+:host-context(.dark-theme) .customer-issues-section
+
+.fw-semibold,
+
+:host-context(.dark-theme) .customer-issues-section
+
+.fw-bold {
+
+  color: #f1f6ff;
+
+}
+
+
+/* Description */
+
+:host-context(.dark-theme) .customer-issues-section
+
+.description-box {
+
+  background: #162f4d !important;
+
+  border: 1px solid #304d6c;
+
+  border-radius: 10px;
+
+  color: #e5efff;
+
+}
+
+:host-context(.dark-theme) .customer-issues-section
+
+.description-box p {
+
+  color: #d2e0f2 !important;
+
+}
+
+
+/* Alerts */
+
+:host-context(.dark-theme) .customer-issues-section
+
+.alert-success {
+
+  background: #164d43 !important;
+
+  border: 1px solid #287a63 !important;
+
+  color: #8af0c9 !important;
+
+}
+
+:host-context(.dark-theme) .customer-issues-section
+
+.alert-danger {
+
+  background: #451f2a !important;
+
+  border: 1px solid #8c3949 !important;
+
+  color: #ffc2cb !important;
+
+}
+
+
+/* =========================================================
+   ISSUE RESOLUTION PANEL - DARK THEME
+   ========================================================= */
+
+:host-context(.dark-theme) .issue-resolution-panel {
+
+  background: #1e2d47 !important;
+
+  border: 1px solid #304563 !important;
+
+  border-radius: 14px !important;
+
+  overflow: hidden;
+
+  color: #e5efff;
+
+}
+
+:host-context(.dark-theme) .issue-resolution-panel
+
+.card-header,
+
+:host-context(.dark-theme) .issue-resolution-panel
+
+.card-footer {
+
+  background: #243956 !important;
+
+  border-color: #3b506c !important;
+
+}
+
+:host-context(.dark-theme) .issue-resolution-panel
+
+.card-body {
+
+  background: #1e2d47 !important;
+
+  color: #e5efff !important;
+
+}
+
+:host-context(.dark-theme) .issue-resolution-panel
+
+.alert-light {
+
+  background: #263b5b !important;
+
+  border-color: #3b506c !important;
+
+  color: #e5efff !important;
+
+}
+
+:host-context(.dark-theme) .issue-resolution-panel
+
+textarea.form-control {
+
+  background: #183554 !important;
+
+  color: #f1f6ff !important;
+
+  border-color: #496384 !important;
+
+}
+
+:host-context(.dark-theme) .issue-resolution-panel
+
+textarea.form-control:focus {
+
+  border-color: #4d9aff !important;
+
+  box-shadow: 0 0 0 3px rgba(77, 154, 255, 0.15) !important;
+
+}
+
+:host-context(.dark-theme) .issue-resolution-panel
+
+.btn-light {
+
+  background: #34445c !important;
+
+  border-color: #496384 !important;
+
+  color: #e5efff !important;
+
+}
+
+
+/* =========================================================
+   MOBILE RESPONSIVENESS
+   ========================================================= */
+
+@media (max-width: 576px) {
+
+  .stat-card {
+
+    padding: 15px;
+
+  }
+
+  .stat-icon {
+
+    width: 42px;
+
+    height: 42px;
+
+  }
+
+  :host-context(.dark-theme) .customer-issues-section
+
+  .card-header {
+
+    padding: 22px 18px !important;
+
+  }
+
+  :host-context(.dark-theme) .customer-issues-section
+
+  .card-header h4 {
+
+    font-size: 18px;
+
+  }
+
+  :host-context(.dark-theme) .customer-issues-section
+
+  .row.g-4.p-4 {
+
+    padding: 15px !important;
+
+  }
+
+}

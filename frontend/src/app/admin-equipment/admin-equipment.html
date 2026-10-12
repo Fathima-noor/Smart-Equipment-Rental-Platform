@@ -1,0 +1,690 @@
+<div class="admin-equipment-page">
+
+  <!-- HEADER -->
+  <div class="page-header">
+
+    <div>
+      <h2>Equipment</h2>
+      <p>Manage all rental equipment</p>
+    </div>
+
+    <button
+      type="button"
+      class="btn btn-primary add-equipment-btn"
+      (click)="openAddEquipment()"
+    >
+      <i class="bi bi-plus-lg"></i>
+      Add Equipment
+    </button>
+
+  </div>
+
+
+  <!-- SUCCESS -->
+
+  <div
+    *ngIf="successMessage"
+    class="alert alert-success"
+  >
+    {{ successMessage }}
+  </div>
+
+
+  <!-- ERROR -->
+
+  <div
+    *ngIf="errorMessage && !showEquipmentForm"
+    class="alert alert-danger"
+  >
+    {{ errorMessage }}
+  </div>
+
+
+  <!-- FILTERS -->
+
+  <div class="filter-card">
+
+    <div class="search-box">
+
+      <input
+        type="text"
+        class="form-control"
+        placeholder="Search equipment or vendor..."
+        [(ngModel)]="searchText"
+        (ngModelChange)="applyFilters()"
+        autocomplete="off"
+      >
+
+    </div>
+
+
+    <div class="category-filter">
+
+      <select
+        class="form-select"
+        [(ngModel)]="selectedCategory"
+        (ngModelChange)="applyFilters()"
+      >
+
+        <option value="all">
+          All Categories
+        </option>
+
+        <option value="camera">
+          Cameras
+        </option>
+
+        <option value="laptop">
+          Laptops
+        </option>
+
+        <option value="projector">
+          Projectors
+        </option>
+
+        <option value="drone">
+          Drones
+        </option>
+
+        <option value="other">
+          Other
+        </option>
+
+      </select>
+
+    </div>
+
+
+    <div class="availability-filter">
+
+      <select
+        class="form-select"
+        [(ngModel)]="selectedAvailability"
+        (ngModelChange)="applyFilters()"
+      >
+
+        <option value="all">
+          All Status
+        </option>
+
+        <option value="true">
+          Available
+        </option>
+
+        <option value="false">
+          Unavailable
+        </option>
+
+      </select>
+
+    </div>
+
+  </div>
+
+
+  <!-- LOADING -->
+
+  <div
+    *ngIf="loading"
+    class="loading-box"
+  >
+
+    <div class="spinner-border spinner-border-sm me-2"></div>
+
+    Loading equipment...
+
+  </div>
+
+
+  <!-- EQUIPMENT TABLE -->
+
+  <div
+    *ngIf="!loading"
+    class="equipment-card"
+  >
+
+    <div class="table-responsive">
+
+      <table class="table align-middle">
+
+        <thead>
+
+          <tr>
+
+            <th>Equipment</th>
+            <th>Vendor</th>
+            <th>Category</th>
+            <th>Price / Day</th>
+            <th>Quantity</th>
+            <th>Status</th>
+            <th class="text-end">
+              Actions
+            </th>
+
+          </tr>
+
+        </thead>
+
+
+        <tbody>
+
+          <tr
+            *ngFor="
+              let item of filteredEquipment;
+              let i = index
+            "
+          >
+
+            <!-- EQUIPMENT -->
+
+            <td>
+
+              <div class="equipment-info">
+
+                <div class="equipment-image">
+
+                  <img
+                    *ngIf="item.image"
+                    [src]="getImageUrl(item.image)"
+                    [alt]="item.name"
+                  >
+
+                  <i
+                    *ngIf="!item.image"
+                    class="bi bi-camera"
+                  ></i>
+
+                </div>
+
+                <div>
+
+                  <strong>
+                    {{ item.name }}
+                  </strong>
+
+                  <small>
+                    ID: {{ item.id }}
+                  </small>
+
+                </div>
+
+              </div>
+
+            </td>
+
+
+            <!-- VENDOR -->
+
+            <td>
+              {{ getVendorName(item) }}
+            </td>
+
+
+            <!-- CATEGORY -->
+
+            <td>
+
+              <span class="category-badge">
+                {{ getCategoryName(item.category) }}
+              </span>
+
+            </td>
+
+
+            <!-- PRICE -->
+
+            <td>
+
+              <strong>
+                ₹{{ item.price_per_day | number:'1.0-2' }}
+              </strong>
+
+            </td>
+
+
+            <!-- QUANTITY -->
+
+            <td>
+              {{ item.quantity }}
+            </td>
+
+
+            <!-- STATUS -->
+
+            <td>
+
+              <span
+                class="status-badge"
+                [ngClass]="
+                  item.is_available
+                    ? 'status-available'
+                    : 'status-unavailable'
+                "
+              >
+
+                <span class="status-dot"></span>
+
+                {{
+                  item.is_available
+                    ? 'Available'
+                    : 'Unavailable'
+                }}
+
+              </span>
+
+            </td>
+
+
+            <!-- ACTIONS -->
+
+            <td class="text-end">
+
+              <button
+                type="button"
+                class="btn btn-sm btn-outline-primary me-2"
+                (click)="openEditEquipment(item)"
+                [disabled]="processing"
+              >
+                Edit
+              </button>
+
+              <button
+                type="button"
+                class="btn btn-sm btn-outline-danger"
+                (click)="deleteEquipment(item)"
+                [disabled]="processing"
+              >
+                Delete
+              </button>
+
+            </td>
+
+          </tr>
+
+
+          <!-- EMPTY -->
+
+          <tr
+            *ngIf="filteredEquipment.length === 0"
+          >
+
+            <td
+              colspan="7"
+              class="empty-state"
+            >
+
+              <div class="empty-icon">
+                <i class="bi bi-camera"></i>
+              </div>
+
+              <strong>
+                No equipment found
+              </strong>
+
+              <span>
+                Try changing your search or filters.
+              </span>
+
+            </td>
+
+          </tr>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+
+  <!-- ========================= -->
+  <!-- ADD / EDIT MODAL -->
+  <!-- ========================= -->
+
+  <div
+    *ngIf="showEquipmentForm"
+    class="modal-backdrop-custom"
+    (click)="closeEquipmentForm()"
+  >
+
+    <div
+      class="equipment-modal"
+      (click)="$event.stopPropagation()"
+    >
+
+      <!-- MODAL HEADER -->
+
+      <div class="modal-header-custom">
+
+        <div class="modal-title-area">
+
+          <div class="modal-icon">
+            <i
+              class="bi"
+              [ngClass]="
+                editingEquipment
+                  ? 'bi-pencil-square'
+                  : 'bi-plus-lg'
+              "
+            ></i>
+          </div>
+
+          <div>
+
+            <h4>
+              {{
+                editingEquipment
+                  ? 'Edit Equipment'
+                  : 'Add Equipment'
+              }}
+            </h4>
+
+            <p>
+              {{
+                editingEquipment
+                  ? 'Update equipment information'
+                  : 'Add new rental equipment'
+              }}
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <button
+          type="button"
+          class="modal-close-btn"
+          (click)="closeEquipmentForm()"
+          [disabled]="processing"
+        >
+          ×
+        </button>
+
+      </div>
+
+
+      <!-- MODAL BODY -->
+
+      <div class="modal-body-custom">
+
+        <div
+          *ngIf="errorMessage"
+          class="alert alert-danger"
+        >
+          {{ errorMessage }}
+        </div>
+
+
+        <div class="equipment-form">
+
+
+          <!-- NAME -->
+
+          <div class="form-group full-width">
+
+            <label>
+              Equipment Name
+            </label>
+
+            <input
+              type="text"
+              class="form-control"
+              [(ngModel)]="equipmentForm.name"
+              [disabled]="processing"
+              autocomplete="off"
+              placeholder="e.g. Sony Camera"
+            >
+
+          </div>
+
+
+          <!-- CATEGORY -->
+
+          <div class="form-group">
+
+            <label>
+              Category
+            </label>
+
+            <select
+              class="form-select"
+              [(ngModel)]="equipmentForm.category"
+              [disabled]="processing"
+            >
+
+              <option value="camera">
+                Camera
+              </option>
+
+              <option value="laptop">
+                Laptop
+              </option>
+
+              <option value="projector">
+                Projector
+              </option>
+
+              <option value="drone">
+                Drone
+              </option>
+
+              <option value="other">
+                Other
+              </option>
+
+            </select>
+
+          </div>
+
+
+          <!-- VENDOR -->
+
+          <div class="form-group">
+
+            <label>
+              Vendor
+            </label>
+
+            <select
+              class="form-select"
+              [(ngModel)]="equipmentForm.vendor"
+              [disabled]="processing"
+            >
+
+              <option value="">
+                Select Vendor
+              </option>
+
+              <option
+                *ngFor="let vendor of vendors"
+                [value]="vendor.id"
+              >
+
+                {{ getVendorName(vendor) }}
+
+              </option>
+
+            </select>
+
+          </div>
+
+
+          <!-- PRICE -->
+
+          <div class="form-group">
+
+            <label>
+              Price per Day
+            </label>
+
+            <div class="input-group">
+
+              <span class="input-group-text">
+                ₹
+              </span>
+
+              <input
+                type="number"
+                class="form-control"
+                [(ngModel)]="equipmentForm.price_per_day"
+                [disabled]="processing"
+                min="1"
+                placeholder="1500"
+              >
+
+            </div>
+
+          </div>
+
+
+          <!-- QUANTITY -->
+
+          <div class="form-group">
+
+            <label>
+              Quantity
+            </label>
+
+            <input
+              type="number"
+              class="form-control"
+              [(ngModel)]="equipmentForm.quantity"
+              [disabled]="processing"
+              min="1"
+              placeholder="1"
+            >
+
+          </div>
+
+
+          <!-- DESCRIPTION -->
+
+          <div class="form-group full-width">
+
+            <label>
+              Description
+            </label>
+
+            <textarea
+              class="form-control"
+              rows="3"
+              [(ngModel)]="equipmentForm.description"
+              [disabled]="processing"
+              placeholder="Describe the equipment..."
+            ></textarea>
+
+          </div>
+
+
+          <!-- IMAGE -->
+
+          <div class="form-group full-width">
+
+            <label>
+              Equipment Image
+            </label>
+
+            <input
+              type="file"
+              class="form-control"
+              accept="image/*"
+              (change)="onImageSelected($event)"
+              [disabled]="processing"
+            >
+
+            <small
+              *ngIf="selectedImage"
+              class="selected-file"
+            >
+              <i class="bi bi-check-circle"></i>
+              {{ selectedImage.name }}
+            </small>
+
+          </div>
+
+
+          <!-- AVAILABILITY -->
+
+          <div class="availability-option full-width">
+
+            <label class="availability-label">
+
+              <input
+                type="checkbox"
+                [(ngModel)]="equipmentForm.is_available"
+                [disabled]="processing"
+              >
+
+              <span>
+                Equipment is available for rental
+              </span>
+
+            </label>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- FOOTER -->
+
+      <div class="modal-footer-custom">
+
+        <button
+          type="button"
+          class="btn btn-light"
+          (click)="closeEquipmentForm()"
+          [disabled]="processing"
+        >
+          Cancel
+        </button>
+
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="saveEquipment()"
+          [disabled]="processing"
+        >
+
+          <span *ngIf="processing">
+
+            <span
+              class="spinner-border spinner-border-sm me-2"
+            ></span>
+
+            Saving...
+
+          </span>
+
+          <span *ngIf="!processing">
+
+            <i
+              class="bi"
+              [ngClass]="
+                editingEquipment
+                  ? 'bi-check-lg'
+                  : 'bi-plus-lg'
+              "
+            ></i>
+
+            {{
+              editingEquipment
+                ? 'Update Equipment'
+                : 'Add Equipment'
+            }}
+
+          </span>
+
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

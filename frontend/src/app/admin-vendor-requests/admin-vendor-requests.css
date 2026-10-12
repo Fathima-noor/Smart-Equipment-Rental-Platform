@@ -1,0 +1,499 @@
+
+.vendor-requests-page {
+  padding: 24px;
+  background: #f5f7fb;
+  min-height: 100vh;
+}
+
+/* Page Header */
+
+.page-header {
+  margin-bottom: 24px;
+}
+
+.page-header h1 {
+  margin: 0;
+  font-size: 28px;
+  color: #1f2937;
+}
+
+.page-header p {
+  margin-top: 8px;
+  color: #6b7280;
+}
+
+/* Messages */
+
+.success-message,
+.error-message {
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+
+.success-message {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.error-message {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+/* Statistics */
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.stat-card {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.stat-card h3 {
+  margin: 0;
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.stat-card p {
+  margin: 10px 0 0;
+  font-size: 28px;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.pending-card {
+  border-left: 4px solid #f59e0b;
+}
+
+.approved-card {
+  border-left: 4px solid #22c55e;
+}
+
+.rejected-card {
+  border-left: 4px solid #ef4444;
+}
+
+/* Filters */
+
+.filters-section {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.filters-section input,
+.filters-section select {
+  padding: 11px 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background: white;
+  font-size: 14px;
+}
+
+.filters-section input {
+  min-width: 280px;
+}
+
+.clear-button {
+  padding: 10px 18px;
+  border: none;
+  border-radius: 8px;
+  background: #6b7280;
+  color: white;
+  cursor: pointer;
+}
+
+/* Loading */
+
+.loading-message,
+.no-requests {
+  background: white;
+  padding: 30px;
+  text-align: center;
+  border-radius: 10px;
+  color: #6b7280;
+}
+
+/* Table */
+
+.table-container {
+  background: white;
+  border-radius: 12px;
+  overflow-x: auto;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 850px;
+}
+
+th,
+td {
+  padding: 15px;
+  text-align: left;
+  border-bottom: 1px solid #e5e7eb;
+  font-size: 14px;
+}
+
+th {
+  background: #f9fafb;
+  color: #374151;
+  font-weight: 600;
+}
+
+td {
+  color: #4b5563;
+}
+
+/* Status */
+
+.status-badge {
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.status-pending {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.status-approved {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.status-rejected {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.status-default {
+  background: #e5e7eb;
+  color: #374151;
+}
+
+/* Buttons */
+
+.actions-cell {
+  white-space: nowrap;
+}
+
+.actions-cell button {
+  margin-right: 6px;
+  margin-bottom: 4px;
+  padding: 7px 10px;
+  border: none;
+  border-radius: 6px;
+  color: white;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.details-button {
+  background: #2563eb;
+}
+
+.approve-button {
+  background: #16a34a;
+}
+
+.reject-button {
+  background: #dc2626;
+}
+
+.actions-cell button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Modal */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  z-index: 1000;
+}
+
+.details-modal {
+  background: white;
+  width: 100%;
+  max-width: 550px;
+  max-height: 90vh;
+  overflow-y: auto;
+  border-radius: 12px;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 22px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.modal-header h2 {
+  margin: 0;
+  font-size: 20px;
+  color: #1f2937;
+}
+
+.close-button {
+  background: transparent;
+  border: none;
+  font-size: 28px;
+  cursor: pointer;
+  color: #6b7280;
+}
+
+.modal-body {
+  padding: 22px;
+}
+
+.modal-body p {
+  margin: 0 0 14px;
+  line-height: 1.6;
+  color: #4b5563;
+}
+
+.modal-footer {
+  padding: 16px 22px;
+  border-top: 1px solid #e5e7eb;
+  text-align: right;
+}
+
+.close-modal-button {
+  padding: 10px 18px;
+  background: #6b7280;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* Responsive */
+
+@media (max-width: 900px) {
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .vendor-requests-page {
+    padding: 16px;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .filters-section {
+    flex-direction: column;
+  }
+
+  .filters-section input {
+    min-width: 0;
+    width: 100%;
+  }
+}
+
+
+
+/* ========================================
+   DARK THEME
+   ======================================== */
+
+/* Main Page */
+
+:host-context(.dark-theme) .vendor-requests-page,
+:host-context(.dark-mode) .vendor-requests-page {
+  background: #0b1a31;
+  color: #e5e7eb;
+}
+
+/* Page Header */
+
+:host-context(.dark-theme) .page-header h1,
+:host-context(.dark-mode) .page-header h1 {
+  color: #ffffff;
+}
+
+:host-context(.dark-theme) .page-header p,
+:host-context(.dark-mode) .page-header p {
+  color: #a9bad3;
+}
+
+/* Statistics Cards */
+
+:host-context(.dark-theme) .stat-card,
+:host-context(.dark-mode) .stat-card {
+  background: #1e304d;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+:host-context(.dark-theme) .stat-card h3,
+:host-context(.dark-mode) .stat-card h3 {
+  color: #a9bad3;
+}
+
+:host-context(.dark-theme) .stat-card p,
+:host-context(.dark-mode) .stat-card p {
+  color: #ffffff;
+}
+
+/* Filters */
+
+:host-context(.dark-theme) .filters-section input,
+:host-context(.dark-theme) .filters-section select,
+:host-context(.dark-mode) .filters-section input,
+:host-context(.dark-mode) .filters-section select {
+  background: #1e304d;
+  color: #ffffff;
+  border: 1px solid #3b506e;
+}
+
+:host-context(.dark-theme) .filters-section input::placeholder,
+:host-context(.dark-mode) .filters-section input::placeholder {
+  color: #9caec5;
+}
+
+:host-context(.dark-theme) .clear-button,
+:host-context(.dark-mode) .clear-button {
+  background: #334966;
+  color: #ffffff;
+}
+
+/* Loading and Empty State */
+
+:host-context(.dark-theme) .loading-message,
+:host-context(.dark-theme) .no-requests,
+:host-context(.dark-mode) .loading-message,
+:host-context(.dark-mode) .no-requests {
+  background: #1e304d;
+  color: #a9bad3;
+}
+
+/* Table */
+
+:host-context(.dark-theme) .table-container,
+:host-context(.dark-mode) .table-container {
+  background: #1e304d;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+:host-context(.dark-theme) th,
+:host-context(.dark-mode) th {
+  background: #263b5a;
+  color: #ffffff;
+  border-bottom: 1px solid #3b506e;
+}
+
+:host-context(.dark-theme) td,
+:host-context(.dark-mode) td {
+  color: #d1dbea;
+  border-bottom: 1px solid #344965;
+}
+
+:host-context(.dark-theme) tr:hover,
+:host-context(.dark-mode) tr:hover {
+  background: #263b5a;
+}
+
+/* Modal */
+
+:host-context(.dark-theme) .details-modal,
+:host-context(.dark-mode) .details-modal {
+  background: #1e304d;
+  color: #e5e7eb;
+}
+
+:host-context(.dark-theme) .modal-header,
+:host-context(.dark-mode) .modal-header {
+  border-bottom: 1px solid #3b506e;
+}
+
+:host-context(.dark-theme) .modal-header h2,
+:host-context(.dark-mode) .modal-header h2 {
+  color: #ffffff;
+}
+
+:host-context(.dark-theme) .close-button,
+:host-context(.dark-mode) .close-button {
+  color: #cbd5e1;
+}
+
+:host-context(.dark-theme) .modal-body p,
+:host-context(.dark-mode) .modal-body p {
+  color: #d1dbea;
+}
+
+:host-context(.dark-theme) .modal-footer,
+:host-context(.dark-mode) .modal-footer {
+  border-top: 1px solid #3b506e;
+}
+
+:host-context(.dark-theme) .modal-overlay,
+:host-context(.dark-mode) .modal-overlay {
+  background: rgba(0, 0, 0, 0.7);
+}
+
+/* Buttons */
+
+:host-context(.dark-theme) .details-button,
+:host-context(.dark-mode) .details-button {
+  background: #2563eb;
+}
+
+:host-context(.dark-theme) .approve-button,
+:host-context(.dark-mode) .approve-button {
+  background: #16a34a;
+}
+
+:host-context(.dark-theme) .reject-button,
+:host-context(.dark-mode) .reject-button {
+  background: #dc2626;
+}
+
+/* Success and Error Messages */
+
+:host-context(.dark-theme) .success-message,
+:host-context(.dark-mode) .success-message {
+  background: #123d2a;
+  color: #86efac;
+  border: 1px solid #166534;
+}
+
+:host-context(.dark-theme) .error-message,
+:host-context(.dark-mode) .error-message {
+  background: #451a24;
+  color: #fca5a5;
+  border: 1px solid #991b1b;
+}
+
+/* Close Button */
+
+:host-context(.dark-theme) .close-modal-button,
+:host-context(.dark-mode) .close-modal-button {
+  background: #334966;
+  color: #ffffff;
+}

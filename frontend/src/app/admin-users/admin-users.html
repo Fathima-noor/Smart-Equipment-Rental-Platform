@@ -1,0 +1,515 @@
+<div class="admin-users-page">
+
+  <!-- HEADER -->
+  <div class="page-header">
+
+    <div>
+      <h2>Users</h2>
+      <p>Manage customers and vendors</p>
+    </div>
+
+    <button
+      type="button"
+      class="btn btn-primary add-user-btn"
+      (click)="openAddUser()"
+    >
+      <i class="bi bi-person-plus"></i>
+      Add User
+    </button>
+
+  </div>
+
+
+  <!-- MESSAGES -->
+
+  <div
+    *ngIf="successMessage"
+    class="alert alert-success"
+  >
+    {{ successMessage }}
+  </div>
+
+  <div
+    *ngIf="errorMessage && !showUserForm"
+    class="alert alert-danger"
+  >
+    {{ errorMessage }}
+  </div>
+
+
+  <!-- FILTERS -->
+
+  <div class="filter-card">
+
+    <div class="search-box">
+
+      <input
+        type="text"
+        class="form-control"
+        placeholder="Search by name, username or email..."
+        [(ngModel)]="searchText"
+        (ngModelChange)="applyFilters()"
+        autocomplete="off"
+      >
+
+    </div>
+
+    <div class="role-filter">
+
+      <select
+        class="form-select"
+        [(ngModel)]="selectedRole"
+        (ngModelChange)="applyFilters()"
+      >
+        <option value="all">All Roles</option>
+        <option value="customer">Customers</option>
+        <option value="vendor">Vendors</option>
+        <option value="admin">Admins</option>
+      </select>
+
+    </div>
+
+  </div>
+
+
+  <!-- LOADING -->
+
+  <div
+    *ngIf="loading"
+    class="loading-box"
+  >
+    <div class="spinner-border spinner-border-sm me-2"></div>
+    Loading users...
+  </div>
+
+
+  <!-- USERS TABLE -->
+
+  <div
+    *ngIf="!loading"
+    class="users-card"
+  >
+
+    <div class="table-responsive">
+
+      <table class="table align-middle">
+
+        <thead>
+
+          <tr>
+            <th>SL NO</th>
+            <th>User</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Joined</th>
+            <th class="text-end">Actions</th>
+          </tr>
+
+        </thead>
+
+        <tbody>
+
+          <tr
+            *ngFor="let user of filteredUsers; let i = index"
+          >
+
+            <td>
+              {{ i+1 }}
+            </td>
+
+            <td>
+
+              <div class="user-info">
+
+                <div class="avatar">
+                  {{ getUserName(user).charAt(0).toUpperCase() }}
+                </div>
+
+                <div>
+
+                  <strong>
+                    {{ getUserName(user) }}
+                  </strong>
+
+                  <small>
+                    @{{ user.username }}
+                  </small>
+
+                </div>
+
+              </div>
+
+            </td>
+
+            <td>
+              {{ user.email }}
+            </td>
+
+            <td>
+
+              <span
+                class="role-badge"
+                [ngClass]="getRoleClass(user.role)"
+              >
+                {{ user.role | titlecase }}
+              </span>
+
+            </td>
+
+            <td>
+              {{ user.date_joined | date:'dd MMM yyyy' }}
+            </td>
+
+            <td class="text-end">
+
+              <!-- Normal Customer/Vendor -->
+              <ng-container *ngIf="!isAdminUser(user)">
+
+                <button
+                  type="button"
+                  class="btn btn-sm btn-outline-primary me-2"
+                  (click)="openEditUser(user)"
+                  [disabled]="processing"
+                >
+                  Edit
+                </button>
+
+                <button
+                  type="button"
+                  class="btn btn-sm btn-outline-danger"
+                  (click)="deleteUser(user)"
+                  [disabled]="processing"
+                >
+                  Delete
+                </button>
+
+              </ng-container>
+
+
+              <!-- Protected Admin -->
+              <span
+                *ngIf="isAdminUser(user)"
+                class="protected-admin"
+              >
+                <i class="bi bi-shield-check"></i>
+                Protected
+              </span>
+
+            </td>
+
+          </tr>
+
+
+          <!-- EMPTY -->
+
+          <tr
+            *ngIf="filteredUsers.length === 0"
+          >
+
+            <td
+              colspan="6"
+              class="empty-state"
+            >
+              <div class="empty-icon">
+                <i class="bi bi-people"></i>
+              </div>
+
+              <strong>No users found</strong>
+
+              <span>
+                Try changing your search or role filter.
+              </span>
+            </td>
+
+          </tr>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+
+  <!-- ========================= -->
+  <!-- ADD / EDIT USER MODAL -->
+  <!-- ========================= -->
+
+  <div
+    *ngIf="showUserForm"
+    class="modal-backdrop-custom"
+    (click)="closeUserForm()"
+  >
+
+    <div
+      class="user-modal"
+      (click)="$event.stopPropagation()"
+    >
+
+      <!-- MODAL HEADER -->
+
+      <div class="modal-header-custom">
+
+        <div>
+
+          <div class="modal-icon">
+            <i
+              class="bi"
+              [ngClass]="editingUser
+                ? 'bi-person-gear'
+                : 'bi-person-plus'"
+            ></i>
+          </div>
+
+          <div>
+
+            <h4>
+              {{ editingUser ? 'Edit User' : 'Add User' }}
+            </h4>
+
+            <p>
+              {{
+                editingUser
+                  ? 'Update user information'
+                  : 'Create a new customer or vendor'
+              }}
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <button
+          type="button"
+          class="modal-close-btn"
+          (click)="closeUserForm()"
+          [disabled]="processing"
+          aria-label="Close"
+        >
+          ×
+        </button>
+
+      </div>
+
+
+      <!-- MODAL BODY -->
+
+      <div class="modal-body-custom">
+
+
+        <!-- FORM ERROR -->
+
+        <div
+          *ngIf="errorMessage"
+          class="alert alert-danger modal-alert"
+        >
+          {{ errorMessage }}
+        </div>
+
+
+        <!-- AUTOFILL PROTECTION -->
+
+        <div
+          class="user-form"
+          autocomplete="off"
+        >
+
+          <!-- Username -->
+
+          <div class="form-group">
+
+            <label for="adminUsername">
+              Username
+            </label>
+
+            <input
+              id="adminUsername"
+              type="text"
+              class="form-control"
+              [(ngModel)]="userForm.username"
+              [disabled]="processing"
+              autocomplete="off"
+              name="admin-new-username"
+              spellcheck="false"
+            >
+
+          </div>
+
+
+          <!-- Email -->
+
+          <div class="form-group">
+
+            <label for="adminEmail">
+              Email
+            </label>
+
+            <input
+              id="adminEmail"
+              type="email"
+              class="form-control"
+              [(ngModel)]="userForm.email"
+              [disabled]="processing"
+              autocomplete="off"
+              name="admin-new-email"
+              spellcheck="false"
+            >
+
+          </div>
+
+
+          <!-- First Name -->
+
+          <div class="form-group">
+
+            <label for="adminFirstName">
+              First Name
+            </label>
+
+            <input
+              id="adminFirstName"
+              type="text"
+              class="form-control"
+              [(ngModel)]="userForm.first_name"
+              [disabled]="processing"
+              autocomplete="off"
+              name="admin-first-name"
+            >
+
+          </div>
+
+
+          <!-- Last Name -->
+
+          <div class="form-group">
+
+            <label for="adminLastName">
+              Last Name
+            </label>
+
+            <input
+              id="adminLastName"
+              type="text"
+              class="form-control"
+              [(ngModel)]="userForm.last_name"
+              [disabled]="processing"
+              autocomplete="off"
+              name="admin-last-name"
+            >
+
+          </div>
+
+
+          <!-- Role -->
+
+          <div class="form-group">
+
+            <label for="adminRole">
+              Role
+            </label>
+
+            <select
+              id="adminRole"
+              class="form-select"
+              [(ngModel)]="userForm.role"
+              [disabled]="processing"
+              name="admin-user-role"
+              autocomplete="off"
+            >
+
+              <option value="customer">
+                Customer
+              </option>
+
+              <option value="vendor">
+                Vendor
+              </option>
+
+            </select>
+
+          </div>
+
+
+          <!-- Password -->
+
+          <div class="form-group">
+
+            <label for="adminPassword">
+
+              Password
+
+              <span *ngIf="editingUser">
+                (leave blank to keep current)
+              </span>
+
+            </label>
+
+            <input
+              id="adminPassword"
+              type="password"
+              class="form-control"
+              [(ngModel)]="userForm.password"
+              [disabled]="processing"
+              autocomplete="new-password"
+              name="admin-new-password"
+            >
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- MODAL FOOTER -->
+
+      <div class="modal-footer-custom">
+
+        <button
+          type="button"
+          class="btn btn-light cancel-btn"
+          (click)="closeUserForm()"
+          [disabled]="processing"
+        >
+          Cancel
+        </button>
+
+        <button
+          type="button"
+          class="btn btn-primary save-user-btn"
+          (click)="saveUser()"
+          [disabled]="processing"
+        >
+
+          <span *ngIf="processing">
+
+            <span class="spinner-border spinner-border-sm me-2"></span>
+
+            Saving...
+
+          </span>
+
+          <span *ngIf="!processing">
+
+            <i
+              class="bi"
+              [ngClass]="editingUser
+                ? 'bi-check-lg'
+                : 'bi-person-plus'"
+            ></i>
+
+            {{ editingUser ? 'Update User' : 'Create User' }}
+
+          </span>
+
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

@@ -1,0 +1,415 @@
+
+<div class="reports-page">
+
+  <!-- Page Header -->
+
+  <div class="page-header">
+
+    <div>
+      <h2>Maintenance Reports</h2>
+
+      <p>
+        Create and manage equipment maintenance reports.
+      </p>
+    </div>
+
+    <button
+      class="btn btn-primary"
+      (click)="showCreateForm = true"
+    >
+      <i class="bi bi-plus-circle me-1"></i>
+      Create Report
+    </button>
+
+  </div>
+
+
+  <!-- Success Message -->
+
+  <div
+    *ngIf="successMessage"
+    class="alert alert-success"
+  >
+    {{ successMessage }}
+  </div>
+
+
+  <!-- Error Message -->
+
+  <div
+    *ngIf="errorMessage"
+    class="alert alert-danger"
+  >
+    {{ errorMessage }}
+  </div>
+
+
+  <!-- Damaged Equipment Section -->
+
+  <div class="damaged-bookings-section">
+
+    <h4>Damaged Equipment</h4>
+
+    <p>
+      Equipment returned by customers and marked as damaged
+      by Operations Staff.
+    </p>
+
+
+    <!-- No Damaged Equipment -->
+
+    <div
+      *ngIf="damagedBookings.length === 0"
+      class="empty-state"
+    >
+      <i class="bi bi-tools"></i>
+
+      <p>
+        No damaged equipment is waiting for maintenance.
+      </p>
+    </div>
+
+
+    <!-- Damaged Booking Cards -->
+
+    <div
+      *ngFor="let booking of damagedBookings"
+      class="report-card"
+    >
+
+      <div class="report-header">
+
+        <div>
+
+          <h5>
+            {{ booking.equipment_name || booking.equipment?.name || booking.equipment }}
+          </h5>
+
+          <small>
+            Booking ID : {{ booking.id }}
+          </small>
+
+        </div>
+
+        <span class="status-badge">
+          Damaged
+        </span>
+
+      </div>
+
+
+      <div class="report-info">
+
+        <div>
+
+          <small>Customer</small>
+
+          <strong>
+            {{ booking.customer_name || booking.customer }}
+          </strong>
+
+        </div>
+
+
+        <div>
+
+          <small>Booking Dates</small>
+
+          <strong>
+            {{ booking.start_date }} to {{ booking.end_date }}
+          </strong>
+
+        </div>
+
+      </div>
+
+
+      <div class="report-actions">
+
+        <button
+          class="btn btn-primary"
+          (click)="bookingId = booking.id; showCreateForm = true"
+        >
+          <i class="bi bi-clipboard-plus me-1"></i>
+          Create Maintenance Report
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- Create Maintenance Report Modal -->
+
+  <div
+    *ngIf="showCreateForm"
+    class="modal-overlay"
+    (click)="showCreateForm = false"
+  >
+
+    <div
+      class="modal-content"
+      (click)="$event.stopPropagation()"
+    >
+
+      <!-- Modal Header -->
+
+      <div class="modal-header">
+
+        <h4>Create Maintenance Report</h4>
+
+        <button
+          type="button"
+          class="modal-close"
+          aria-label="Close"
+          (click)="showCreateForm = false"
+        >
+          &times;
+        </button>
+
+      </div>
+
+
+      <!-- Modal Body -->
+
+      <div class="modal-body">
+
+        <!-- Booking Selection -->
+
+        <div class="form-group">
+
+          <label>Damaged Booking</label>
+
+          <select
+            class="form-control"
+            [(ngModel)]="bookingId"
+          >
+
+            <option [ngValue]="null" disabled>
+              Select damaged booking
+            </option>
+
+            <option
+              *ngFor="let booking of damagedBookings"
+              [ngValue]="booking.id"
+            >
+              Booking ID:{{ booking.id }} -
+              {{ booking.equipment_name || booking.equipment?.name || booking.equipment }}
+            </option>
+
+          </select>
+
+          <small class="form-text text-muted">
+            Select the booking marked as damaged by Operations Staff.
+          </small>
+
+        </div>
+
+
+        <!-- Maintenance Description -->
+
+        <div class="form-group">
+
+          <label>Description</label>
+
+          <textarea
+            class="form-control"
+            rows="4"
+            [(ngModel)]="description"
+            placeholder="Describe the damage and required maintenance"
+          ></textarea>
+
+        </div>
+
+
+        <!-- Repair Cost -->
+
+        <div class="form-group">
+
+          <label>Repair Cost</label>
+
+          <input
+            type="number"
+            class="form-control"
+            [(ngModel)]="repairCost"
+            placeholder="Enter repair cost"
+            min="0"
+          >
+
+        </div>
+
+      </div>
+
+
+      <!-- Modal Footer -->
+
+      <div class="modal-footer">
+
+        <button
+          class="btn btn-primary"
+          [disabled]="!bookingId || !description.trim() || repairCost === null || repairCost < 0"
+          (click)="createReport()"
+        >
+          <i class="bi bi-check-circle me-1"></i>
+          Create Report
+        </button>
+
+
+        <button
+          class="btn btn-secondary"
+          (click)="closeCreateForm()"
+        >
+          Cancel
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- Loading Reports -->
+
+  <div
+    *ngIf="loading"
+    class="text-center py-5"
+  >
+
+    <div
+      class="spinner-border"
+      role="status"
+    ></div>
+
+    <p class="mt-2">
+      Loading reports...
+    </p>
+
+  </div>
+
+
+  <!-- No Maintenance Reports -->
+
+  <div
+    *ngIf="!loading && reports.length === 0"
+    class="empty-state"
+  >
+
+    <i class="bi bi-tools"></i>
+
+    <h4>No Maintenance Reports</h4>
+
+    <p>
+      No maintenance reports have been created yet.
+    </p>
+
+  </div>
+
+
+  <!-- Maintenance Reports List -->
+
+  <div
+    *ngIf="!loading && reports.length > 0"
+    class="reports-list"
+  >
+
+    <div
+      *ngFor="let report of reports"
+      class="report-card"
+    >
+
+      <!-- Report Header -->
+
+      <div class="report-header">
+
+        <div>
+
+          <h5>
+            {{ report.equipment_name || report.booking }}
+          </h5>
+
+          <small>
+            Booking ID: {{ report.booking }}
+          </small>
+
+        </div>
+
+
+        <span class="status-badge">
+          {{ getStatusLabel(report.status) }}
+        </span>
+
+      </div>
+
+
+      <!-- Report Information -->
+
+      <div class="report-info">
+
+        <div>
+
+          <small>Description</small>
+
+          <strong>
+            {{ report.description }}
+          </strong>
+
+        </div>
+
+
+        <div>
+
+          <small>Repair Cost</small>
+
+          <strong>
+            ₹{{ report.repair_cost }}
+          </strong>
+
+        </div>
+
+      </div>
+
+
+      <!-- Report Actions -->
+
+      <div
+        *ngIf="report.status !== 'completed'"
+        class="report-actions"
+      >
+
+        <button
+          *ngIf="report.status === 'pending'"
+          class="btn btn-warning"
+          [disabled]="processingReportId === report.id"
+          (click)="updateStatus(report, 'in_progress')"
+        >
+
+          <i class="bi bi-play-circle me-1"></i>
+
+          Start Maintenance
+
+        </button>
+
+
+        <button
+          *ngIf="report.status === 'in_progress'"
+          class="btn btn-success"
+          [disabled]="processingReportId === report.id"
+          (click)="updateStatus(report, 'completed')"
+        >
+
+          <i class="bi bi-check-circle me-1"></i>
+
+          Complete Maintenance
+
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

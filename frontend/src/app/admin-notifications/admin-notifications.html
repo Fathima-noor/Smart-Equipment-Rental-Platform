@@ -1,0 +1,809 @@
+<div class="admin-notifications-page">
+
+  <!-- HEADER -->
+
+  <div class="page-header">
+
+    <div>
+      <h1>Notifications</h1>
+
+      <p>
+        Monitor notifications sent to customers and vendors.
+      </p>
+    </div>
+
+    <div class="header-actions">
+
+      <button
+        type="button"
+        class="mark-all-btn"
+        (click)="markAllAsRead()"
+        [disabled]="
+          processing ||
+          unreadNotifications === 0
+        "
+        *ngIf="unreadNotifications > 0">
+
+        ✓ Mark All Read
+
+      </button>
+
+      <button
+        type="button"
+        class="refresh-btn"
+        (click)="loadNotifications()"
+        [disabled]="loading || processing">
+
+        <span class="refresh-icon">↻</span>
+
+        Refresh
+
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <!-- ALERTS -->
+
+  <div
+    class="alert-message error-message"
+    *ngIf="errorMessage">
+
+    <span>⚠</span>
+
+    <span>{{ errorMessage }}</span>
+
+    <button
+      type="button"
+      (click)="errorMessage = ''">
+
+      ×
+
+    </button>
+
+  </div>
+
+
+  <div
+    class="alert-message success-message"
+    *ngIf="successMessage">
+
+    <span>✓</span>
+
+    <span>{{ successMessage }}</span>
+
+    <button
+      type="button"
+      (click)="successMessage = ''">
+
+      ×
+
+    </button>
+
+  </div>
+
+
+  <!-- STATISTICS -->
+
+  <div class="stats-grid">
+
+    <div class="stat-card">
+
+      <div class="stat-icon total-icon">
+        !
+      </div>
+
+      <div class="stat-content">
+
+        <span>Total Notifications</span>
+
+        <strong>
+          {{ totalNotifications }}
+        </strong>
+
+      </div>
+
+    </div>
+
+
+    <div class="stat-card">
+
+      <div class="stat-icon unread-icon">
+        ●
+      </div>
+
+      <div class="stat-content">
+
+        <span>Unread</span>
+
+        <strong>
+          {{ unreadNotifications }}
+        </strong>
+
+      </div>
+
+    </div>
+
+
+    <div class="stat-card">
+
+      <div class="stat-icon read-icon">
+        ✓
+      </div>
+
+      <div class="stat-content">
+
+        <span>Read</span>
+
+        <strong>
+          {{ readNotifications }}
+        </strong>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- FILTERS -->
+
+  <div class="filter-card">
+
+    <div class="search-box">
+
+      <span class="search-icon">
+        ⌕
+      </span>
+
+      <input
+        type="text"
+        [(ngModel)]="searchText"
+        (input)="onSearch()"
+        placeholder="Search recipient, title, message..."
+        autocomplete="off">
+
+    </div>
+
+
+    <div class="filter-group">
+
+      <label for="notificationType">
+        Type
+      </label>
+
+      <select
+        id="notificationType"
+        [(ngModel)]="selectedType"
+        (change)="onFilterChange()">
+
+        <option value="all">
+          All Types
+        </option>
+
+        <option value="booking">
+          Booking
+        </option>
+
+        <option value="payment">
+          Payment
+        </option>
+
+        <option value="damage">
+          Damage
+        </option>
+
+        <option value="equipment">
+          Equipment
+        </option>
+
+        <option value="general">
+          General
+        </option>
+
+      </select>
+
+    </div>
+
+
+    <div class="filter-group">
+
+      <label for="notificationStatus">
+        Status
+      </label>
+
+      <select
+        id="notificationStatus"
+        [(ngModel)]="selectedStatus"
+        (change)="onFilterChange()">
+
+        <option value="all">
+          All
+        </option>
+
+        <option value="unread">
+          Unread
+        </option>
+
+        <option value="read">
+          Read
+        </option>
+
+      </select>
+
+    </div>
+
+
+    <button
+      type="button"
+      class="clear-btn"
+      *ngIf="
+        searchText ||
+        selectedType !== 'all' ||
+        selectedStatus !== 'all'
+      "
+      (click)="clearFilters()">
+
+      Clear Filters
+
+    </button>
+
+  </div>
+
+
+  <!-- LOADING -->
+
+  <div
+    class="loading-container"
+    *ngIf="loading">
+
+    <div class="spinner"></div>
+
+    <p>
+      Loading notifications...
+    </p>
+
+  </div>
+
+
+  <!-- EMPTY -->
+
+  <div
+    class="empty-state"
+    *ngIf="
+      !loading &&
+      filteredNotifications.length === 0
+    ">
+
+    <div class="empty-icon">
+      🔔
+    </div>
+
+    <h3>
+      No notifications found
+    </h3>
+
+    <p *ngIf="
+      searchText ||
+      selectedType !== 'all' ||
+      selectedStatus !== 'all'
+    ">
+      Try changing your search or filter.
+    </p>
+
+    <p *ngIf="
+      !searchText &&
+      selectedType === 'all' &&
+      selectedStatus === 'all'
+    ">
+      Notifications will appear here when
+      platform activity generates them.
+    </p>
+
+  </div>
+
+
+  <!-- TABLE -->
+
+  <div
+    class="table-card"
+    *ngIf="
+      !loading &&
+      filteredNotifications.length > 0
+    ">
+
+    <div class="table-header">
+
+      <div>
+
+        <h2>
+          All Notifications
+        </h2>
+
+        <span>
+          {{ filteredNotifications.length }}
+          {{
+            filteredNotifications.length === 1
+              ? 'notification'
+              : 'notifications'
+          }}
+        </span>
+
+      </div>
+
+    </div>
+
+
+    <div class="table-wrapper">
+
+      <table>
+
+        <thead>
+
+          <tr>
+
+            <th class="serial-column">
+              SL No.
+            </th>
+
+            <th>
+              Recipient
+            </th>
+
+            <th>
+              Notification
+            </th>
+
+            <th>
+              Type
+            </th>
+
+            <th>
+              Date
+            </th>
+
+            <th>
+              Status
+            </th>
+
+            <th class="action-column">
+              Action
+            </th>
+
+          </tr>
+
+        </thead>
+
+
+        <tbody>
+
+          <tr
+            *ngFor="
+              let notification of filteredNotifications;
+              let i = index
+            "
+            [class.unread-row]="
+              !notification.is_read
+            ">
+
+
+            <td class="serial-number">
+              {{ i + 1 }}
+            </td>
+
+
+            <!-- RECIPIENT -->
+
+            <td>
+
+              <div class="recipient-cell">
+
+                <div class="avatar">
+
+                  {{
+                    getRecipientInitial(
+                      notification
+                    )
+                  }}
+
+                </div>
+
+                <div class="recipient-info">
+
+                  <strong>
+                    {{
+                      notification.recipient_name ||
+                      notification.recipient_username
+                    }}
+                  </strong>
+
+                  <small>
+
+                    {{
+                      notification.recipient_username
+                    }}
+
+                    <span
+                      class="role-badge"
+                      [ngClass]="
+                        getRecipientClass(
+                          notification.recipient_role
+                        )
+                      ">
+
+                      {{
+                        notification.recipient_role
+                          | titlecase
+                      }}
+
+                    </span>
+
+                  </small>
+
+                </div>
+
+              </div>
+
+            </td>
+
+
+            <!-- NOTIFICATION -->
+
+            <td>
+
+              <div class="notification-cell">
+
+                <strong>
+                  {{ notification.title }}
+                </strong>
+
+                <small>
+                  {{ notification.message }}
+                </small>
+
+              </div>
+
+            </td>
+
+
+            <!-- TYPE -->
+
+            <td>
+
+              <span
+                class="type-badge"
+                [ngClass]="
+                  getTypeClass(
+                    notification.notification_type
+                  )
+                ">
+
+                {{
+                  getTypeLabel(
+                    notification.notification_type
+                  )
+                }}
+
+              </span>
+
+            </td>
+
+
+            <!-- DATE -->
+
+            <td>
+
+              <span class="date-text">
+
+                {{
+                  formatDate(
+                    notification.created_at
+                  )
+                }}
+
+              </span>
+
+            </td>
+
+
+            <!-- STATUS -->
+
+            <td>
+
+              <span
+                class="status-badge"
+                [class.status-unread]="
+                  !notification.is_read
+                "
+                [class.status-read]="
+                  notification.is_read
+                ">
+
+                <span class="status-dot"></span>
+
+                {{
+                  notification.is_read
+                    ? 'Read'
+                    : 'Unread'
+                }}
+
+              </span>
+
+            </td>
+
+
+            <!-- ACTION -->
+
+            <td class="action-column">
+
+              <button
+                type="button"
+                class="view-btn"
+                (click)="
+                  openDetails(notification)
+                ">
+
+                View
+
+              </button>
+
+            </td>
+
+          </tr>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+
+<!-- DETAILS POPUP -->
+
+<div
+  class="modal-backdrop"
+  *ngIf="
+    showDetails &&
+    selectedNotification
+  "
+  (click)="closeDetails()">
+
+
+  <div
+    class="details-modal"
+    (click)="$event.stopPropagation()">
+
+
+    <div class="modal-header">
+
+      <div>
+
+        <span class="modal-label">
+          NOTIFICATION
+        </span>
+
+        <h2>
+          {{ selectedNotification.title }}
+        </h2>
+
+      </div>
+
+
+      <button
+        type="button"
+        class="close-btn"
+        (click)="closeDetails()"
+        [disabled]="processing">
+
+        ×
+
+      </button>
+
+    </div>
+
+
+    <div class="modal-body">
+
+
+      <!-- STATUS -->
+
+      <div class="modal-status-row">
+
+        <span
+          class="status-badge large-status"
+          [class.status-unread]="
+            !selectedNotification.is_read
+          "
+          [class.status-read]="
+            selectedNotification.is_read
+          ">
+
+          <span class="status-dot"></span>
+
+          {{
+            selectedNotification.is_read
+              ? 'Read'
+              : 'Unread'
+          }}
+
+        </span>
+
+      </div>
+
+
+      <!-- RECIPIENT -->
+
+      <div class="info-grid">
+
+        <div class="info-box">
+
+          <span class="info-label">
+            RECIPIENT
+          </span>
+
+          <strong>
+            {{
+              selectedNotification.recipient_name
+                || selectedNotification.recipient_username
+            }}
+          </strong>
+
+          <small>
+            {{
+              selectedNotification.recipient_username
+            }}
+          </small>
+
+        </div>
+
+
+        <div class="info-box">
+
+          <span class="info-label">
+            ROLE
+          </span>
+
+          <strong>
+            {{
+              selectedNotification.recipient_role
+                | titlecase
+            }}
+          </strong>
+
+          <small>
+            {{
+              formatDateTime(
+                selectedNotification.created_at
+              )
+            }}
+          </small>
+
+        </div>
+
+      </div>
+
+
+      <!-- TYPE -->
+
+      <div class="detail-section">
+
+        <span class="section-label">
+          NOTIFICATION TYPE
+        </span>
+
+        <div class="type-box">
+
+          {{
+            getTypeLabel(
+              selectedNotification.notification_type
+            )
+          }}
+
+        </div>
+
+      </div>
+
+
+      <!-- MESSAGE -->
+
+      <div class="detail-section">
+
+        <span class="section-label">
+          MESSAGE
+        </span>
+
+        <div class="description-box">
+
+          {{
+            selectedNotification.message ||
+            'No message available.'
+          }}
+
+        </div>
+
+      </div>
+
+
+      <!-- DATE -->
+
+      <div class="detail-section">
+
+        <span class="section-label">
+          CREATED
+        </span>
+
+        <div class="date-box">
+
+          {{
+            formatDateTime(
+              selectedNotification.created_at
+            )
+          }}
+
+        </div>
+
+      </div>
+
+
+      <!-- ACTION -->
+
+      <div class="update-section">
+
+        <button
+          type="button"
+          class="mark-read-btn"
+          *ngIf="
+            !selectedNotification.is_read
+          "
+          (click)="
+            markAsRead(
+              selectedNotification
+            )
+          "
+          [disabled]="processing">
+
+          <span
+            class="button-spinner"
+            *ngIf="processing">
+          </span>
+
+          <span *ngIf="!processing">
+            ✓ Mark as Read
+          </span>
+
+          <span *ngIf="processing">
+            Updating...
+          </span>
+
+        </button>
+
+
+        <div
+          class="already-read"
+          *ngIf="
+            selectedNotification.is_read
+          ">
+
+          ✓ This notification has been read.
+
+        </div>
+
+      </div>
+
+
+    </div>
+
+  </div>
+
+</div>
+
+
+
+

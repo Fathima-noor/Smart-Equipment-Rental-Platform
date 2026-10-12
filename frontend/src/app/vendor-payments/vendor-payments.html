@@ -1,0 +1,63 @@
+<div class="vendor-payments-page">
+
+  <div class="page-header">
+    <div>
+      <h1>Vendor Payments</h1>
+      <p>View rental payments linked to your equipment bookings.</p>
+    </div>
+
+    <button type="button" (click)="loadVendorPayments()">
+      Refresh
+    </button>
+  </div>
+
+  <div *ngIf="isLoading">
+    Loading payments...
+  </div>
+
+  <div *ngIf="errorMessage">
+    {{ errorMessage }}
+  </div>
+
+  <div *ngIf="!isLoading && !errorMessage && payments.length === 0">
+    No vendor payments found.
+  </div>
+
+  <div class="payment-list" *ngIf="!isLoading && payments.length > 0">
+
+    <div class="payment-card" *ngFor="let payment of payments">
+
+      <h3>{{ payment.booking_equipment }}</h3>
+
+      <p>
+        <strong>Customer:</strong>
+        {{ payment.customer_name }}
+      </p>
+
+      <p>
+        <strong>Rental Amount:</strong>
+        ₹{{ payment.rental_amount }}
+      </p>
+
+      <p>
+        <strong>Payment Date:</strong>
+        {{ payment.payment_date | date:'medium' }}
+      </p>
+
+      <p>
+        <strong>Handover Date:</strong>
+        {{ payment.handover_date | date:'medium' }}
+      </p>
+
+      <p>
+        <strong>Payment Status:</strong>
+        {{ payment.payment_status }}
+      </p>
+
+      <span class="payout-status">Paid</span>
+
+    </div>
+
+  </div>
+
+</div>

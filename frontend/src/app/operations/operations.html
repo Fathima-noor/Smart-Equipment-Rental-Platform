@@ -1,0 +1,253 @@
+
+<div class="container-fluid py-4 operations-dashboard">
+
+  <!-- Dashboard heading -->
+  <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+    <div>
+      <h2 class="fw-bold mb-1">Operations Dashboard</h2>
+      <p class="text-muted mb-0">
+        Overview of equipment receiving, handover, inspection, and returns.
+      </p>
+    </div>
+
+    <div class="d-flex gap-2">
+      <button
+        type="button"
+        class="btn btn-outline-secondary"
+        (click)="loadDashboard()"
+        [disabled]="loading"
+      >
+        <span
+          *ngIf="loading"
+          class="spinner-border spinner-border-sm me-1"
+        ></span>
+        Refresh
+      </button>
+
+      <button
+        type="button"
+        class="btn btn-primary"
+        (click)="openWorkflow()"
+      >
+        Open Operations Workflow
+      </button>
+    </div>
+  </div>
+
+  <!-- Error message -->
+  <div *ngIf="errorMessage" class="alert alert-danger" role="alert">
+    {{ errorMessage }}
+  </div>
+
+  <!-- Loading state -->
+  <div *ngIf="loading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <p class="text-muted mt-2">Loading dashboard...</p>
+  </div>
+
+  <ng-container *ngIf="!loading">
+
+    <!-- Summary cards -->
+    <div class="row g-3 mb-4">
+
+      <div class="col-12 col-sm-6 col-xl-3">
+        <div class="card dashboard-card h-100 border-0 shadow-sm">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <p class="text-muted mb-2">Total Bookings</p>
+                <h3 class="fw-bold mb-0">{{ totalBookings }}</h3>
+              </div>
+              <div class="dashboard-icon icon-blue">
+                <span aria-hidden="true">▣</span>
+              </div>
+            </div>
+            <p class="small text-muted mt-3 mb-0">
+              Bookings available to operations
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12 col-sm-6 col-xl-3">
+        <div class="card dashboard-card h-100 border-0 shadow-sm">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <p class="text-muted mb-2">Awaiting Receiving</p>
+                <h3 class="fw-bold mb-0">{{ awaitingReceiving }}</h3>
+              </div>
+              <div class="dashboard-icon icon-orange">
+                <span aria-hidden="true">↓</span>
+              </div>
+            </div>
+            <p class="small text-muted mt-3 mb-0">
+              Approved bookings to receive
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12 col-sm-6 col-xl-3">
+        <div class="card dashboard-card h-100 border-0 shadow-sm">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <p class="text-muted mb-2">Awaiting Inspection</p>
+                <h3 class="fw-bold mb-0">{{ awaitingInspection }}</h3>
+              </div>
+              <div class="dashboard-icon icon-purple">
+                <span aria-hidden="true">⌕</span>
+              </div>
+            </div>
+            <p class="small text-muted mt-3 mb-0">
+              Returned equipment to inspect
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12 col-sm-6 col-xl-3">
+        <div class="card dashboard-card h-100 border-0 shadow-sm">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <p class="text-muted mb-2">Damaged Returns</p>
+                <h3 class="fw-bold mb-0">{{ damagedReturns }}</h3>
+              </div>
+              <div class="dashboard-icon icon-red">
+                <span aria-hidden="true">!</span>
+              </div>
+            </div>
+            <p class="small text-muted mt-3 mb-0">
+              Waiting for maintenance completion
+            </p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Additional status cards -->
+    <div class="row g-3 mb-4">
+
+      <div class="col-12 col-md-6">
+        <div class="card border-0 shadow-sm h-100">
+          <div class="card-body d-flex justify-content-between align-items-center">
+            <div>
+              <p class="text-muted mb-1">Awaiting Handover</p>
+              <h4 class="fw-bold mb-0">{{ awaitingHandover }}</h4>
+              <small class="text-muted">
+                Received and paid bookings
+              </small>
+            </div>
+            <span class="badge bg-info-subtle text-info fs-6">Handover</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12 col-md-6">
+        <div class="card border-0 shadow-sm h-100">
+          <div class="card-body d-flex justify-content-between align-items-center">
+            <div>
+              <p class="text-muted mb-1">Completed Returns</p>
+              <h4 class="fw-bold mb-0">{{ completedReturns }}</h4>
+              <small class="text-muted">
+                Returns finalized in the workflow
+              </small>
+            </div>
+            <span class="badge bg-success-subtle text-success fs-6">Completed</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Recent bookings -->
+    <div class="card border-0 shadow-sm">
+      <div class="card-header bg-white py-3 d-flex flex-wrap justify-content-between align-items-center gap-2">
+        <div>
+          <h5 class="fw-bold mb-1">Recent Bookings</h5>
+          <p class="text-muted small mb-0">
+            Latest bookings returned by the API
+          </p>
+        </div>
+
+        <button
+          type="button"
+          class="btn btn-sm btn-outline-primary"
+          (click)="openWorkflow()"
+        >
+          Manage Workflow
+        </button>
+      </div>
+
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+              <tr>
+                <th class="ps-3">Booking</th>
+                <th>Equipment</th>
+                <th>Customer</th>
+                <th>Booking Status</th>
+                <th>Workflow Status</th>
+                <th class="text-end pe-3">Payment</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr *ngFor="let booking of recentBookings">
+                <td class="ps-3 fw-semibold">
+                  #{{ booking.id }}
+                </td>
+
+                <td>
+                  {{ getEquipmentName(booking) }}
+                </td>
+
+                <td>
+                  {{ getCustomerName(booking) }}
+                </td>
+
+                <td>
+                  <span class="badge bg-secondary-subtle text-secondary">
+                    {{ getStatusLabel(booking.status) }}
+                  </span>
+                </td>
+
+                <td>
+                  <span
+                    class="badge"
+                    [ngClass]="{
+                      'bg-success-subtle text-success': booking.equipment_workflow_status === 'no_damage' || booking.equipment_workflow_status === 'returned_to_vendor',
+                      'bg-danger-subtle text-danger': booking.equipment_workflow_status === 'damaged',
+                      'bg-warning-subtle text-warning-emphasis': booking.equipment_workflow_status === 'awaiting_inspection',
+                      'bg-primary-subtle text-primary': booking.equipment_workflow_status === 'booked' || booking.equipment_workflow_status === 'received',
+                      'bg-secondary-subtle text-secondary': !booking.equipment_workflow_status
+                    }"
+                  >
+                    {{ getStatusLabel(booking.equipment_workflow_status) }}
+                  </span>
+                </td>
+
+                <td class="text-end pe-3">
+                  {{ getStatusLabel(booking.payment_status) }}
+                </td>
+              </tr>
+
+              <tr *ngIf="recentBookings.length === 0">
+                <td colspan="6" class="text-center text-muted py-4">
+                  No bookings found.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </ng-container>
+</div>

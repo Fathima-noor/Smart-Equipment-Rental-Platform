@@ -1,0 +1,1004 @@
+
+
+<!-- =========================================================
+     MAIN CONTENT
+     ========================================================= -->
+
+<main class="admin-main">
+
+  <div class="admin-content">
+
+    <!-- TOP HEADER -->
+    <div class="dashboard-topbar">
+
+      <div class="dashboard-page-title">
+        <span class="dashboard-eyebrow">
+          EQUIPMENT RENTAL PLATFORM
+        </span>
+
+        <h1>Dashboard</h1>
+      </div>
+
+      <div class="dashboard-top-actions">
+
+        <button
+          type="button"
+          class="theme-btn"
+          title="Light theme"
+          (click)="setLightTheme()">
+
+          <i class="bi bi-sun"></i>
+
+        </button>
+
+        <button
+          type="button"
+          class="theme-btn"
+          title="Dark theme"
+          (click)="setDarkTheme()">
+
+          <i class="bi bi-moon"></i>
+
+        </button>
+
+        <button
+          type="button"
+          class="notification-top-btn"
+          routerLink="/admin/notifications">
+
+          <i class="bi bi-bell"></i>
+
+          <span class="notification-dot"></span>
+
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <!-- WELCOME BANNER -->
+
+    <section class="dashboard-welcome">
+
+      <div class="welcome-left">
+
+        <div class="welcome-icon">
+
+          <i class="bi bi-box-seam"></i>
+
+        </div>
+
+        <div>
+
+          <span class="welcome-small">
+            Welcome back,
+          </span>
+
+          <h2>Administrator</h2>
+
+          <p>
+            Here's what's happening with your rental platform today.
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <div class="welcome-date">
+
+        <i class="bi bi-calendar3"></i>
+
+        <div>
+
+          
+
+          <strong>EquipRent</strong>
+
+          <input
+            type="date"
+            class="dashboard-date-picker"
+            [value]="todayDate"
+            (change)="todayDate = $any($event.target).value">
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ERROR MESSAGE -->
+
+    <div
+      class="alert alert-danger dashboard-alert"
+      *ngIf="errorMessage">
+
+      <i class="bi bi-exclamation-circle me-2"></i>
+
+      <span>
+        {{ errorMessage }}
+      </span>
+
+      <button
+        type="button"
+        class="alert-refresh-btn"
+        (click)="loadDashboardData()">
+
+        Try Again
+
+      </button>
+
+    </div>
+
+
+    <!-- LOADING -->
+
+    <div
+      class="dashboard-loading"
+      *ngIf="loading">
+
+      <div class="spinner-border"></div>
+
+      <span>
+        Loading dashboard...
+      </span>
+
+    </div>
+
+
+    <!-- DASHBOARD -->
+
+    <ng-container *ngIf="!loading">
+
+
+      <!-- =====================================================
+           SUMMARY CARDS
+           ===================================================== -->
+
+      <div class="dashboard-stat-grid">
+
+
+        <!-- TOTAL EQUIPMENT -->
+
+        <div
+          class="modern-stat-card equipment-stat"
+          (click)="goToEquipment()">
+
+          <div class="modern-stat-top">
+
+            <div class="modern-stat-icon">
+
+              <i class="bi bi-camera"></i>
+
+            </div>
+
+            <i class="bi bi-arrow-up-right stat-link-icon"></i>
+
+          </div>
+
+          <span class="modern-stat-label">
+            Total Equipment
+          </span>
+
+          <h2>
+            {{ totalEquipment }}
+          </h2>
+
+          <div class="modern-stat-footer">
+
+            <i class="bi bi-arrow-up-right"></i>
+
+            <span>
+              Available rental inventory
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <!-- TOTAL BOOKINGS -->
+
+        <div
+          class="modern-stat-card booking-stat"
+          (click)="goToBookings()">
+
+          <div class="modern-stat-top">
+
+            <div class="modern-stat-icon">
+
+              <i class="bi bi-calendar-check"></i>
+
+            </div>
+
+            <i class="bi bi-arrow-up-right stat-link-icon"></i>
+
+          </div>
+
+          <span class="modern-stat-label">
+            Total Bookings
+          </span>
+
+          <h2>
+            {{ totalBookings }}
+          </h2>
+
+          <div class="modern-stat-footer">
+
+            <i class="bi bi-arrow-up-right"></i>
+
+            <span>
+              {{ pendingBookings }} pending bookings
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <!-- TOTAL USERS -->
+
+        <div
+          class="modern-stat-card users-stat"
+          (click)="goToUsers()">
+
+          <div class="modern-stat-top">
+
+            <div class="modern-stat-icon">
+
+              <i class="bi bi-people"></i>
+
+            </div>
+
+            <i class="bi bi-arrow-up-right stat-link-icon"></i>
+
+          </div>
+
+          <span class="modern-stat-label">
+            Total Users
+          </span>
+
+          <h2>
+            {{ totalUsers }}
+          </h2>
+
+          <div class="modern-stat-footer">
+
+            <i class="bi bi-arrow-up-right"></i>
+
+            <span>
+              Registered customers and vendors
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <!-- TOTAL REVENUE -->
+
+        <div
+          class="modern-stat-card revenue-stat"
+          (click)="goToPayments()">
+
+          <div class="modern-stat-top">
+
+            <div class="modern-stat-icon">
+
+              <i class="bi bi-currency-rupee"></i>
+
+            </div>
+
+            <i class="bi bi-arrow-up-right stat-link-icon"></i>
+
+          </div>
+
+          <span class="modern-stat-label">
+            Total Revenue
+          </span>
+
+          <h2>
+            ₹{{ totalRevenue | number:'1.0-2' }}
+          </h2>
+
+          <div class="modern-stat-footer">
+
+            <i class="bi bi-arrow-up-right"></i>
+
+            <span>
+              Successful payments
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <!-- DAMAGE REPORTS -->
+
+        <div
+          class="modern-stat-card damage-stat"
+          (click)="goToDamageReports()">
+
+          <div class="modern-stat-top">
+
+            <div class="modern-stat-icon">
+
+              <i class="bi bi-exclamation-triangle"></i>
+
+            </div>
+
+            <i class="bi bi-arrow-up-right stat-link-icon"></i>
+
+          </div>
+
+          <span class="modern-stat-label">
+            Damage Reports
+          </span>
+
+          <h2>
+            {{ totalDamageReports }}
+          </h2>
+
+          <div class="modern-stat-footer">
+
+            <i class="bi bi-clock"></i>
+
+            <span>
+              {{ pendingDamageReports }} pending review
+            </span>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- =====================================================
+           MIDDLE SECTION
+           ===================================================== -->
+
+      <div class="dashboard-middle-grid">
+
+
+        <!-- MONTHLY OVERVIEW -->
+
+        <section class="dashboard-panel monthly-panel">
+
+          <div class="panel-header">
+
+            <div class="panel-title-area">
+
+              <div class="panel-icon blue-panel-icon">
+
+                <i class="bi bi-bar-chart-line"></i>
+
+              </div>
+
+              <div>
+
+                <h3>
+                  Monthly Overview
+                </h3>
+
+                <p>
+                  Revenue and booking overview
+                </p>
+
+              </div>
+
+            </div>
+
+            <button
+              type="button"
+              class="panel-filter">
+
+              Last 6 Months
+
+              <i class="bi bi-chevron-down ms-2"></i>
+
+            </button>
+
+          </div>
+
+
+          <!-- CHART AREA -->
+
+          <div class="overview-chart">
+
+            <div class="chart-legend">
+
+              <span>
+                <i class="legend-dot revenue-dot"></i>
+                Revenue
+              </span>
+
+              <span>
+                <i class="legend-dot booking-dot"></i>
+                Bookings
+              </span>
+
+            </div>
+
+
+            <div class="chart-area">
+
+              <div class="chart-y-labels">
+
+                <span>High</span>
+                <span>Medium</span>
+                <span>Low</span>
+                <span>0</span>
+
+              </div>
+
+
+              <div class="chart-visual">
+
+                <div class="chart-grid-line"></div>
+                <div class="chart-grid-line"></div>
+                <div class="chart-grid-line"></div>
+                <div class="chart-grid-line"></div>
+
+
+                
+
+
+                <div class="chart-bars">
+
+                  <div
+                    class="chart-bar-group"
+                    *ngFor="let month of monthlyOverview">
+
+                    <div
+                      class="chart-bar revenue-bar"
+                      [style.height.%]="month.revenueHeight">
+                    </div>
+
+                    <div
+                      class="chart-bar booking-bar"
+                      [style.height.%]="month.bookingHeight">
+                    </div>
+
+                    <span>
+                      {{ month.month }}
+                    </span>
+
+                  </div>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </section>
+
+
+      
+
+        
+
+
+        <!-- EQUIPMENT BY CATEGORY -->
+
+        <section class="dashboard-panel category-panel">
+
+          <div class="panel-header">
+
+            <div class="panel-title-area">
+
+              <div class="panel-icon purple-panel-icon">
+
+                <i class="bi bi-camera"></i>
+
+              </div>
+
+              <div>
+
+                <h3>
+                  Equipment Overview
+                </h3>
+
+                <p>
+                  Total equipment count
+                </p>
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <div class="equipment-overview-content">
+
+            <div class="equipment-total-circle">
+
+              <strong>
+                {{ totalEquipment }}
+              </strong>
+
+              <span>
+                Total
+              </span>
+
+            </div>
+
+
+            <div class="equipment-category-list">
+
+              <div class="category-overview-item">
+
+                <span class="category-color camera-color"></span>
+
+                <span>
+                  Cameras
+                </span>
+
+                <strong>
+                  {{ equipmentCategoryCounts.camera }}
+                </strong>
+
+              </div>
+
+
+              <div class="category-overview-item">
+
+                <span class="category-color laptop-color"></span>
+
+                <span>
+                  Laptops
+                </span>
+
+                <strong>
+                   {{ equipmentCategoryCounts.laptop }}
+                </strong>
+
+              </div>
+
+
+              <div class="category-overview-item">
+
+                <span class="category-color projector-color"></span>
+
+                <span>
+                  Projectors
+                </span>
+
+                <strong>
+                   {{ equipmentCategoryCounts.projector }}
+                </strong>
+
+              </div>
+
+
+              <div class="category-overview-item">
+
+                <span class="category-color drone-color"></span>
+
+                <span>
+                  Drones
+                </span>
+
+                <strong>
+                   {{ equipmentCategoryCounts.drone }}
+                </strong>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </section>
+
+
+        <!-- RECENT ACTIVITY -->
+
+        <section class="dashboard-panel activity-panel">
+
+          <div class="panel-header">
+
+            <div class="panel-title-area">
+
+              <div class="panel-icon green-panel-icon">
+
+                <i class="bi bi-lightning-charge"></i>
+
+              </div>
+
+              <div>
+
+                <h3>
+                  Recent Activity
+                </h3>
+
+                <p>
+                  Latest platform updates
+                </p>
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <div
+            class="modern-activity-list"
+            *ngIf="recentActivities.length > 0">
+
+            <div
+              class="modern-activity-item"
+              *ngFor="let activity of recentActivities | slice:0:5">
+
+              <div class="activity-type-icon">
+
+                <i
+                  class="bi"
+                  [ngClass]="activity.icon">
+                </i>
+
+              </div>
+
+
+              <div class="modern-activity-info">
+
+                <strong>
+                  {{ activity.title }}
+                </strong>
+
+                <span>
+                  {{ activity.description }}
+                </span>
+
+              </div>
+
+
+              <small>
+                {{ formatActivityDate(activity.date) }}
+              </small>
+
+            </div>
+
+          </div>
+
+
+          <div
+            class="modern-empty-activity"
+            *ngIf="recentActivities.length === 0">
+
+            <i class="bi bi-clock-history"></i>
+
+            <p>
+              No recent activity
+            </p>
+
+          </div>
+
+
+          <a
+            routerLink="/admin/notifications"
+            class="panel-view-link">
+
+            View All
+
+            <i class="bi bi-arrow-right"></i>
+
+          </a>
+
+        </section>
+
+      </div>
+
+
+      <!-- =====================================================
+           BOTTOM SECTION
+           ===================================================== -->
+
+      <div class="dashboard-bottom-grid">
+
+
+        <!-- RECENT BOOKINGS -->
+
+        <section class="dashboard-panel bookings-panel">
+
+          <div class="panel-header">
+
+            <div class="panel-title-area">
+
+              <div class="panel-icon blue-panel-icon">
+
+                <i class="bi bi-calendar-check"></i>
+
+              </div>
+
+              <div>
+
+                <h3>
+                  Recent Bookings
+                </h3>
+
+                <p>
+                  Latest booking overview
+                </p>
+
+              </div>
+
+            </div>
+
+            <a
+              routerLink="/admin/bookings"
+              class="panel-view-link">
+
+              View All
+
+              <i class="bi bi-arrow-right"></i>
+
+            </a>
+
+          </div>
+
+
+          <div class="booking-summary-list">
+
+            <div class="booking-summary-row">
+
+              <span>
+                Total Bookings
+              </span>
+
+              <strong>
+                {{ totalBookings }}
+              </strong>
+
+            </div>
+
+
+            <div class="booking-summary-row">
+
+              <span>
+                Pending Bookings
+              </span>
+
+              <strong class="pending-value">
+                {{ pendingBookings }}
+              </strong>
+
+            </div>
+
+
+            <div class="booking-summary-row">
+
+              <span>
+                Approved Bookings
+              </span>
+
+              <strong class="approved-value">
+                {{ approvedBookings }}
+              </strong>
+
+            </div>
+
+
+            <div class="booking-summary-row">
+
+              <span>
+                Completed Rentals
+              </span>
+
+              <strong class="completed-value">
+                {{ completedBookings }}
+              </strong>
+
+            </div>
+
+          </div>
+
+        </section>
+
+
+        <!-- PENDING ACTIONS -->
+
+        <section class="dashboard-panel pending-panel">
+
+          <div class="panel-header">
+
+            <div class="panel-title-area">
+
+              <div class="panel-icon orange-panel-icon">
+
+                <i class="bi bi-bell"></i>
+
+              </div>
+
+              <div>
+
+                <h3>
+                  Pending Actions
+                </h3>
+
+                <p>
+                  Items that need your attention
+                </p>
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <div class="pending-action-list">
+
+
+            <!-- DAMAGE REPORTS -->
+
+            <button
+              type="button"
+              class="pending-action-item"
+              (click)="goToDamageReports()">
+
+              <div class="pending-action-icon danger-action-icon">
+
+                <i class="bi bi-exclamation-triangle"></i>
+
+              </div>
+
+              <div>
+
+                <strong>
+                  Damage Reports
+                </strong>
+
+                <span>
+                  {{ pendingDamageReports }} require review
+                </span>
+
+              </div>
+
+              <i class="bi bi-chevron-right"></i>
+
+            </button>
+
+
+            <!-- DAMAGE ISSUES -->
+
+            <button
+              type="button"
+              class="pending-action-item"
+              (click)="goToDamageIssues()">
+
+              <div class="pending-action-icon warning-action-icon">
+
+                <i class="bi bi-exclamation-circle"></i>
+
+              </div>
+
+              <div>
+
+                <strong>
+                  Customer Issues
+                </strong>
+
+                <span>
+                  {{ pendingDamageIssues }} pending issues
+                </span>
+
+              </div>
+
+              <i class="bi bi-chevron-right"></i>
+
+            </button>
+
+
+            <!-- NOTIFICATIONS -->
+
+            <button
+              type="button"
+              class="pending-action-item"
+              (click)="goToNotifications()">
+
+              <div class="pending-action-icon info-action-icon">
+
+                <i class="bi bi-bell"></i>
+
+              </div>
+
+              <div>
+
+                <strong>
+                  Notifications
+                </strong>
+
+                <span>
+                  {{ unreadNotifications }} unread notifications
+                </span>
+
+              </div>
+
+              <i class="bi bi-chevron-right"></i>
+
+            </button>
+
+
+          
+
+
+
+
+            <!-- PAYMENTS -->
+
+            <button
+              type="button"
+              class="pending-action-item"
+              (click)="goToPayments()">
+
+              <div class="pending-action-icon purple-action-icon">
+
+                <i class="bi bi-credit-card"></i>
+
+              </div>
+
+              <div>
+
+                <strong>
+                  Payment Records
+                </strong>
+
+                <span>
+                  View payment transactions
+                </span>
+
+              </div>
+
+              <i class="bi bi-chevron-right"></i>
+
+            </button>
+
+          </div>
+
+        </section>
+
+      </div>
+
+
+      <!-- REFRESH BUTTON -->
+
+      <div class="dashboard-refresh-area">
+
+        <button
+          type="button"
+          class="refresh-btn"
+          (click)="loadDashboardData()"
+          [disabled]="loading">
+
+          <i
+            class="bi"
+            [ngClass]="
+              loading
+                ? 'bi-arrow-repeat spin'
+                : 'bi-arrow-clockwise'
+            ">
+          </i>
+
+          <span>
+            {{ loading ? 'Refreshing...' : 'Refresh Dashboard' }}
+          </span>
+
+        </button>
+
+      </div>
+
+
+    </ng-container>
+
+  </div>
+
+</main>

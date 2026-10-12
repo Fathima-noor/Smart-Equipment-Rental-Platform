@@ -1,0 +1,32 @@
+
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+**/.env
+**/.env.*
+!**/.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+env/
+venv/
+.venv/
+
+# Database
+db.sqlite3
+
+# Django generated files
+staticfiles/
+media/
+
+# Logs
+*.log
+
+
+frontend/node_modules/
+frontend/dist/
+frontend/.angular/
+
+frontend/.git-backup/

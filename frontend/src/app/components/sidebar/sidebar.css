@@ -1,0 +1,111 @@
+/* ========================================
+   SIDEBAR
+======================================== */
+
+.sidebar {
+  width: 240px;
+  min-height: calc(100vh - 70px);
+
+  background: var(--surface-color);
+  border-right: 1px solid var(--border-color);
+
+  display: flex;
+  flex-direction: column;
+
+  padding: 20px 14px;
+
+  transition:
+    background-color 0.25s ease,
+    border-color 0.25s ease;
+}
+
+.sidebar-menu {
+  flex: 1;
+}
+
+/* ========================================
+   SIDEBAR LINKS
+======================================== */
+
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+
+  padding: 12px 15px;
+  margin-bottom: 6px;
+
+  color: var(--secondary-text-color);
+  text-decoration: none;
+
+  border-radius: 8px;
+
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.sidebar-link i {
+  font-size: 18px;
+  width: 20px;
+  text-align: center;
+}
+
+.sidebar-link:hover {
+  background: var(--surface-secondary-color);
+  color: var(--primary-color);
+}
+
+.sidebar-link.active {
+  background: var(--primary-soft-color);
+  color: var(--primary-color);
+  font-weight: 600;
+}
+
+/* ========================================
+   LOGOUT
+======================================== */
+
+.logout-link {
+  color: var(--danger-color);
+}
+
+.logout-link:hover {
+  background: var(--danger-soft-color);
+  color: var(--danger-color);
+}
+
+/* ========================================
+   MOBILE RESPONSIVE
+======================================== */
+
+@media (max-width: 768px) {
+
+  .sidebar {
+    width: 100%;
+    min-height: auto;
+
+    border-right: none;
+    border-bottom: 1px solid var(--border-color);
+
+    padding: 10px;
+  }
+
+  .sidebar-menu {
+    display: flex;
+    overflow-x: auto;
+    gap: 5px;
+  }
+
+  .sidebar-link {
+    flex-shrink: 0;
+    margin-bottom: 0;
+  }
+
+  .sidebar-bottom {
+    display: flex;
+    gap: 5px;
+    margin-top: 8px;
+  }
+
+}

@@ -1,0 +1,271 @@
+
+<div class="register-page">
+
+  <!-- Left Branding Section -->
+  <div class="register-brand">
+
+    <div class="brand-content">
+
+      <div class="brand-logo">
+        <i class="bi bi-box-seam"></i>
+        <span>EquipRent</span>
+      </div>
+
+      <div class="brand-message">
+
+        <p class="brand-label">JOIN EQUIPRENT</p>
+
+        <h1>
+          Start your
+          <br>
+          <span>rental journey.</span>
+        </h1>
+
+        <p class="brand-description">
+          Create your account and explore a smarter
+          way to rent and manage equipment.
+        </p>
+
+      </div>
+
+      <div class="brand-footer">
+
+        <i class="bi bi-check-circle"></i>
+
+        <span>Simple. Reliable. Convenient.</span>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- Right Registration Section -->
+  <div class="register-section">
+
+    <div class="register-card">
+
+      <div class="mobile-logo">
+
+        <i class="bi bi-box-seam"></i>
+
+        <span>EquipRent</span>
+
+      </div>
+
+
+      <div class="register-heading">
+
+        <p class="welcome-text">GET STARTED</p>
+
+        <h2>Create your account</h2>
+
+        <p class="register-subtitle">
+          Fill in your details to join EquipRent.
+        </p>
+
+      </div>
+
+
+      <form
+        (ngSubmit)="register()"
+        #registerForm="ngForm"
+      >
+
+        <!-- First Name and Last Name -->
+        <div class="name-row">
+
+          <div class="form-group">
+
+            <label for="first_name">First Name</label>
+
+            <input
+              id="first_name"
+              type="text"
+              [(ngModel)]="first_name"
+              name="first_name"
+              placeholder="First name"
+            >
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label for="last_name">Last Name</label>
+
+            <input
+              id="last_name"
+              type="text"
+              [(ngModel)]="last_name"
+              name="last_name"
+              placeholder="Last name"
+            >
+
+          </div>
+
+        </div>
+
+
+        <!-- Username -->
+        <div class="form-group">
+
+          <label for="username">Username</label>
+
+          <div class="input-wrapper">
+
+            <i class="bi bi-person"></i>
+
+            <input
+              id="username"
+              type="text"
+              [(ngModel)]="username"
+              name="username"
+              placeholder="Enter your username"
+              required
+              autocomplete="username"
+            >
+
+          </div>
+
+        </div>
+
+
+        <!-- Email -->
+        <div class="form-group">
+
+          <label for="email">Email Address</label>
+
+          <div class="input-wrapper">
+
+            <i class="bi bi-envelope"></i>
+
+            <input
+              id="email"
+              type="email"
+              [(ngModel)]="email"
+              name="email"
+              placeholder="Enter your email"
+              required
+              email
+              autocomplete="email"
+            >
+
+          </div>
+
+        </div>
+
+
+        <!-- Password -->
+        <div class="form-group">
+
+          <label for="password">Password</label>
+
+          <div class="input-wrapper">
+
+            <i class="bi bi-lock"></i>
+
+            <input
+              id="password"
+              type="password"
+              [(ngModel)]="password"
+              name="password"
+              placeholder="Minimum 8 characters"
+              required
+              minlength="8"
+              autocomplete="new-password"
+            >
+
+          </div>
+
+        </div>
+
+
+        <!-- Confirm Password -->
+        <div class="form-group">
+
+          <label for="confirm_password">
+            Confirm Password
+          </label>
+
+          <div class="input-wrapper">
+
+            <i class="bi bi-shield-lock"></i>
+
+            <input
+              id="confirm_password"
+              type="password"
+              [(ngModel)]="confirm_password"
+              name="confirm_password"
+              placeholder="Confirm your password"
+              required
+              autocomplete="new-password"
+            >
+
+          </div>
+
+        </div>
+
+
+        <!-- Error Message -->
+        @if (errorMessage) {
+
+          <div class="error-message">
+
+            <i class="bi bi-exclamation-circle"></i>
+
+            <span>{{ errorMessage }}</span>
+
+          </div>
+
+        }
+
+
+        <!-- Success Message -->
+        @if (successMessage) {
+
+          <div class="success-message">
+
+            <i class="bi bi-check-circle"></i>
+
+            <span>{{ successMessage }}</span>
+
+          </div>
+
+        }
+
+
+        <!-- Register Button -->
+        <button
+          type="submit"
+          class="register-button"
+          [disabled]="registerForm.invalid || isLoading"
+        >
+
+          @if (isLoading) {
+            Creating Account...
+          } @else {
+            Create Account
+            <i class="bi bi-arrow-right"></i>
+          }
+
+        </button>
+
+      </form>
+
+
+      <div class="register-bottom">
+
+        <p>
+          Already have an account?
+          <a routerLink="/login">Sign in</a>
+        </p>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

@@ -1,0 +1,320 @@
+<div class="equipment-page">
+
+  <!-- Page Header -->
+  <div class="page-header mb-4">
+
+    <div>
+      <h2 class="fw-bold mb-1">
+        Equipment
+      </h2>
+
+      <p class="text-muted mb-0">
+        Find the perfect equipment for your rental.
+      </p>
+    </div>
+
+  </div>
+
+
+  <!-- Search & Filter -->
+  <div class="filter-card bg-white border rounded-3 p-3 mb-4">
+
+    <div class="row g-3 align-items-center">
+
+      <!-- Search -->
+      <div class="col-lg-7">
+
+        <div class="search-box">
+
+          <i class="bi bi-search"></i>
+
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Search equipment..."
+            [(ngModel)]="searchText"
+            (ngModelChange)="filterEquipment()"
+          />
+
+        </div>
+
+      </div>
+
+
+      <!-- Category -->
+      <div class="col-lg-5">
+
+        <div class="category-buttons">
+
+          <button
+            type="button"
+            class="btn"
+            [class.btn-primary]="selectedCategory === 'all'"
+            [class.btn-light]="selectedCategory !== 'all'"
+            (click)="selectCategory('all')">
+            All
+          </button>
+
+          <button
+            type="button"
+            class="btn"
+            [class.btn-primary]="selectedCategory === 'camera'"
+            [class.btn-light]="selectedCategory !== 'camera'"
+            (click)="selectCategory('camera')">
+            <i class="bi bi-camera me-1"></i>
+            Cameras
+          </button> 
+
+          <button
+            type="button"
+            class="btn"
+            [class.btn-primary]="selectedCategory === 'laptop'"
+            [class.btn-light]="selectedCategory !== 'laptop'"
+            (click)="selectCategory('laptop')">
+            <i class="bi bi-laptop me-1"></i>
+            Laptops
+          </button>
+
+          <button
+            type="button"
+            class="btn"
+            [class.btn-primary]="selectedCategory === 'projector'"
+            [class.btn-light]="selectedCategory !== 'projector'"
+            (click)="selectCategory('projector')">
+            <i class="bi bi-projector me-1"></i>
+            Projectors
+          </button>
+
+          <button
+            type="button"
+            class="btn"
+            [class.btn-primary]="selectedCategory === 'drone'"
+            [class.btn-light]="selectedCategory !== 'drone'"
+            (click)="selectCategory('drone')">
+            <i class="bi bi-send me-1"></i>
+            Drones
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- Loading -->
+  @if (loading) {
+
+    <div class="loading-container">
+
+      <div
+        class="spinner-border text-primary"
+        role="status">
+      </div>
+
+      <p class="text-muted mt-3 mb-0">
+        Loading equipment...
+      </p>
+
+    </div>
+
+  }
+
+
+  <!-- Error -->
+  @if (!loading && errorMessage) {
+
+    <div class="alert alert-danger d-flex align-items-center">
+
+      <i class="bi bi-exclamation-circle me-2"></i>
+
+      {{ errorMessage }}
+
+      <button
+        type="button"
+        class="btn btn-sm btn-outline-danger ms-auto"
+        (click)="loadEquipment()">
+        Try Again
+      </button>
+
+    </div>
+
+  }
+
+
+  <!-- Equipment Grid -->
+  @if (!loading && !errorMessage) {
+
+    @if (filteredEquipment.length > 0) {
+
+      <div class="row g-4">
+
+        @for (equipment of filteredEquipment; track equipment.id) {
+
+          <div class="col-xl-3 col-lg-4 col-md-6">
+
+            <div class="equipment-card bg-white border rounded-3 h-100">
+
+              <!-- Image -->
+              <div class="equipment-image">
+
+                @if (equipment.image) {
+
+                  <img
+                    [src]="getImageUrl(equipment.image)"
+                    [alt]="equipment.name"
+                    loading="lazy"
+                  />
+
+                } @else {
+
+                  <div class="image-placeholder">
+
+                    <i
+                      class="bi {{ getEquipmentIcon(equipment.category) }}">
+                    </i>
+
+                  </div>
+
+                }
+
+
+                <!-- Availability -->
+                <div class="availability-badge">
+
+                  @if (equipment.is_available && equipment.quantity > 0) {
+
+                    <span class="badge text-bg-success">
+                      <i class="bi bi-check-circle me-1"></i>
+                      Available
+                    </span>
+
+                  } @else {
+
+                    <span class="badge text-bg-danger">
+                      <i class="bi bi-x-circle me-1"></i>
+                      Unavailable
+                    </span>
+
+                  }
+
+                </div>
+
+              </div>
+
+
+              <!-- Content -->
+              <div class="equipment-content p-3">
+
+                <div class="category-label mb-2">
+
+                  <i
+                    class="bi {{ getEquipmentIcon(equipment.category) }} me-1">
+                  </i>
+
+                  {{ getCategoryName(equipment.category) }}
+
+                </div>
+
+
+                <h5 class="equipment-name mb-2">
+                  {{ equipment.name }}
+                </h5>
+
+
+                <p class="equipment-description text-muted small mb-3">
+
+                  {{ equipment.description }}
+
+                </p>
+
+
+                <div class="equipment-footer">
+
+                  <div>
+
+                    <span class="price">
+                      ₹{{ equipment.price_per_day | number:'1.0-0' }}
+                    </span>
+
+                    <span class="text-muted small">
+                      / day
+                    </span>
+
+                  </div>
+
+
+                  @if (equipment.is_available && equipment.quantity > 0) {
+
+                    <button
+                      type="button"
+                      class="btn btn-primary btn-sm px-3"
+                      [routerLink]="['/equipment', equipment.id]">
+
+                      Rent Now
+                      <i class="bi bi-arrow-right ms-1"></i>
+
+                    </button>
+
+                  } @else {
+
+                    <button
+                      type="button"
+                      class="btn btn-light btn-sm px-3"
+                      disabled>
+
+                      Unavailable
+
+                    </button>
+
+                  }
+
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        }
+
+      </div>
+
+    } @else {
+
+      <!-- Empty State -->
+      <div class="empty-state">
+
+        <div class="empty-icon">
+
+          <i class="bi bi-search"></i>
+
+        </div>
+
+        <h5 class="fw-semibold mt-3">
+          No equipment found
+        </h5>
+
+        <p class="text-muted mb-3">
+          Try changing your search or category filter.
+        </p>
+
+        <button
+          type="button"
+          class="btn btn-outline-primary"
+          (click)="searchText = ''; selectCategory('all')">
+
+          Clear Filters
+
+        </button>
+
+      </div>
+
+    }
+
+  }
+
+</div>

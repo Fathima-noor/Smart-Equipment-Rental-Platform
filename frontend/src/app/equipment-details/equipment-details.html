@@ -1,0 +1,401 @@
+
+<div class="details-page">
+
+  <!-- Loading -->
+  @if (loading) {
+
+    <div class="loading-container">
+
+      <div
+        class="spinner-border text-primary"
+        role="status">
+      </div>
+
+      <p class="text-muted mt-3">
+        Loading equipment...
+      </p>
+
+    </div>
+
+  }
+
+
+  <!-- Error -->
+  @if (!loading && errorMessage) {
+
+    <div class="alert alert-danger">
+
+      <i class="bi bi-exclamation-circle me-2"></i>
+
+      {{ errorMessage }}
+
+      <div class="mt-3">
+
+        <a
+          routerLink="/equipment"
+          class="btn btn-outline-danger btn-sm">
+
+          <i class="bi bi-arrow-left me-1"></i>
+          Back to Equipment
+
+        </a>
+
+      </div>
+
+    </div>
+
+  }
+
+
+  <!-- Details -->
+  @if (!loading && !errorMessage && equipment) {
+
+    <!-- Back -->
+    <div class="mb-3">
+
+      <a
+        routerLink="/equipment"
+        class="back-link">
+
+        <i class="bi bi-arrow-left me-2"></i>
+        Back to Equipment
+
+      </a>
+
+    </div>
+
+
+    <div class="row g-4">
+
+      <!-- Equipment Information -->
+      <div class="col-lg-7">
+
+        <div class="details-card bg-white border rounded-3 overflow-hidden">
+
+          <!-- Image -->
+          <div class="details-image">
+
+            @if (equipment.image) {
+
+              <img
+                [src]="getImageUrl(equipment.image)"
+                [alt]="equipment.name"
+              />
+
+            } @else {
+
+              <div class="image-placeholder">
+
+                <i
+                  class="bi {{ getEquipmentIcon(equipment.category) }}">
+                </i>
+
+              </div>
+
+            }
+
+          </div>
+
+
+          <!-- Content -->
+          <div class="p-4">
+
+            <div class="category-label mb-2">
+
+              <i
+                class="bi {{ getEquipmentIcon(equipment.category) }} me-1">
+              </i>
+
+              {{ equipment.category }}
+
+            </div>
+
+
+            <h2 class="fw-bold mb-3">
+              {{ equipment.name }}
+            </h2>
+
+
+            <p class="text-muted description">
+              {{ equipment.description }}
+            </p>
+
+
+            <div class="info-row">
+
+              <div class="info-item">
+
+                <i class="bi bi-calendar3"></i>
+
+                <div>
+                  <small class="text-muted d-block">
+                    Price per day
+                  </small>
+
+                  <strong>
+                    ₹{{ equipment.price_per_day | number:'1.0-0' }}
+                  </strong>
+                </div>
+
+              </div>
+
+
+              <div class="info-item">
+
+                <i class="bi bi-box-seam"></i>
+
+                <div>
+                  <small class="text-muted d-block">
+                    Quantity
+                  </small>
+
+                  <strong>
+                    {{ equipment.quantity }}
+                  </strong>
+                </div>
+
+              </div>
+
+
+              <div class="info-item">
+
+                <i class="bi bi-check-circle"></i>
+
+                <div>
+                  <small class="text-muted d-block">
+                    Status
+                  </small>
+
+                  @if (equipment.is_available && equipment.quantity > 0) {
+
+                    <strong class="text-success">
+                      Available
+                    </strong>
+
+                  } @else {
+
+                    <strong class="text-danger">
+                      Unavailable
+                    </strong>
+
+                  }
+
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- Booking Card -->
+      <div class="col-lg-5">
+
+        <div class="booking-card bg-white border rounded-3 p-4">
+
+          <h4 class="fw-bold mb-1">
+            Rent this equipment
+          </h4>
+
+          <p class="text-muted small mb-4">
+            Select your rental dates.
+          </p>
+
+
+          <!-- Unavailable -->
+          @if (!equipment.is_available || equipment.quantity <= 0) {
+
+            <div class="alert alert-danger">
+
+              <i class="bi bi-x-circle me-2"></i>
+
+              This equipment is currently unavailable.
+
+            </div>
+
+          }
+
+
+          <!-- Booking Form -->
+          @if (equipment.is_available && equipment.quantity > 0) {
+
+            <!-- Start Date -->
+            <div class="mb-3">
+
+              <label
+                for="startDate"
+                class="form-label fw-semibold">
+
+                Start Date
+
+              </label>
+
+              <input
+                id="startDate"
+                type="date"
+                class="form-control"
+                [min]="today"
+                [(ngModel)]="startDate"
+                (ngModelChange)="onStartDateChange()"
+              />
+
+            </div>
+
+
+            <!-- End Date -->
+            <div class="mb-3">
+
+              <label
+                for="endDate"
+                class="form-label fw-semibold">
+
+                End Date
+
+              </label>
+
+              <input
+                id="endDate"
+                type="date"
+                class="form-control"
+                [min]="startDate || today"
+                [(ngModel)]="endDate"
+                (ngModelChange)="onEndDateChange()"
+              />
+
+            </div>
+
+
+            
+        <!-- Availability messages -->
+        <div *ngIf="availabilityLoading" class="alert alert-info mt-2">
+          Checking equipment availability...
+        </div>
+
+        <div
+          *ngIf="!availabilityLoading && availabilityAvailable === false"
+          class="alert alert-danger mt-2"
+        >
+          {{ availabilityMessage || 'This equipment is fully booked for the selected dates.' }}
+        </div>
+
+        <div
+          *ngIf="!availabilityLoading && availabilityAvailable === true"
+          class="alert alert-success mt-2"
+        >
+          {{ availabilityMessage || 'Equipment is available for the selected dates.' }}
+        </div>
+
+        <div
+          *ngIf="!availabilityLoading && availabilityAvailable === null && startDate && endDate"
+          class="alert alert-warning mt-2"
+        >
+          {{ availabilityMessage || 'Availability has not been checked yet.' }}
+        </div>
+        
+
+            <!-- Price Summary -->
+            @if (rentalDays > 0) {
+
+              <div class="price-summary">
+
+                <div class="summary-row">
+
+                  <span>
+                    ₹{{ equipment.price_per_day | number:'1.0-0' }}
+                    × {{ rentalDays }} day(s)
+                  </span>
+
+                  <strong>
+                    ₹{{ rentalAmount | number:'1.0-0' }}
+                  </strong>
+
+                </div>
+
+
+                <div class="summary-row">
+
+                  <span>
+                    Security Deposit (20%)
+                  </span>
+
+                  <strong>
+                    ₹{{ depositAmount | number:'1.0-0' }}
+                  </strong>
+
+                </div>
+
+
+                <hr>
+
+
+                <div class="summary-row total-row">
+
+                  <span>
+                    Total Amount
+                  </span>
+
+                  <strong>
+                    ₹{{ totalAmount | number:'1.0-0' }}
+                  </strong>
+
+                </div>
+
+              </div>
+
+            }
+
+
+            <!-- Error -->
+            @if (bookingMessage) {
+
+              <div class="alert alert-danger mt-3">
+
+                <i class="bi bi-exclamation-circle me-2"></i>
+
+                {{ bookingMessage }}
+
+              </div>
+
+            }
+
+
+            <!-- Book -->
+                         <!-- Book -->
+            <button
+              type="button"
+              class="btn btn-primary w-100 mt-3"
+              [disabled]="bookingLoading || availabilityLoading || availabilityAvailable !== true || rentalDays <= 0"
+              (click)="bookEquipment()"
+            >
+              @if (bookingLoading) {
+                <span
+                  class="spinner-border spinner-border-sm me-2">
+                </span>
+                Creating Booking...
+              } @else {
+                <i class="bi bi-calendar-check me-2"></i>
+                Book Now
+              }
+            </button>
+
+            <p class="text-muted text-center small mt-3 mb-0">
+              You can make the payment after your booking is approved.
+            </p>
+            
+
+          }
+
+        </div>
+
+      </div>
+
+    </div>
+
+  }
+
+</div>

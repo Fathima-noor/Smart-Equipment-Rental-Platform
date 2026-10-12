@@ -1,0 +1,679 @@
+<div class="payments-page">
+
+  <!-- ==================== PAGE HEADER ==================== -->
+
+  <div class="page-header mb-4">
+
+    <div>
+      <h2 class="fw-bold mb-1">
+        Payments
+      </h2>
+
+      <p class="text-muted mb-0">
+        View and manage your rental payments
+      </p>
+    </div>
+
+    <a
+      routerLink="/bookings"
+      class="btn btn-outline-primary"
+    >
+      <i class="bi bi-calendar-check me-2"></i>
+      My Bookings
+    </a>
+
+  </div>
+
+
+  <!-- ==================== SELECTED BOOKING ==================== -->
+
+  <div
+    *ngIf="
+      selectedBookingId &&
+      !creatingPayment &&
+      selectedPayment
+    "
+    class="selected-payment-banner mb-4"
+  >
+
+    <div>
+
+      <small class="text-muted">
+        Payment for selected booking
+      </small>
+
+      <h5 class="fw-bold mb-0">
+        Booking ID: {{ selectedBookingId }}
+      </h5>
+
+    </div>
+
+    <span
+      class="badge rounded-pill"
+      [ngClass]="
+        getPaymentStatusClass(
+          selectedPayment.payment_status
+        )
+      "
+    >
+      {{
+        formatStatus(
+          selectedPayment.payment_status
+        )
+      }}
+    </span>
+
+  </div>
+
+
+  <!-- ==================== CREATING PAYMENT ==================== -->
+
+  <div
+    *ngIf="
+      selectedBookingId &&
+      creatingPayment
+    "
+    class="selected-payment-banner mb-4"
+  >
+
+    <div
+      class="spinner-border spinner-border-sm text-primary"
+      role="status"
+    ></div>
+
+    <span>
+      Preparing payment for
+      <strong>
+        Booking ID : {{ selectedBookingId }}
+      </strong>
+    </span>
+
+  </div>
+
+
+  <!-- ==================== PAYMENT SUMMARY ==================== -->
+
+  <div
+    *ngIf="
+      !loading &&
+      !errorMessage
+    "
+    class="row g-3 mb-4"
+  >
+
+    <!-- Total Paid -->
+
+    <div class="col-md-6">
+
+      <div
+        class="summary-card card border-0 shadow-sm"
+      >
+
+        <div class="card-body">
+
+          <div
+            class="summary-icon paid-icon"
+          >
+            <i class="bi bi-check-circle"></i>
+          </div>
+
+          <div>
+
+            <p class="text-muted mb-1">
+              Total Paid
+            </p>
+
+            <h4 class="fw-bold mb-0">
+              ₹{{ getTotalPaid() | number:'1.2-2' }}
+            </h4>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- Pending Amount -->
+
+    <div class="col-md-6">
+
+      <div
+        class="summary-card card border-0 shadow-sm"
+      >
+
+        <div class="card-body">
+
+          <div
+            class="summary-icon pending-icon"
+          >
+            <i class="bi bi-clock"></i>
+          </div>
+
+          <div>
+
+            <p class="text-muted mb-1">
+              Pending Amount
+            </p>
+
+            <h4 class="fw-bold mb-0">
+              ₹{{ getPendingAmount() | number:'1.2-2' }}
+            </h4>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- ==================== SUCCESS MESSAGE ==================== -->
+
+  <div
+    *ngIf="successMessage"
+    class="alert alert-success"
+  >
+
+    <i class="bi bi-check-circle me-2"></i>
+
+    {{ successMessage }}
+
+    <button
+      type="button"
+      class="btn-close float-end"
+      (click)="successMessage = ''"
+    ></button>
+
+  </div>
+
+
+  <!-- ==================== ERROR MESSAGE ==================== -->
+
+  <div
+    *ngIf="errorMessage"
+    class="alert alert-danger"
+  >
+
+    <i class="bi bi-exclamation-circle me-2"></i>
+
+    {{ errorMessage }}
+
+  </div>
+
+
+  <!-- ==================== LOADING ==================== -->
+
+  <div
+    *ngIf="loading"
+    class="loading-box text-center py-5"
+  >
+
+    <div
+      class="spinner-border text-primary mb-3"
+      role="status"
+    ></div>
+
+    <p class="text-muted mb-0">
+      Loading your payments...
+    </p>
+
+  </div>
+
+
+  <!-- ==================== EMPTY STATE ==================== -->
+
+  <div
+    *ngIf="
+      !loading &&
+      !errorMessage &&
+      payments.length === 0
+    "
+    class="empty-box text-center"
+  >
+
+    <div class="empty-icon">
+
+      <i class="bi bi-credit-card"></i>
+
+    </div>
+
+    <h5 class="fw-bold mt-3">
+      No payments yet
+    </h5>
+
+    <p class="text-muted">
+      Your rental payments will appear here.
+    </p>
+
+    <a
+      routerLink="/equipment"
+      class="btn btn-primary"
+    >
+      Browse Equipment
+    </a>
+
+  </div>
+
+
+  <!-- ==================== PAYMENT LIST ==================== -->
+
+  <div
+    *ngIf="
+      !loading &&
+      !errorMessage &&
+      payments.length > 0
+    "
+  >
+
+    <div
+      class="payment-card card border-0 shadow-sm mb-3"
+      *ngFor="let payment of payments"
+    >
+
+      <div class="card-body p-4">
+
+        <!-- ==================== TOP ROW ==================== -->
+
+        <div class="row align-items-start g-3">
+
+          <!-- Payment Icon -->
+
+          <div class="col-auto">
+
+            <div class="payment-icon">
+
+              <i class="bi bi-receipt"></i>
+
+            </div>
+
+          </div>
+
+
+          <!-- Payment Details -->
+
+          <div class="col">
+
+            <h5 class="fw-bold mb-1">
+              Payment ID: {{ payment.id }}
+            </h5>
+
+            <div class="payment-details">
+
+              <span class="me-3">
+
+                <i
+                  class="bi bi-calendar3 me-1"
+                ></i>
+
+                {{
+                  payment.payment_date
+                    | date:'dd MMM yyyy, hh:mm a'
+                }}
+
+              </span> 
+
+              <span>
+
+                <i
+                  class="bi bi-bookmark me-1"
+                ></i>
+
+                Booking ID: {{ payment.booking }}
+
+              </span>
+
+            </div>
+
+          </div>
+
+
+          <!-- Status -->
+
+          <div class="col-auto">
+
+            <span
+              class="badge rounded-pill"
+              [ngClass]="
+                getPaymentStatusClass(
+                  payment.payment_status
+                )
+              "
+            >
+
+              {{
+                formatStatus(
+                  payment.payment_status
+                )
+              }}
+
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <!-- ==================== PAYMENT BREAKDOWN ==================== -->
+
+        <div class="payment-breakdown mt-4">
+
+          <!-- Rental -->
+
+          <div class="breakdown-row">
+
+            <span>
+              <i class="bi bi-box-seam me-2"></i>
+              Rental Amount
+            </span>
+
+            <strong>
+              ₹{{ payment.rental_amount | number:'1.2-2' }}
+            </strong>
+
+          </div>
+
+
+          <!-- Deposit -->
+
+          <div class="breakdown-row">
+
+            <span>
+              <i class="bi bi-shield-check me-2"></i>
+              Security Deposit
+            </span>
+
+            <strong>
+              ₹{{ payment.deposit_amount | number:'1.2-2' }}
+            </strong>
+
+          </div>
+
+
+          <!-- Total -->
+
+          <div class="breakdown-row total-row">
+
+            <span>
+              Total Upfront Payment
+            </span>
+
+            <strong>
+              ₹{{ payment.total_amount | number:'1.2-2' }}
+            </strong>
+
+          </div>
+
+        </div>
+
+
+        <!-- ==================== PAY NOW ==================== -->
+
+        <div
+          *ngIf="
+            payment.payment_status !== 'paid'
+          "
+          class="payment-action mt-4"
+        >
+
+          <div>
+
+            <small class="text-muted">
+              You will pay rental + security deposit together.
+            </small>
+
+          </div>
+
+          <button
+            class="btn btn-primary"
+            [disabled]="
+              processingPaymentId === payment.id
+            "
+            (click)="processPayment(payment)"
+          >
+
+            <span
+              *ngIf="
+                processingPaymentId === payment.id
+              "
+              class="spinner-border spinner-border-sm me-1"
+              role="status"
+            ></span>
+
+            <i
+              *ngIf="
+                processingPaymentId !== payment.id
+              "
+              class="bi bi-credit-card me-1"
+            ></i>
+
+            {{
+              processingPaymentId === payment.id
+                ? 'Processing...'
+                : 'Pay ₹' + formatAmount(payment.total_amount)
+            }}
+
+          </button>
+
+        </div>
+
+
+        <!-- ==================== DEPOSIT SETTLEMENT ==================== -->
+
+        <div
+          *ngIf="
+            payment.payment_status === 'paid' &&
+            (
+              payment.deposit_refunded > 0 ||
+              payment.deposit_deducted > 0 ||
+              payment.additional_damage_payment > 0
+            )
+          "
+          class="deposit-settlement mt-4"
+        >
+
+          <h6 class="fw-bold mb-3">
+
+            <i class="bi bi-shield-check me-2"></i>
+
+            Security Deposit Settlement
+
+          </h6>
+
+
+          <!-- Deducted -->
+
+          <div
+            *ngIf="payment.deposit_deducted > 0"
+            class="settlement-row"
+          >
+
+            <span>
+              Deposit Deducted
+            </span>
+
+            <strong class="text-danger">
+              ₹{{ payment.deposit_deducted | number:'1.2-2' }}
+            </strong>
+
+          </div>
+
+
+          <!-- Refunded -->
+
+          <div
+            *ngIf="payment.deposit_refunded > 0"
+            class="settlement-row"
+          >
+
+            <span>
+              Deposit Refunded
+            </span>
+
+            <strong class="text-success">
+              ₹{{ payment.deposit_refunded | number:'1.2-2' }}
+            </strong>
+
+          </div>
+
+
+          <!-- Additional Damage -->
+
+          <div
+            *ngIf="payment.additional_damage_payment > 0"
+            class="settlement-row"
+          >
+
+            <span>
+              Additional Damage Payment
+            </span>
+
+            <strong class="text-danger">
+              ₹{{ payment.additional_damage_payment | number:'1.2-2' }}
+            </strong>
+
+          </div>
+
+
+          <!-- Refund Status -->
+
+          <div
+            *ngIf="payment.refund_status !== 'not_applicable'"
+            class="settlement-row"
+          >
+
+            <span>
+              Refund Status
+            </span>
+
+            <span class="badge rounded-pill bg-success-subtle text-success">
+              {{ formatStatus(payment.refund_status) }}
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <!-- ==================== TRANSACTION ID ==================== -->
+
+        <div
+          *ngIf="payment.transaction_id"
+          class="transaction-row mt-4 pt-3"
+        >
+
+          <small class="text-muted">
+
+            <i
+              class="bi bi-receipt-cutoff me-1"
+            ></i>
+
+            Transaction ID:
+
+            <span class="fw-semibold">
+
+              {{ payment.transaction_id }}
+
+            </span>
+
+          </small>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+
+
+<div
+  *ngIf="showStripePayment"
+  class="payment-modal-backdrop"
+>
+
+  <div class="payment-modal">
+
+    <div class="payment-modal-header">
+
+      <div>
+        <h4>Complete Payment</h4>
+
+        <p class="text-muted mb-0">
+          {{ selectedPayment?.booking_equipment }}
+        </p>
+      </div>
+
+      <button
+        type="button"
+        class="btn-close"
+        [disabled]="processingPaymentId === selectedPayment?.id"
+        (click)="closeStripePayment()"
+      ></button>
+
+    </div>
+
+    <div class="payment-modal-body">
+
+      <div class="payment-amount">
+        <span>Total Amount</span>
+
+        <strong>
+          ₹{{ formatAmount(selectedPayment?.total_amount) }}
+        </strong>
+      </div>
+
+      <div
+        #paymentElement
+        class="stripe-payment-element"
+      ></div>
+
+      <button
+        class="btn btn-success w-100 mt-4"
+        [disabled]="
+          processingPaymentId === selectedPayment?.id
+        "
+        (click)="confirmStripePayment(selectedPayment)"
+      >
+
+        <span
+          *ngIf="
+            processingPaymentId === selectedPayment?.id
+          "
+          class="spinner-border spinner-border-sm me-1"
+          role="status"
+        ></span>
+
+        {{
+          processingPaymentId === selectedPayment?.id
+            ? 'Confirming Payment...'
+            : 'Confirm Payment'
+        }}
+
+      </button>
+
+      <button
+        type="button"
+        class="btn btn-outline-secondary w-100 mt-2"
+        [disabled]="
+          processingPaymentId === selectedPayment?.id
+        "
+        (click)="closeStripePayment()"
+      >
+        Cancel
+      </button>
+
+    </div>
+
+  </div>
+
+</div>

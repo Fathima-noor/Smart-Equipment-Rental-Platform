@@ -1,0 +1,581 @@
+<div class="vendor-equipment-page">
+
+  <!-- Header -->
+  <div class="page-header">
+
+    <div>
+      <div class="eyebrow">
+        Vendor Management
+      </div>
+
+      <h1>My Equipment</h1>
+
+      <p>
+        Manage the equipment you offer for rental.
+      </p>
+    </div>
+
+    <button
+      type="button"
+      class="btn btn-primary add-button"
+      (click)="openAddForm()"
+    >
+      <i class="bi bi-plus-lg me-2"></i>
+      Add Equipment
+    </button>
+
+  </div>
+
+
+  <!-- Success -->
+  <div
+    *ngIf="successMessage"
+    class="alert alert-success alert-dismissible"
+  >
+    <i class="bi bi-check-circle me-2"></i>
+
+    {{ successMessage }}
+
+    <button
+      type="button"
+      class="btn-close"
+      (click)="successMessage = ''"
+    ></button>
+  </div>
+
+
+  <!-- Error -->
+  <div
+    *ngIf="errorMessage"
+    class="alert alert-danger"
+  >
+    <i class="bi bi-exclamation-triangle me-2"></i>
+
+    {{ errorMessage }}
+  </div>
+
+
+  <!-- Add / Edit Form -->
+  <div
+    *ngIf="showForm"
+    class="form-card"
+  >
+
+    <div class="form-header">
+
+      <div>
+
+        <h3>
+          {{ editingEquipment
+            ? 'Edit Equipment'
+            : 'Add New Equipment'
+          }}
+        </h3>
+
+        <p>
+          Enter the equipment details below.
+        </p>
+
+      </div>
+
+      <button
+        type="button"
+        class="btn-close"
+        [disabled]="saving"
+        (click)="closeForm()"
+      ></button>
+
+    </div>
+
+
+    <form
+      (ngSubmit)="saveEquipment()"
+    >
+
+      <div class="row g-3">
+
+
+        <!-- Name -->
+        <div class="col-md-6">
+
+          <label class="form-label">
+            Equipment Name
+          </label>
+
+          <input
+            type="text"
+            class="form-control"
+            [(ngModel)]="formData.name"
+            name="name"
+            placeholder="Example: Sony Camera"
+          />
+
+        </div>
+
+
+        <!-- Category -->
+        <div class="col-md-6">
+
+          <label class="form-label">
+            Category
+          </label>
+
+          <select
+            class="form-select"
+            [(ngModel)]="formData.category"
+            name="category"
+          >
+
+            <option
+              *ngFor="let category of categories"
+              [value]="category.value"
+            >
+              {{ category.label }}
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <!-- Description -->
+        <div class="col-12">
+
+          <label class="form-label">
+            Description
+          </label>
+
+          <textarea
+            class="form-control"
+            rows="4"
+            [(ngModel)]="formData.description"
+            name="description"
+            placeholder="Describe your equipment..."
+          ></textarea>
+
+        </div>
+
+
+        <!-- Price -->
+        <div class="col-md-4">
+
+          <label class="form-label">
+            Price Per Day
+          </label>
+
+          <div class="input-group">
+
+            <span class="input-group-text">
+              ₹
+            </span>
+
+            <input
+              type="number"
+              class="form-control"
+              [(ngModel)]="formData.price_per_day"
+              name="price_per_day"
+              min="1"
+              placeholder="1000"
+            />
+
+          </div>
+
+        </div>
+
+
+        <!-- Quantity -->
+        <div class="col-md-4">
+
+          <label class="form-label">
+            Quantity
+          </label>
+
+          <input
+            type="number"
+            class="form-control"
+            [(ngModel)]="formData.quantity"
+            name="quantity"
+            min="1"
+          />
+
+        </div>
+
+
+        <!-- Availability -->
+        <div class="col-md-4">
+
+          <label class="form-label">
+            Availability
+          </label>
+
+          <div class="availability-toggle">
+
+            <input
+              type="checkbox"
+              class="form-check-input"
+              [(ngModel)]="formData.is_available"
+              name="is_available"
+              id="availableCheck"
+            />
+
+            <label
+              for="availableCheck"
+              class="form-check-label"
+            >
+              Available for rental
+            </label>
+
+          </div>
+
+        </div>
+
+
+        <!-- Image -->
+        <div class="col-12">
+
+          <label class="form-label">
+            Equipment Image
+          </label>
+
+          <input
+            type="file"
+            class="form-control"
+            accept="image/*"
+            (change)="onImageSelected($event)"
+          />
+
+          <small class="text-muted">
+            JPG, PNG or other image formats.
+          </small>
+
+          <div
+            *ngIf="selectedImage"
+            class="selected-file"
+          >
+            <i class="bi bi-image me-2"></i>
+
+            {{ selectedImage.name }}
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- Form Actions -->
+      <div class="form-actions">
+
+        <button
+          type="button"
+          class="btn btn-light"
+          [disabled]="saving"
+          (click)="closeForm()"
+        >
+          Cancel
+        </button>
+
+        <button
+          type="submit"
+          class="btn btn-primary"
+          [disabled]="saving"
+        >
+
+          <span
+            *ngIf="saving"
+            class="spinner-border spinner-border-sm me-2"
+          ></span>
+
+          <i
+            *ngIf="!saving"
+            class="bi bi-check-lg me-2"
+          ></i>
+
+          {{ editingEquipment
+            ? 'Update Equipment'
+            : 'Add Equipment'
+          }}
+
+        </button>
+
+      </div>
+
+    </form>
+
+  </div>
+
+
+  <!-- Search / Filter -->
+  <div
+    *ngIf="!loading"
+    class="filter-card"
+  >
+
+    <div class="search-box">
+
+      <i class="bi bi-search"></i>
+
+      <input
+        type="text"
+        placeholder="Search equipment..."
+        [(ngModel)]="searchText"
+        (input)="onSearchChange()"
+      />
+
+    </div>
+
+
+    <select
+      class="form-select category-filter"
+      [(ngModel)]="selectedCategory"
+      (change)="onCategoryChange()"
+    >
+
+      <option value="">
+        All Categories
+      </option>
+
+      <option
+        *ngFor="let category of categories"
+        [value]="category.value"
+      >
+        {{ category.label }}
+      </option>
+
+    </select>
+
+  </div>
+
+
+  <!-- Loading -->
+  <div
+    *ngIf="loading"
+    class="loading-container"
+  >
+
+    <div
+      class="spinner-border text-primary"
+    ></div>
+
+    <p>
+      Loading your equipment...
+    </p>
+
+  </div>
+
+
+  <!-- Empty -->
+  <div
+    *ngIf="
+      !loading &&
+      equipment.length === 0
+    "
+    class="empty-card"
+  >
+
+    <div class="empty-icon">
+      <i class="bi bi-box-seam"></i>
+    </div>
+
+    <h3>No Equipment Yet</h3>
+
+    <p>
+      Add your first equipment to start
+      receiving rental bookings.
+    </p>
+
+    <button
+      type="button"
+      class="btn btn-primary"
+      (click)="openAddForm()"
+    >
+      <i class="bi bi-plus-lg me-2"></i>
+      Add Equipment
+    </button>
+
+  </div>
+
+
+  <!-- No Search Results -->
+  <div
+    *ngIf="
+      !loading &&
+      equipment.length > 0 &&
+      filteredEquipment.length === 0
+    "
+    class="empty-card"
+  >
+
+    <div class="empty-icon">
+      <i class="bi bi-search"></i>
+    </div>
+
+    <h3>No Equipment Found</h3>
+
+    <p>
+      Try changing your search or category filter.
+    </p>
+
+  </div>
+
+
+  <!-- Equipment Grid -->
+  <div
+    *ngIf="
+      !loading &&
+      filteredEquipment.length > 0
+    "
+    class="equipment-grid"
+  >
+
+    <div
+      *ngFor="let item of filteredEquipment"
+      class="equipment-card"
+    >
+
+
+      <!-- Image -->
+      <div class="equipment-image">
+
+        <img
+          *ngIf="item.image"
+          [src]="getImageUrl(item.image)"
+          [alt]="item.name"
+        />
+
+        <div
+          *ngIf="!item.image"
+          class="image-placeholder"
+        >
+          <i
+            [class]="
+              'bi ' +
+              getEquipmentIcon(item.category)
+            "
+          ></i>
+        </div>
+
+
+        <!-- Availability -->
+        <span
+          class="availability-badge"
+          [class.available]="item.is_available"
+          [class.unavailable]="!item.is_available"
+        >
+
+          <i
+            class="bi"
+            [class.bi-check-circle]="item.is_available"
+            [class.bi-x-circle]="!item.is_available"
+          ></i>
+
+          {{
+            item.is_available
+              ? 'Available'
+              : 'Unavailable'
+          }}
+
+        </span>
+
+      </div>
+
+
+      <!-- Content -->
+      <div class="equipment-content">
+
+        <div class="equipment-category">
+
+          <i
+            [class]="
+              'bi ' +
+              getEquipmentIcon(item.category)
+            "
+          ></i>
+
+          {{ formatCategory(item.category) }}
+
+        </div>
+
+
+        <h3>
+          {{ item.name }}
+        </h3>
+
+
+        <p class="description">
+          {{ item.description }}
+        </p>
+
+
+        <div class="equipment-meta">
+
+          <div>
+
+            <span>
+              Price per day
+            </span>
+
+            <strong>
+              ₹{{ item.price_per_day }}
+            </strong>
+
+          </div>
+
+
+          <div>
+
+            <span>
+              Quantity
+            </span>
+
+            <strong>
+              {{ item.quantity }}
+            </strong>
+
+          </div>
+
+        </div>
+
+
+        <!-- Actions -->
+        <div class="equipment-actions">
+
+          <button
+            type="button"
+            class="btn btn-outline-primary"
+            (click)="openEditForm(item)"
+          >
+            <i class="bi bi-pencil me-1"></i>
+            Edit
+          </button>
+
+
+          <button
+            type="button"
+            class="btn btn-outline-danger"
+            [disabled]="deletingId === item.id"
+            (click)="deleteEquipment(item)"
+          >
+
+            <span
+              *ngIf="deletingId === item.id"
+              class="spinner-border spinner-border-sm"
+            ></span>
+
+            <i
+              *ngIf="deletingId !== item.id"
+              class="bi bi-trash me-1"
+            ></i>
+
+            Delete
+
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

@@ -1,0 +1,135 @@
+.vendor-request-page {
+  max-width: 850px;
+  margin: 0 auto;
+  padding: 20px 0;
+}
+
+.vendor-request-card {
+  background: #ffffff;
+  border: 1px solid #edf0f2;
+  border-radius: 16px;
+  padding: 35px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+}
+
+.request-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.header-icon {
+  width: 65px;
+  height: 65px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 15px;
+  border-radius: 16px;
+  background: #f3e8ff;
+  color: #7c3aed;
+  font-size: 28px;
+}
+
+.request-header h2 {
+  font-weight: 700;
+  color: #212529;
+  margin-bottom: 8px;
+}
+
+.request-header p {
+  color: #6c757d;
+  margin-bottom: 0;
+}
+
+.form-group {
+  margin-bottom: 22px;
+}
+
+.form-group label {
+  display: block;
+  font-weight: 600;
+  color: #343a40;
+  margin-bottom: 8px;
+}
+
+.form-group textarea,
+.form-group select {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #dce1e7;
+  border-radius: 9px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s ease;
+  background: #ffffff;
+}
+
+.form-group textarea {
+  resize: vertical;
+}
+
+.form-group textarea:focus,
+.form-group select:focus {
+  border-color: #0d6efd;
+  box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.1);
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 30px;
+}
+
+.form-actions .btn {
+  border-radius: 9px;
+  padding: 10px 20px;
+}
+
+/* Dark Theme */
+
+:host-context(.dark-theme) .vendor-request-card {
+  background: #1e2d47;
+  border-color: #304563;
+}
+
+:host-context(.dark-theme) .request-header h2 {
+  color: #ffffff;
+}
+
+:host-context(.dark-theme) .request-header p {
+  color: #b7c8df;
+}
+
+:host-context(.dark-theme) .form-group label {
+  color: #e5efff;
+}
+
+:host-context(.dark-theme) .form-group textarea,
+:host-context(.dark-theme) .form-group select {
+  background: #263b5b;
+  color: #ffffff;
+  border-color: #405674;
+}
+
+:host-context(.dark-theme) .form-group textarea::placeholder {
+  color: #9eb2cc;
+}
+
+/* Mobile */
+
+@media (max-width: 576px) {
+
+  .vendor-request-card {
+    padding: 22px;
+  }
+
+  .form-actions {
+    flex-direction: column-reverse;
+  }
+
+  .form-actions .btn {
+    width: 100%;
+  }
+
+}

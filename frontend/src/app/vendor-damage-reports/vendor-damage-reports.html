@@ -1,0 +1,555 @@
+<div class="container-fluid py-4">
+
+  <!-- Header -->
+
+  <div
+    class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4"
+  >
+
+    <div>
+
+      <h2 class="fw-bold mb-1">
+
+        <i class="bi bi-exclamation-triangle me-2"></i>
+
+        Damage Reports
+
+      </h2>
+
+      <p class="text-muted mb-0">
+        View equipment damage reports and deposit settlements.
+      </p>
+
+    </div>
+
+  </div>
+
+
+  <!-- Messages -->
+
+  <div
+    *ngIf="successMessage"
+    class="alert alert-success alert-dismissible fade show"
+  >
+
+    <i class="bi bi-check-circle me-2"></i>
+
+    {{ successMessage }}
+
+    <button
+      type="button"
+      class="btn-close"
+      (click)="successMessage = ''"
+    ></button>
+
+  </div>
+
+
+  <div
+    *ngIf="errorMessage"
+    class="alert alert-danger alert-dismissible fade show"
+  >
+
+    <i class="bi bi-exclamation-circle me-2"></i>
+
+    {{ errorMessage }}
+
+    <button
+      type="button"
+      class="btn-close"
+      (click)="errorMessage = ''"
+    ></button>
+
+  </div>
+
+
+  <!-- Statistics -->
+
+  <div class="row g-3 mb-4">
+
+    <div class="col-6 col-xl-3">
+
+      <div class="stat-card">
+
+        <div class="stat-icon">
+
+          <i class="bi bi-file-earmark-text"></i>
+
+        </div>
+
+        <div>
+
+          <small>Total Reports</small>
+
+          <h4>
+            {{ getTotalReports() }}
+          </h4>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div class="col-6 col-xl-3">
+
+      <div class="stat-card">
+
+        <div class="stat-icon warning">
+
+          <i class="bi bi-exclamation-circle"></i>
+
+        </div>
+
+        <div>
+
+          <small>Reported</small>
+
+          <h4>
+            {{ getReportedCount() }}
+          </h4>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div class="col-6 col-xl-3">
+
+      <div class="stat-card">
+
+        <div class="stat-icon info">
+
+          <i class="bi bi-search"></i>
+
+        </div>
+
+        <div>
+
+          <small>Reviewed</small>
+
+          <h4>
+            {{ getReviewedCount() }}
+          </h4>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div class="col-6 col-xl-3">
+
+      <div class="stat-card">
+
+        <div class="stat-icon success">
+
+          <i class="bi bi-check-circle"></i>
+
+        </div>
+
+        <div>
+
+          <small>Resolved</small>
+
+          <h4>
+            {{ getResolvedCount() }}
+          </h4>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- Search / Filter -->
+
+  <div class="card border-0 shadow-sm mb-4">
+
+    <div class="card-body">
+
+      <div class="row g-3">
+
+        <div class="col-md-8">
+
+          <div class="input-group">
+
+            <span class="input-group-text">
+
+              <i class="bi bi-search"></i>
+
+            </span>
+
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Search by report ID, booking ID or description..."
+              [(ngModel)]="searchText"
+              (input)="applyFilters()"
+            >
+
+          </div>
+
+        </div>
+
+
+        <div class="col-md-4">
+
+          <select
+            class="form-select"
+            [(ngModel)]="selectedStatus"
+            (change)="applyFilters()"
+          >
+
+            <option value="all">
+              All Statuses
+            </option>
+
+            <option value="reported">
+              Reported
+            </option>
+
+            <option value="reviewed">
+              Reviewed
+            </option>
+
+            <option value="resolved">
+              Resolved
+            </option>
+
+          </select>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- Loading -->
+
+  <div
+    *ngIf="loading"
+    class="text-center py-5"
+  >
+
+    <div
+      class="spinner-border text-primary"
+      role="status"
+    ></div>
+
+    <p class="text-muted mt-3 mb-0">
+      Loading damage reports...
+    </p>
+
+  </div>
+
+
+  <!-- Empty -->
+
+  <div
+    *ngIf="!loading && filteredReports.length === 0"
+    class="empty-state"
+  >
+
+    <i class="bi bi-clipboard-check"></i>
+
+    <h5 class="mt-3">
+      No damage reports found
+    </h5>
+
+    <p class="text-muted">
+      There are no damage reports matching your search.
+    </p>
+
+  </div>
+
+
+  <!-- Reports -->
+
+  <div
+    *ngIf="!loading && filteredReports.length > 0"
+    class="row g-4"
+  >
+
+    <div
+      class="col-12 col-lg-6"
+      *ngFor="let report of filteredReports"
+    >
+
+      <div class="card report-card border-0 shadow-sm h-100">
+
+
+        <!-- Card Header -->
+
+        <div class="card-header bg-white border-0 pt-4 px-4">
+
+          <div class="d-flex justify-content-between align-items-start">
+
+            <div>
+
+              <span class="text-muted small">
+                Damage Report
+              </span>
+
+              <h5 class="fw-bold mb-1">
+                ID: {{ report.id }}
+              </h5>
+
+            </div>
+
+            <span
+              class="badge"
+              [ngClass]="getStatusClass(report.status)"
+            >
+              {{ formatStatus(report.status) }}
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <!-- Card Body -->
+
+        <div class="card-body px-4">
+
+
+          <!-- Customer -->
+
+          <div class="info-row">
+
+            <div class="info-icon">
+
+              <i class="bi bi-person"></i>
+
+            </div>
+
+            <div>
+
+              <div class="text-muted">
+                Customer
+              </div>
+
+              <div class="fw-semibold">
+                {{ report.customer_name }}
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <!-- Equipment -->
+
+          <div class="info-row">
+
+            <div class="info-icon">
+
+              <i class="bi bi-camera"></i>
+
+            </div>
+
+            <div>
+
+              <small class="text-muted">
+                Equipment
+              </small>
+
+              <div class="fw-semibold">
+                {{ report.equipment_name || 'Equipment' }}
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <!-- Customer Return Condition -->
+
+          <div class="info-item">
+
+            <div class="info-label">
+              Customer Return Condition
+            </div>
+
+
+            <div
+              *ngIf="report.customer_return_condition === 'good'"
+              class="text-success fw-semibold"
+            >
+
+              <i class="bi bi-check-circle me-1"></i>
+
+              Good Condition
+
+            </div>
+
+
+            <div
+              *ngIf="report.customer_return_condition === 'damaged'"
+              class="text-danger fw-semibold"
+            >
+
+              <i class="bi bi-exclamation-triangle me-1"></i>
+
+              Damaged
+
+            </div>
+
+
+            <div
+              *ngIf="!report.customer_return_condition"
+              class="text-muted"
+            >
+
+              Not available
+
+            </div>
+
+          </div>
+
+
+          <!-- Description -->
+
+          <div class="description-box">
+
+            <small class="text-muted">
+              Damage Description
+            </small>
+
+            <p class="mb-0 mt-1">
+              {{ report.description }}
+            </p>
+
+          </div>
+
+
+          <!-- Damage Amount -->
+
+          <div class="amount-box">
+
+            <div>
+
+              <small class="text-muted">
+                Damage Amount
+              </small>
+
+              <h5 class="fw-bold text-danger mb-0">
+
+                ₹{{ formatAmount(report.damage_amount) }}
+
+              </h5>
+
+            </div>
+
+            <i class="bi bi-currency-rupee"></i>
+
+          </div>
+
+
+          <!-- Settlement -->
+
+          <div
+            *ngIf="report.status === 'resolved'"
+            class="settlement-box mt-3"
+          >
+
+            <div class="settlement-title">
+
+              <i class="bi bi-calculator me-1"></i>
+
+              Deposit Settlement
+
+            </div>
+
+
+            <div class="settlement-row">
+
+              <span>
+                Deposit Deducted
+              </span>
+
+              <strong>
+                ₹{{ formatAmount(report.deposit_deducted) }}
+              </strong>
+
+            </div>
+
+
+            <div class="settlement-row">
+
+              <span>
+                Additional Payment
+              </span>
+
+              <strong
+                [class.text-danger]="
+                  Number(report.additional_amount || 0) > 0
+                "
+              >
+
+                ₹{{ formatAmount(report.additional_amount) }}
+
+              </strong>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <!-- Actions -->
+
+        <div class="card-footer bg-white border-0 px-4 pb-4">
+
+
+          <!-- Resolved -->
+
+          <div
+            *ngIf="report.status === 'resolved'"
+            class="resolved-message"
+          >
+
+            <i class="bi bi-check-circle-fill me-2"></i>
+
+            Damage report resolved successfully.
+
+          </div>
+
+
+          <!-- Admin Processing -->
+
+          <div
+            *ngIf="
+              report.status === 'reported' ||
+              report.status === 'reviewed'
+            "
+            class="text-muted small"
+          >
+
+            <i class="bi bi-info-circle me-1"></i>
+
+            This damage report is currently being processed by Admin.
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

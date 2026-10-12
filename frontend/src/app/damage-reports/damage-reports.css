@@ -1,0 +1,545 @@
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+
+
+.report-form-card {
+  border-radius: 16px;
+}
+
+
+.form-icon {
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #e9f2ff;
+  color: #0d6efd;
+  font-size: 1.3rem;
+}
+
+
+.damage-card {
+  border-radius: 16px;
+  overflow: hidden;
+  transition: transform 0.2s ease,
+              box-shadow 0.2s ease;
+}
+
+
+.damage-card:hover {
+  transform: translateY(-4px);
+}
+
+
+.info-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 0;
+}
+
+
+.info-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f1f5f9;
+  color: #0d6efd;
+  font-size: 1.05rem;
+  flex-shrink: 0;
+}
+
+
+.description-box {
+  padding: 14px;
+  border-radius: 10px;
+  background: #f8f9fa;
+  line-height: 1.6;
+}
+
+
+.damage-amount-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  border-radius: 12px;
+  background: #f8f9fa;
+}
+
+
+.damage-amount-box > i {
+  font-size: 1.6rem;
+  opacity: 0.5;
+}
+
+
+.settlement-box {
+  padding: 17px;
+  border-radius: 12px;
+  background: #f0f8ff;
+  border: 1px solid #d9ecff;
+}
+
+
+.settlement-box > div:first-child {
+  color: #0d6efd;
+}
+
+
+.settlement-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  padding: 9px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.07);
+}
+
+
+.settlement-row:last-of-type {
+  border-bottom: none;
+}
+
+
+.settlement-message {
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.75);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+
+.status-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+
+.additional-payment-box {
+  padding: 17px;
+  border-radius: 12px;
+  background: #fff5f5;
+  border: 1px solid #ffd6d6;
+}
+
+
+.payment-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+}
+
+
+.payment-heading > i {
+  font-size: 1.7rem;
+  opacity: 0.6;
+}
+
+
+.paid-box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 10px;
+  background: #eaf8ef;
+  color: #198754;
+}
+
+
+.paid-box > i {
+  font-size: 1.4rem;
+}
+
+
+.created-date {
+  padding-top: 12px;
+  border-top: 1px solid #eee;
+  color: #6c757d;
+  font-size: 0.8rem;
+}
+
+
+.loading-container {
+  min-height: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+
+.empty-state {
+  padding: 70px 20px;
+}
+
+
+.empty-icon {
+  width: 70px;
+  height: 70px;
+  margin: 0 auto;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f1f3f5;
+  color: #adb5bd;
+  font-size: 2rem;
+}
+
+
+@media (max-width: 768px) {
+
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+
+  .page-header button {
+    width: 100%;
+  }
+
+
+  .settlement-row {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+}
+
+
+@media (max-width: 576px) {
+
+  .damage-card .card-body {
+    padding: 20px !important;
+  }
+
+
+  .status-actions {
+    flex-direction: column;
+  }
+
+
+  .status-actions button {
+    width: 100%;
+  }
+
+
+  .damage-amount-box {
+    padding: 14px;
+  }
+
+}
+
+/* =========================================
+   CUSTOMER DAMAGE REPORTS - DARK THEME
+   ========================================= */
+
+/* Header */
+
+:host-context(.dark-theme) .page-header {
+  color: #f1f6ff;
+}
+
+/* Report Form */
+
+:host-context(.dark-theme) .report-form-card {
+  background: #1e2d47;
+  border-color: #304563;
+  color: #e5efff;
+}
+
+:host-context(.dark-theme) .form-icon {
+  background: #163b5d;
+  color: #9bcaff;
+}
+
+/* Damage Cards */
+
+:host-context(.dark-theme) .damage-card {
+  background: #1e2d47;
+  border-color: #304563;
+  color: #e5efff;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.18);
+}
+
+:host-context(.dark-theme) .damage-card:hover {
+  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.28);
+}
+
+/* Information Rows */
+
+:host-context(.dark-theme) .info-row {
+  color: #c2d1e5;
+}
+
+:host-context(.dark-theme) .info-icon {
+  background: #263b5b;
+  color: #9bcaff;
+}
+
+/* Description */
+
+:host-context(.dark-theme) .description-box {
+  background: #263b5b;
+  color: #d5e2f3;
+}
+
+/* Damage Amount */
+
+:host-context(.dark-theme) .damage-amount-box {
+  background: #263b5b;
+  color: #f1f6ff;
+}
+
+:host-context(.dark-theme) .damage-amount-box > i {
+  color: #9eb2cc;
+}
+
+/* Settlement */
+
+:host-context(.dark-theme) .settlement-box {
+  background: #163b5d;
+  border-color: #2b537d;
+  color: #e5efff;
+}
+
+:host-context(.dark-theme) .settlement-box > div:first-child {
+  color: #9bcaff;
+}
+
+:host-context(.dark-theme) .settlement-row {
+  border-bottom-color: rgba(158, 178, 204, 0.25);
+}
+
+:host-context(.dark-theme) .settlement-message {
+  background: rgba(22, 59, 93, 0.8);
+  color: #d5e2f3;
+}
+
+/* Status Actions */
+
+:host-context(.dark-theme) .status-actions button {
+  border-color: #496384;
+}
+
+/* Additional Payment */
+
+:host-context(.dark-theme) .additional-payment-box {
+  background: #451f2a;
+  border-color: #71313e;
+  color: #f1dce1;
+}
+
+:host-context(.dark-theme) .payment-heading {
+  color: #ffc2cb;
+}
+
+:host-context(.dark-theme) .payment-heading > i {
+  color: #ff9eaa;
+}
+
+/* Paid Box */
+
+:host-context(.dark-theme) .paid-box {
+  background: #164d43;
+  color: #8af0c9;
+}
+
+/* Created Date */
+
+:host-context(.dark-theme) .created-date {
+  border-top-color: #304563;
+  color: #9eb2cc;
+}
+
+/* Loading */
+
+:host-context(.dark-theme) .loading-container {
+  color: #e5efff;
+}
+
+/* Empty State */
+
+:host-context(.dark-theme) .empty-state {
+  color: #c2d1e5;
+}
+
+:host-context(.dark-theme) .empty-icon {
+  background: #263b5b;
+  color: #9eb2cc;
+}
+
+/* General Text */
+
+:host-context(.dark-theme) .damage-card h5,
+:host-context(.dark-theme) .damage-card h6,
+:host-context(.dark-theme) .damage-card strong {
+  color: #f1f6ff;
+}
+
+:host-context(.dark-theme) .damage-card small,
+:host-context(.dark-theme) .damage-card .text-muted {
+  color: #9eb2cc !important;
+}
+
+/* Form Controls */
+
+:host-context(.dark-theme) .report-form-card input,
+:host-context(.dark-theme) .report-form-card select,
+:host-context(.dark-theme) .report-form-card textarea {
+  background: #183554;
+  color: #f1f6ff;
+  border-color: #496384;
+}
+
+:host-context(.dark-theme) .report-form-card input::placeholder,
+:host-context(.dark-theme) .report-form-card textarea::placeholder {
+  color: #9eb2cc;
+}
+
+:host-context(.dark-theme) .report-form-card input:focus,
+:host-context(.dark-theme) .report-form-card select:focus,
+:host-context(.dark-theme) .report-form-card textarea:focus {
+  background: #183554;
+  color: #f1f6ff;
+  border-color: #4d9aff;
+  box-shadow: 0 0 0 0.2rem rgba(77, 154, 255, 0.2);
+}
+
+/* =========================================
+   ISSUE STATUS BOX - DARK THEME
+   ========================================= */
+
+/* Common issue status box */
+:host-context(.dark-theme) .issue-status-box {
+  border-radius: 10px;
+  color: #f1f6ff;
+}
+
+/* Issue Under Review */
+:host-context(.dark-theme) .issue-status-box.issue-under-review {
+  background: #30283f;
+  border: 1px solid #e34b67;
+}
+
+:host-context(.dark-theme) .issue-under-review .issue-status-title {
+  color: #ffffff;
+}
+
+:host-context(.dark-theme) .issue-under-review .issue-status-message {
+  color: #b7c8df;
+}
+
+/* Issue Rejected */
+:host-context(.dark-theme) .issue-status-box.issue-rejected {
+  background: #303329;
+  border: 1px solid #e5a900;
+}
+
+:host-context(.dark-theme) .issue-rejected .issue-status-title {
+  color: #ffffff;
+}
+
+:host-context(.dark-theme) .issue-rejected .issue-status-message {
+  color: #b7c8df;
+}
+
+/* Status icon */
+:host-context(.dark-theme) .issue-status-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* Under review icon */
+:host-context(.dark-theme) .issue-under-review .issue-status-icon {
+  background: #553044;
+  color: #ff9eaa;
+}
+
+/* Rejected icon */
+:host-context(.dark-theme) .issue-rejected .issue-status-icon {
+  background: #594b22;
+  color: #ffda75;
+}
+
+/* =========================================
+   ISSUE STATUS BOX - DARK THEME
+   ========================================= */
+
+/* Common styles */
+:host-context(.dark-theme) .issue-status-box {
+  border-radius: 10px;
+  border: 1px solid transparent;
+  color: #f1f6ff;
+  padding: 16px;
+}
+
+/* Remove Bootstrap alert colors */
+:host-context(.dark-theme) .issue-status-box strong {
+  color: #ffffff;
+}
+
+:host-context(.dark-theme) .issue-status-message {
+  color: #b7c8df !important;
+}
+
+/* Issue Resolved - Dark Green */
+:host-context(.dark-theme) .issue-resolved {
+  background: #164d43 !important;
+  border-color: #237b69 !important;
+}
+
+:host-context(.dark-theme) .issue-resolved .issue-status-icon {
+  color: #8af0c9;
+}
+
+/* Issue Under Review - Dark Purple */
+:host-context(.dark-theme) .issue-under-review {
+  background: #30283f !important;
+  border-color: #e34b67 !important;
+}
+
+:host-context(.dark-theme) .issue-under-review .issue-status-icon {
+  color: #ff9eaa;
+}
+
+/* Issue Rejected - Dark Amber */
+:host-context(.dark-theme) .issue-rejected {
+  background: #303329 !important;
+  border-color: #e5a900 !important;
+}
+
+:host-context(.dark-theme) .issue-rejected .issue-status-icon {
+  color: #ffda75;
+}
+
+/* Default status */
+:host-context(.dark-theme) .issue-default {
+  background: #263b5b !important;
+  border-color: #496384 !important;
+}
+
+:host-context(.dark-theme) .issue-default .issue-status-icon {
+  color: #9bcaff;
+}

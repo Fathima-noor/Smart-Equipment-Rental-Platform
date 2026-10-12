@@ -1,0 +1,1168 @@
+<div class="container-fluid py-4">
+
+  <!-- ================================= -->
+  <!-- PAGE HEADER -->
+  <!-- ================================= -->
+
+  <div class="page-header mb-4">
+
+    <div>
+
+      <h2 class="fw-bold mb-1">
+        <i class="bi bi-exclamation-triangle me-2"></i>
+        Damage Reports
+      </h2>
+
+      <p class="text-muted mb-0">
+        View damage reports, deposit settlements, and report any issues.
+      </p>
+
+    </div>
+
+  </div>
+
+
+  <!-- ================================= -->
+  <!-- SUCCESS MESSAGE -->
+  <!-- ================================= -->
+
+  <div
+    *ngIf="successMessage"
+    class="alert alert-success alert-dismissible"
+  >
+
+    <i class="bi bi-check-circle me-2"></i>
+
+    {{ successMessage }}
+
+  </div>
+
+
+  <!-- ================================= -->
+  <!-- ERROR MESSAGE -->
+  <!-- ================================= -->
+
+  <div
+    *ngIf="errorMessage"
+    class="alert alert-danger alert-dismissible"
+  >
+
+    <i class="bi bi-exclamation-circle me-2"></i>
+
+    {{ errorMessage }}
+
+  </div>
+
+
+  <!-- ================================= -->
+  <!-- LOADING -->
+  <!-- ================================= -->
+
+  <div
+    *ngIf="loading"
+    class="loading-container text-center py-5"
+  >
+
+    <div
+      class="spinner-border text-primary"
+      role="status"
+    ></div>
+
+    <p class="text-muted mt-3 mb-0">
+      Loading damage reports...
+    </p>
+
+  </div>
+
+
+  <!-- ================================= -->
+  <!-- EMPTY STATE -->
+  <!-- ================================= -->
+
+  <div
+    *ngIf="
+      !loading &&
+      damageReports.length === 0
+    "
+    class="card border-0 shadow-sm"
+  >
+
+    <div class="card-body text-center empty-state">
+
+      <div class="empty-icon">
+
+        <i class="bi bi-shield-check"></i>
+
+      </div>
+
+      <h5 class="fw-bold mt-3">
+        No Damage Reports
+      </h5>
+
+      <p class="text-muted mb-0">
+        There are currently no damage reports for your bookings.
+      </p>
+
+    </div>
+
+  </div>
+
+
+  <!-- ================================= -->
+  <!-- DAMAGE REPORT CARDS -->
+  <!-- ================================= -->
+
+  <div
+    *ngIf="
+      !loading &&
+      damageReports.length > 0
+    "
+    class="row g-4"
+  >
+
+    <div
+      class="col-12 col-xl-6"
+      *ngFor="let report of damageReports"
+    >
+
+      <div class="card damage-card border-0 shadow-sm h-100">
+
+        <div class="card-body p-4">
+
+
+          <!-- ================================= -->
+          <!-- REPORT HEADER -->
+          <!-- ================================= -->
+
+          <div
+            class="d-flex justify-content-between align-items-start mb-4"
+          >
+
+            <div>
+
+              <h5 class="fw-bold mb-1">
+
+                Damage Report ID : {{ report.id }}
+
+              </h5>
+
+              <span class="text-muted small">
+
+                Booking ID : {{ report.booking }}
+
+              </span>
+
+            </div>
+
+
+            <!-- STATUS -->
+
+            <span
+              class="badge rounded-pill"
+              [ngClass]="getStatusClass(report.status)"
+            >
+
+              {{ formatStatus(report.status) }}
+
+            </span>
+
+          </div>
+
+
+          <!-- ================================= -->
+          <!-- EQUIPMENT -->
+          <!-- ================================= -->
+
+          <div class="info-row">
+
+            <div class="info-icon">
+
+              <i class="bi bi-box-seam"></i>
+
+            </div>
+
+            <div>
+
+              <small class="text-muted d-block">
+                Equipment
+              </small>
+
+              <div class="fw-semibold">
+
+                {{ report.equipment_name }}
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <!-- ================================= -->
+          <!-- VENDOR -->
+          <!-- ================================= -->
+
+          <div class="info-row">
+
+            <div class="info-icon">
+
+              <i class="bi bi-person-badge"></i>
+
+            </div>
+
+            <div>
+
+              <small class="text-muted d-block">
+                Vendor
+              </small>
+
+              <div class="fw-semibold">
+
+                {{ report.vendor_name }}
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <!-- ================================= -->
+          <!-- DESCRIPTION -->
+          <!-- ================================= -->
+
+          <div
+            class="description-box mt-3 mb-3"
+          >
+
+            <small class="text-muted d-block mb-2">
+
+              Damage Description
+
+            </small>
+
+            <div>
+
+              {{ report.description }}
+
+            </div>
+
+          </div>
+
+
+          <!-- ================================= -->
+          <!-- DAMAGE AMOUNT -->
+          <!-- ================================= -->
+
+          <div class="damage-amount-box">
+
+            <div>
+
+              <small class="text-muted d-block">
+
+                Damage Amount
+
+              </small>
+
+              <h4 class="fw-bold mb-0">
+
+                ₹{{ formatAmount(report.damage_amount) }}
+
+              </h4>
+
+            </div>
+
+            <i class="bi bi-tools"></i>
+
+          </div>
+
+
+          <!-- ================================= -->
+          <!-- DEPOSIT SETTLEMENT -->
+          <!-- ================================= -->
+
+          <div
+            *ngIf="report.refundable_amount !== undefined"
+            class="settlement-box mt-3"
+          >
+
+            <div
+              class="d-flex align-items-center mb-3"
+            >
+
+              <i class="bi bi-wallet2 me-2"></i>
+
+              <h6 class="fw-bold mb-0">
+
+                Deposit Settlement
+
+              </h6>
+
+            </div>
+
+
+            <!-- ORIGINAL DEPOSIT -->
+
+            <div class="settlement-row">
+
+              <span>
+                Original Deposit
+              </span>
+
+              <strong>
+
+                {{
+                  getPaymentForBooking(report.booking)
+                    ? '₹' +
+                      formatAmount(
+                        getPaymentForBooking(
+                          report.booking
+                        ).deposit_amount
+                      )
+                    : '—'
+                }}
+
+              </strong>
+
+            </div>
+
+
+            <!-- DEPOSIT DEDUCTED -->
+
+            <div class="settlement-row">
+
+              <span>
+                Deposit Deducted
+              </span>
+
+              <strong class="text-danger">
+
+                ₹{{ formatAmount(
+                  report.deposit_deducted
+                ) }}
+
+              </strong>
+
+            </div>
+
+
+            <!-- REFUNDABLE BALANCE -->
+
+            <div class="settlement-row">
+
+              <span>
+                Refundable Balance Remaining
+              </span>
+
+              <strong class="text-warning">
+                ₹{{ formatAmount(getPendingRefundAmount(report)) }}
+              </strong>
+
+            </div>
+
+            <!-- ACTUAL REFUND -->
+
+            <div class="settlement-row">
+              <span>Deposit Refunded</span>
+              <strong class="text-success">
+                ₹{{ formatAmount(getVerifiedRefundedAmount(report)) }}
+
+              </strong>
+
+            </div>
+
+            <p
+              class="small text-muted"
+              *ngIf="report.refundable_amount > 0 && !getPaymentForBooking(report.booking)?.refund_provider_reference_valid">
+              Refund is pending or requires verification; it has not been confirmed by Stripe.
+            </p>
+
+
+            <!-- ADDITIONAL PAYMENT -->
+
+            <div
+              *ngIf="
+                isAdditionalPaymentRequired(report)
+              "
+              class="settlement-row"
+            >
+
+              <span>
+                Additional Damage Payment
+              </span>
+
+              <strong class="text-danger">
+
+                ₹{{ formatAmount(
+                  report.additional_amount
+                ) }}
+
+              </strong>
+
+            </div>
+
+
+            <!-- SETTLEMENT MESSAGE -->
+
+            <div class="settlement-message mt-3">
+
+              <i class="bi bi-info-circle me-1"></i>
+
+              {{ getSettlementMessage(report) }}
+
+            </div>
+
+          </div>
+
+          <div
+            *ngIf="report.status === 'resolved' && !isAdditionalPaymentRequired(report)"
+            class="paid-box mt-3">
+            <i class="bi bi-check-circle-fill"></i>
+            <div>
+              <strong>No additional payment is required</strong>
+              <small class="d-block text-muted">
+                {{ getRefundStatusLabel(report) }}
+              </small>
+            </div>
+          </div>
+
+
+          <!-- ================================= -->
+          <!-- ADDITIONAL DAMAGE PAYMENT -->
+          <!-- ================================= -->
+
+          <div
+            *ngIf="
+              report.status === 'resolved' &&
+              isAdditionalPaymentRequired(report)
+            "
+            class="additional-payment-box mt-3"
+          >
+
+            <div class="payment-heading">
+
+              <div>
+
+                <small class="text-muted d-block">
+
+                  Additional damage payment required
+
+                </small>
+
+                <h5 class="fw-bold mb-0">
+
+                  ₹{{ formatAmount(
+                    report.additional_amount
+                  ) }}
+
+                </h5>
+
+              </div>
+
+              <i class="bi bi-credit-card"></i>
+
+            </div>
+
+
+            <!-- ================================= -->
+            <!-- EXISTING DAMAGE PAYMENT -->
+            <!-- ================================= -->
+
+            <ng-container
+              *ngIf="
+                getDamagePayment(report.id) as damagePayment;
+                else createDamagePaymentButton
+              "
+            >
+
+
+              <!-- ================================= -->
+              <!-- PAYMENT PENDING -->
+              <!-- ================================= -->
+
+              <div
+                *ngIf="
+                  damagePayment.payment_status !== 'paid'
+                "
+              >
+
+                <button
+                  class="btn btn-danger w-100 mt-3"
+                  (click)="processDamagePayment(
+                    damagePayment
+                  )"
+                  [disabled]="
+                    processingPaymentId ===
+                    damagePayment.id
+                  "
+                >
+
+                  <span
+                    *ngIf="
+                      processingPaymentId ===
+                      damagePayment.id
+                    "
+                    class="spinner-border spinner-border-sm me-2"
+                  ></span>
+
+                  <i
+                    *ngIf="
+                      processingPaymentId !==
+                      damagePayment.id
+                    "
+                    class="bi bi-credit-card me-1"
+                  ></i>
+
+                  {{
+                    processingPaymentId ===
+                    damagePayment.id
+                      ? 'Opening Payment...'
+                      : 'Pay ₹' +
+                        formatAmount(
+                          damagePayment.amount
+                        )
+                  }}
+
+                </button>
+
+              </div>
+
+
+              <!-- ================================= -->
+              <!-- PAYMENT COMPLETED -->
+              <!-- ================================= -->
+
+              <div
+                *ngIf="
+                  damagePayment.payment_status ===
+                  'paid'
+                "
+                class="paid-box mt-3"
+              >
+
+                <i class="bi bi-check-circle-fill"></i>
+
+                <div>
+
+                  <strong>
+                    Additional payment completed
+                  </strong>
+
+                  <small class="d-block text-muted">
+
+                    Transaction:
+                    {{
+                      damagePayment.transaction_id ||
+                      'Completed'
+                    }}
+
+                  </small>
+
+                </div>
+
+              </div>
+
+            </ng-container>
+
+
+            <!-- ================================= -->
+            <!-- CREATE DAMAGE PAYMENT -->
+            <!-- ================================= -->
+
+            <ng-template
+              #createDamagePaymentButton
+            >
+
+              <button
+                class="btn btn-outline-danger w-100 mt-3"
+                (click)="createDamagePayment(report)"
+              >
+
+                <i class="bi bi-credit-card me-1"></i>
+
+                Create Additional Payment
+
+              </button>
+
+            </ng-template>
+
+          </div>
+
+
+          <!-- ================================= -->
+          <!-- REPORT AN ISSUE -->
+          <!-- ================================= -->
+
+          <div
+            *ngIf="isCustomer()"
+            class="mt-3"
+          >
+
+            <button
+              type="button"
+              class="btn btn-outline-danger w-100"
+              (click)="openIssueForm(report)"
+            >
+
+              <i
+                class="bi bi-exclamation-circle me-2"
+              ></i>
+
+              Report an Issue
+
+            </button>
+
+
+            <div
+              *ngIf="hasIssue(report.id)"
+              class="alert mb-0 d-flex align-items-center issue-status-box"
+              [ngClass]="
+                getIssueStatusClass(
+                  getIssueForReport(report.id)?.status
+                )
+              "
+            >
+
+              <i
+                class="bi bi-check-circle-fill me-2 issue-status-icon"
+              ></i>
+
+              <div>
+
+                <strong class="issue-status-title">
+
+                  {{
+                    getIssueStatusText(
+                      getIssueForReport(report.id)?.status
+                    )
+                  }}
+
+                </strong>
+
+                <small class="d-block issue-status-message">
+
+                  You have already reported an issue for this damage report.
+
+                </small>
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <!-- ================================= -->
+          <!-- CREATED DATE -->
+          <!-- ================================= -->
+
+          <div
+            *ngIf="report.created_at"
+            class="created-date mt-3"
+          >
+
+            <i class="bi bi-clock me-1"></i>
+
+            Report created:
+            {{ report.created_at | date:'medium' }}
+
+          </div>
+
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- ================================= -->
+<!-- STRIPE DAMAGE PAYMENT MODAL -->
+<!-- ================================= -->
+
+<div
+  *ngIf="showStripePayment"
+  class="modal fade show"
+  style="display: block;"
+  tabindex="-1"
+  role="dialog"
+>
+
+  <div
+    class="modal-dialog modal-dialog-centered modal-lg"
+  >
+
+    <div class="modal-content border-0 shadow">
+
+      <!-- ================================= -->
+      <!-- STRIPE MODAL HEADER -->
+      <!-- ================================= -->
+
+      <div class="modal-header">
+
+        <div>
+
+          <h5 class="modal-title fw-bold">
+
+            <i
+              class="bi bi-credit-card me-2 text-danger"
+            ></i>
+
+            Additional Damage Payment
+
+          </h5>
+
+          <small class="text-muted">
+
+            Secure payment powered by Stripe
+
+          </small>
+
+        </div>
+
+        <button
+          type="button"
+          class="btn-close"
+          (click)="closeStripeDamagePayment()"
+          [disabled]="processingPaymentId !== null"
+        ></button>
+
+      </div>
+
+
+      <!-- ================================= -->
+      <!-- STRIPE MODAL BODY -->
+      <!-- ================================= -->
+
+      <div class="modal-body">
+
+        <!-- PAYMENT INFORMATION -->
+
+        <div
+          class="alert alert-light border mb-4"
+          *ngIf="selectedStripePayment"
+        >
+
+          <div
+            class="d-flex justify-content-between align-items-center"
+          >
+
+            <div>
+
+              <small class="text-muted d-block">
+
+                Additional damage payment
+
+              </small>
+
+              <strong>
+
+                Damage Report ID:
+                {{
+                  selectedStripePayment.damage_report
+                }}
+
+              </strong>
+
+            </div>
+
+            <div class="text-end">
+
+              <small class="text-muted d-block">
+
+                Amount to pay
+
+              </small>
+
+              <h4 class="fw-bold text-danger mb-0">
+
+                ₹{{ formatAmount(
+                  selectedStripePayment.amount
+                ) }}
+
+              </h4>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <!-- STRIPE PAYMENT ELEMENT -->
+
+        <div class="stripe-payment-section">
+
+          <h6 class="fw-bold mb-3">
+
+            Payment Details
+
+          </h6>
+
+          <div
+            #damagePaymentElement
+            class="stripe-payment-element"
+          ></div>
+
+        </div>
+
+
+        <!-- STRIPE SECURITY MESSAGE -->
+
+        <div
+          class="text-muted small mt-3"
+        >
+
+          <i class="bi bi-shield-lock me-1"></i>
+
+          Your payment information is securely processed by Stripe.
+
+        </div>
+
+
+        <!-- PAYMENT ERROR -->
+
+        <div
+          *ngIf="errorMessage"
+          class="alert alert-danger mt-3 mb-0"
+        >
+
+          <i class="bi bi-exclamation-circle me-2"></i>
+
+          {{ errorMessage }}
+
+        </div>
+
+      </div>
+
+
+      <!-- ================================= -->
+      <!-- STRIPE MODAL FOOTER -->
+      <!-- ================================= -->
+
+      <div class="modal-footer">
+
+        <button
+          type="button"
+          class="btn btn-light"
+          (click)="closeStripeDamagePayment()"
+          [disabled]="processingPaymentId !== null"
+        >
+
+          Cancel
+
+        </button>
+
+
+        <button
+          type="button"
+          class="btn btn-danger px-4"
+          (click)="confirmStripeDamagePayment(
+            selectedStripePayment
+          )"
+          [disabled]="
+            !selectedStripePayment ||
+            processingPaymentId !== null
+          "
+        >
+
+          <span
+            *ngIf="processingPaymentId !== null"
+            class="spinner-border spinner-border-sm me-2"
+          ></span>
+
+          <i
+            *ngIf="processingPaymentId === null"
+            class="bi bi-lock-fill me-1"
+          ></i>
+
+          {{
+            processingPaymentId !== null
+              ? 'Processing Payment...'
+              : 'Pay ₹' +
+                formatAmount(
+                  selectedStripePayment?.amount
+                )
+          }}
+
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- ================================= -->
+<!-- STRIPE MODAL BACKDROP -->
+<!-- ================================= -->
+
+<div
+  *ngIf="showStripePayment"
+  class="modal-backdrop fade show"
+></div>
+
+
+<!-- ================================= -->
+<!-- REPORT ISSUE MODAL -->
+<!-- ================================= -->
+
+<div
+  class="modal fade"
+  [class.show]="showIssueModal"
+  [style.display]="
+    showIssueModal ? 'block' : 'none'
+  "
+  tabindex="-1"
+  *ngIf="showIssueModal"
+>
+
+  <div class="modal-dialog modal-dialog-centered">
+
+    <div class="modal-content border-0 shadow">
+
+
+      <!-- ================================= -->
+      <!-- MODAL HEADER -->
+      <!-- ================================= -->
+
+      <div class="modal-header">
+
+        <h5 class="modal-title fw-bold">
+
+          <i
+            class="bi bi-exclamation-circle text-danger me-2"
+          ></i>
+
+          Report an Issue
+
+        </h5>
+
+        <button
+          type="button"
+          class="btn-close"
+          (click)="closeIssueForm()"
+          [disabled]="submittingIssue"
+        ></button>
+
+      </div>
+
+
+      <!-- ================================= -->
+      <!-- MODAL BODY -->
+      <!-- ================================= -->
+
+      <div class="modal-body">
+
+
+        <!-- REPORT INFORMATION -->
+
+        <div
+          class="alert alert-light border"
+        >
+
+          <div class="small text-muted">
+
+            Damage Report
+
+          </div>
+
+          <div class="fw-bold">
+
+            ID: {{ selectedDamageReport?.id }}
+
+          </div>
+
+
+          <div class="small text-muted mt-2">
+
+            Equipment
+
+          </div>
+
+          <div class="fw-semibold">
+
+            {{ selectedDamageReport?.equipment_name }}
+
+          </div>
+
+
+          <div class="small text-muted mt-2">
+
+            Vendor
+
+          </div>
+
+          <div class="fw-semibold">
+
+            {{ selectedDamageReport?.vendor_name }}
+
+          </div>
+
+        </div>
+
+
+        <!-- ISSUE TYPE -->
+
+        <div class="mb-3">
+
+          <label
+            class="form-label fw-semibold"
+          >
+
+            Issue Type
+
+          </label>
+
+          <select
+            class="form-select"
+            [(ngModel)]="issueType"
+          >
+
+            <option value="">
+
+              Select issue type
+
+            </option>
+
+            <option value="incorrect_damage">
+
+              Incorrect Damage Charge
+
+            </option>
+
+            <option value="not_caused">
+
+              Damage Not Caused By Me
+
+            </option>
+
+            <option value="already_damaged">
+
+              Equipment Was Already Damaged
+
+            </option>
+
+            <option value="incorrect_deposit">
+
+              Incorrect Deposit Deduction
+
+            </option>
+
+            <option value="other">
+
+              Other
+
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <!-- ISSUE DESCRIPTION -->
+
+        <div class="mb-3">
+
+          <label
+            class="form-label fw-semibold"
+          >
+
+            Describe Your Issue
+
+          </label>
+
+          <textarea
+            class="form-control"
+            rows="5"
+            [(ngModel)]="issueDescription"
+            placeholder="Please explain your issue clearly..."
+          ></textarea>
+
+        </div>
+
+
+        <!-- ISSUE ERROR -->
+
+        <div
+          *ngIf="issueError"
+          class="alert alert-danger"
+        >
+
+          <i class="bi bi-exclamation-circle me-2"></i>
+
+          {{ issueError }}
+
+        </div>
+
+      </div>
+
+
+      <!-- ================================= -->
+      <!-- MODAL FOOTER -->
+      <!-- ================================= -->
+
+      <div class="modal-footer">
+
+        <button
+          type="button"
+          class="btn btn-light"
+          (click)="closeIssueForm()"
+          [disabled]="submittingIssue"
+        >
+
+          Cancel
+
+        </button>
+
+
+        <button
+          type="button"
+          class="btn btn-danger"
+          (click)="submitIssue()"
+          [disabled]="submittingIssue"
+        >
+
+          <span
+            *ngIf="submittingIssue"
+            class="spinner-border spinner-border-sm me-2"
+          ></span>
+
+          <i
+            *ngIf="!submittingIssue"
+            class="bi bi-send me-1"
+          ></i>
+
+          {{
+            submittingIssue
+              ? 'Submitting...'
+              : 'Submit Issue'
+          }}
+
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- ================================= -->
+<!-- ISSUE MODAL BACKDROP -->
+<!-- ================================= -->
+
+<div
+  *ngIf="showIssueModal"
+  class="modal-backdrop fade show"
+  (click)="closeIssueForm()"
+></div>

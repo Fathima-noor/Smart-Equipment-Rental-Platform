@@ -1,0 +1,655 @@
+
+/* ==========================================
+   OPERATIONS DASHBOARD
+   THEME VARIABLES
+========================================== */
+
+.operations-dashboard {
+  --ops-bg: #f5f7fb;
+  --ops-card-bg: #ffffff;
+  --ops-header-bg: #f8fafc;
+  --ops-text: #263238;
+  --ops-heading: #172033;
+  --ops-muted: #64748b;
+  --ops-border: #e2e8f0;
+  --ops-hover: #f1f5f9;
+  --ops-shadow: rgba(15, 23, 42, 0.08);
+
+  min-height: 100vh;
+  padding: 24px;
+  color: var(--ops-text);
+  background-color: var(--ops-bg);
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+/* ==========================================
+   LIGHT THEME
+========================================== */
+
+:host-context(.light-theme) .operations-dashboard {
+  --ops-bg: #f5f7fb;
+  --ops-card-bg: #ffffff;
+  --ops-header-bg: #f8fafc;
+  --ops-text: #263238;
+  --ops-heading: #172033;
+  --ops-muted: #64748b;
+  --ops-border: #e2e8f0;
+  --ops-hover: #f1f5f9;
+  --ops-shadow: rgba(15, 23, 42, 0.08);
+}
+
+/* Light theme headings */
+:host-context(.light-theme) .operations-dashboard h2,
+:host-context(.light-theme) .operations-dashboard h3,
+:host-context(.light-theme) .operations-dashboard h4,
+:host-context(.light-theme) .operations-dashboard h5,
+:host-context(.light-theme) .operations-dashboard h6 {
+  color: var(--ops-heading);
+}
+
+/* Light theme paragraphs and muted text */
+:host-context(.light-theme) .operations-dashboard p,
+:host-context(.light-theme) .operations-dashboard small,
+:host-context(.light-theme) .operations-dashboard .text-muted {
+  color: var(--ops-muted) !important;
+}
+
+/* Light theme cards */
+:host-context(.light-theme) .operations-dashboard .card,
+:host-context(.light-theme) .operations-dashboard .dashboard-card {
+  background-color: var(--ops-card-bg);
+  color: var(--ops-text);
+  border: 1px solid var(--ops-border) !important;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/* Light theme card hover */
+:host-context(.light-theme) .operations-dashboard .dashboard-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+:host-context(.light-theme) .operations-dashboard .dashboard-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px var(--ops-shadow) !important;
+}
+
+/* Light theme card body */
+:host-context(.light-theme) .operations-dashboard .card-body {
+  color: var(--ops-text);
+}
+
+/* Light theme card header */
+:host-context(.light-theme) .operations-dashboard .card-header {
+  background-color: var(--ops-header-bg) !important;
+  border-bottom: 1px solid var(--ops-border);
+  color: var(--ops-heading);
+}
+
+/* Light theme icons */
+:host-context(.light-theme) .operations-dashboard .icon-blue {
+  background-color: #e7f0ff;
+  color: #2563eb;
+}
+
+:host-context(.light-theme) .operations-dashboard .icon-orange {
+  background-color: #fff1df;
+  color: #b45309;
+}
+
+:host-context(.light-theme) .operations-dashboard .icon-purple {
+  background-color: #f1e9ff;
+  color: #7c3aed;
+}
+
+:host-context(.light-theme) .operations-dashboard .icon-red {
+  background-color: #fee8e7;
+  color: #dc2626;
+}
+
+/* ==========================================
+   DARK THEME
+========================================== */
+
+:host-context(.dark-theme) .operations-dashboard {
+  --ops-bg: #111827;
+  --ops-card-bg: #1e293b;
+  --ops-header-bg: #1e293b;
+  --ops-text: #e2e8f0;
+  --ops-heading: #f8fafc;
+  --ops-muted: #cbd5e1;
+  --ops-border: #334155;
+  --ops-hover: #273449;
+  --ops-shadow: rgba(0, 0, 0, 0.3);
+}
+
+/* Dark theme headings */
+:host-context(.dark-theme) .operations-dashboard h2,
+:host-context(.dark-theme) .operations-dashboard h3,
+:host-context(.dark-theme) .operations-dashboard h4,
+:host-context(.dark-theme) .operations-dashboard h5,
+:host-context(.dark-theme) .operations-dashboard h6 {
+  color: var(--ops-heading);
+}
+
+/* Dark theme paragraphs and muted text */
+:host-context(.dark-theme) .operations-dashboard p,
+:host-context(.dark-theme) .operations-dashboard small,
+:host-context(.dark-theme) .operations-dashboard .text-muted {
+  color: var(--ops-muted) !important;
+}
+
+/* Dark theme cards */
+:host-context(.dark-theme) .operations-dashboard .card,
+:host-context(.dark-theme) .operations-dashboard .dashboard-card {
+  background-color: var(--ops-card-bg);
+  color: var(--ops-text);
+  border: 1px solid var(--ops-border) !important;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/* Dark theme card hover */
+:host-context(.dark-theme) .operations-dashboard .dashboard-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+:host-context(.dark-theme) .operations-dashboard .dashboard-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px var(--ops-shadow) !important;
+}
+
+/* Dark theme card body */
+:host-context(.dark-theme) .operations-dashboard .card-body {
+  color: var(--ops-text);
+}
+
+/* Dark theme card header */
+:host-context(.dark-theme) .operations-dashboard .card-header {
+  background-color: var(--ops-header-bg) !important;
+  border-bottom: 1px solid var(--ops-border);
+  color: var(--ops-heading);
+}
+
+/* Dark theme icons */
+:host-context(.dark-theme) .operations-dashboard .icon-blue {
+  background-color: #1e3a5f;
+  color: #93c5fd;
+}
+
+:host-context(.dark-theme) .operations-dashboard .icon-orange {
+  background-color: #422d16;
+  color: #fbbf24;
+}
+
+:host-context(.dark-theme) .operations-dashboard .icon-purple {
+  background-color: #38245c;
+  color: #c4b5fd;
+}
+
+:host-context(.dark-theme) .operations-dashboard .icon-red {
+  background-color: #4c2028;
+  color: #fca5a5;
+}
+
+/* ==========================================
+   COMMON DASHBOARD ICONS
+========================================== */
+
+.operations-dashboard .dashboard-icon {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  font-size: 25px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+/* ==========================================
+   LIGHT THEME TABLE
+========================================== */
+
+:host-context(.light-theme) .operations-dashboard .table {
+  --bs-table-bg: #ffffff;
+  --bs-table-color: #263238;
+  --bs-table-border-color: #e2e8f0;
+  --bs-table-hover-bg: #f1f5f9;
+  --bs-table-hover-color: #172033;
+
+  background-color: #ffffff;
+  color: #263238;
+  margin-bottom: 0;
+}
+
+:host-context(.light-theme) .operations-dashboard .table thead th,
+:host-context(.light-theme) .operations-dashboard .table .table-light th {
+  background-color: #f1f5f9 !important;
+  color: #334155 !important;
+  border-color: #e2e8f0 !important;
+  font-weight: 600;
+}
+
+:host-context(.light-theme) .operations-dashboard .table tbody td {
+  background-color: #ffffff;
+  color: #263238;
+  border-color: #e2e8f0;
+  vertical-align: middle;
+}
+
+:host-context(.light-theme) .operations-dashboard .table-hover tbody tr:hover td {
+  background-color: #f1f5f9;
+  color: #172033;
+}
+
+/* ==========================================
+   DARK THEME TABLE
+========================================== */
+
+:host-context(.dark-theme) .operations-dashboard .table {
+  --bs-table-bg: #1e293b;
+  --bs-table-color: #e2e8f0;
+  --bs-table-border-color: #334155;
+  --bs-table-hover-bg: #273449;
+  --bs-table-hover-color: #f8fafc;
+
+  background-color: #1e293b;
+  color: #e2e8f0;
+  margin-bottom: 0;
+}
+
+:host-context(.dark-theme) .operations-dashboard .table thead th,
+:host-context(.dark-theme) .operations-dashboard .table .table-light th {
+  background-color: #273449 !important;
+  color: #e2e8f0 !important;
+  border-color: #334155 !important;
+  font-weight: 600;
+}
+
+:host-context(.dark-theme) .operations-dashboard .table tbody td {
+  background-color: #1e293b;
+  color: #e2e8f0;
+  border-color: #334155;
+  vertical-align: middle;
+}
+
+:host-context(.dark-theme) .operations-dashboard .table-hover tbody tr:hover td {
+  background-color: #273449;
+  color: #f8fafc;
+}
+
+/* ==========================================
+   COMMON TABLE AND BADGE STYLES
+========================================== */
+
+.operations-dashboard .table th {
+  white-space: nowrap;
+  font-size: 0.85rem;
+}
+
+.operations-dashboard .table td {
+  white-space: nowrap;
+}
+
+.operations-dashboard .badge {
+  font-weight: 600;
+  padding: 0.5em 0.7em;
+  border-radius: 6px;
+}
+
+/* ==========================================
+   LIGHT THEME STATUS BADGES
+========================================== */
+
+:host-context(.light-theme) .operations-dashboard .bg-secondary-subtle {
+  background-color: #e2e8f0 !important;
+}
+
+:host-context(.light-theme) .operations-dashboard .text-secondary {
+  color: #475569 !important;
+}
+
+:host-context(.light-theme) .operations-dashboard .bg-success-subtle {
+  background-color: #dcfce7 !important;
+}
+
+:host-context(.light-theme) .operations-dashboard .text-success {
+  color: #166534 !important;
+}
+
+:host-context(.light-theme) .operations-dashboard .bg-info-subtle {
+  background-color: #cffafe !important;
+}
+
+:host-context(.light-theme) .operations-dashboard .text-info {
+  color: #155e75 !important;
+}
+
+:host-context(.light-theme) .operations-dashboard .bg-primary-subtle {
+  background-color: #dbeafe !important;
+}
+
+:host-context(.light-theme) .operations-dashboard .text-primary {
+  color: #1d4ed8 !important;
+}
+
+:host-context(.light-theme) .operations-dashboard .bg-warning-subtle {
+  background-color: #fef3c7 !important;
+}
+
+:host-context(.light-theme) .operations-dashboard .text-warning,
+:host-context(.light-theme) .operations-dashboard .text-warning-emphasis {
+  color: #92400e !important;
+}
+
+:host-context(.light-theme) .operations-dashboard .bg-danger-subtle {
+  background-color: #fee2e2 !important;
+}
+
+:host-context(.light-theme) .operations-dashboard .text-danger {
+  color: #b91c1c !important;
+}
+
+/* ==========================================
+   DARK THEME STATUS BADGES
+========================================== */
+
+:host-context(.dark-theme) .operations-dashboard .bg-secondary-subtle {
+  background-color: #334155 !important;
+}
+
+:host-context(.dark-theme) .operations-dashboard .text-secondary {
+  color: #e2e8f0 !important;
+}
+
+:host-context(.dark-theme) .operations-dashboard .bg-success-subtle {
+  background-color: #143d32 !important;
+}
+
+:host-context(.dark-theme) .operations-dashboard .text-success {
+  color: #86efac !important;
+}
+
+:host-context(.dark-theme) .operations-dashboard .bg-info-subtle {
+  background-color: #123b50 !important;
+}
+
+:host-context(.dark-theme) .operations-dashboard .text-info {
+  color: #67e8f9 !important;
+}
+
+:host-context(.dark-theme) .operations-dashboard .bg-primary-subtle {
+  background-color: #1e3a8a !important;
+}
+
+:host-context(.dark-theme) .operations-dashboard .text-primary {
+  color: #bfdbfe !important;
+}
+
+:host-context(.dark-theme) .operations-dashboard .bg-warning-subtle {
+  background-color: #493517 !important;
+}
+
+:host-context(.dark-theme) .operations-dashboard .text-warning,
+:host-context(.dark-theme) .operations-dashboard .text-warning-emphasis {
+  color: #fde68a !important;
+}
+
+:host-context(.dark-theme) .operations-dashboard .bg-danger-subtle {
+  background-color: #4c2028 !important;
+}
+
+:host-context(.dark-theme) .operations-dashboard .text-danger {
+  color: #fecaca !important;
+}
+
+/* ==========================================
+   LIGHT THEME BUTTONS
+========================================== */
+
+:host-context(.light-theme) .operations-dashboard .btn-primary {
+  background-color: #2563eb;
+  border-color: #2563eb;
+  color: #ffffff;
+}
+
+:host-context(.light-theme) .operations-dashboard .btn-primary:hover {
+  background-color: #1d4ed8;
+  border-color: #1d4ed8;
+}
+
+:host-context(.light-theme) .operations-dashboard .btn-outline-primary {
+  color: #2563eb;
+  border-color: #2563eb;
+}
+
+:host-context(.light-theme) .operations-dashboard .btn-outline-primary:hover {
+  background-color: #2563eb;
+  color: #ffffff;
+}
+
+:host-context(.light-theme) .operations-dashboard .btn-outline-secondary {
+  color: #475569;
+  border-color: #94a3b8;
+}
+
+:host-context(.light-theme) .operations-dashboard .btn-outline-secondary:hover {
+  background-color: #e2e8f0;
+  color: #172033;
+  border-color: #64748b;
+}
+
+/* ==========================================
+   DARK THEME BUTTONS
+========================================== */
+
+:host-context(.dark-theme) .operations-dashboard .btn-primary {
+  background-color: #2563eb;
+  border-color: #2563eb;
+  color: #ffffff;
+}
+
+:host-context(.dark-theme) .operations-dashboard .btn-primary:hover {
+  background-color: #1d4ed8;
+  border-color: #1d4ed8;
+}
+
+:host-context(.dark-theme) .operations-dashboard .btn-outline-primary {
+  color: #93c5fd;
+  border-color: #3b82f6;
+}
+
+:host-context(.dark-theme) .operations-dashboard .btn-outline-primary:hover {
+  background-color: #1e3a8a;
+  color: #ffffff;
+  border-color: #3b82f6;
+}
+
+:host-context(.dark-theme) .operations-dashboard .btn-outline-secondary {
+  color: #cbd5e1;
+  border-color: #64748b;
+}
+
+:host-context(.dark-theme) .operations-dashboard .btn-outline-secondary:hover {
+  background-color: #334155;
+  color: #ffffff;
+  border-color: #94a3b8;
+}
+
+/* Disabled buttons */
+.operations-dashboard button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ==========================================
+   ALERTS
+========================================== */
+
+:host-context(.light-theme) .operations-dashboard .alert-danger {
+  background-color: #fef2f2;
+  border-color: #fecaca;
+  color: #991b1b;
+}
+
+:host-context(.dark-theme) .operations-dashboard .alert-danger {
+  background-color: #451f28;
+  border-color: #7f1d1d;
+  color: #fecaca;
+}
+
+/* ==========================================
+   LOADING SPINNER
+========================================== */
+
+:host-context(.light-theme) .operations-dashboard .spinner-border {
+  color: #2563eb;
+}
+
+:host-context(.dark-theme) .operations-dashboard .spinner-border {
+  color: #60a5fa;
+}
+
+/* ==========================================
+   DIVIDER
+========================================== */
+
+:host-context(.light-theme) .operations-dashboard hr {
+  border-color: #cbd5e1;
+  opacity: 0.8;
+}
+
+:host-context(.dark-theme) .operations-dashboard hr {
+  border-color: #475569;
+  opacity: 0.7;
+}
+
+/* ==========================================
+   EMPTY STATE
+========================================== */
+
+:host-context(.light-theme) .operations-dashboard .text-center {
+  color: #475569;
+}
+
+:host-context(.dark-theme) .operations-dashboard .text-center {
+  color: #cbd5e1;
+}
+
+/* ==========================================
+   RESPONSIVE DESIGN
+========================================== */
+
+@media (max-width: 768px) {
+  .operations-dashboard {
+    padding: 16px;
+  }
+
+  .operations-dashboard h2 {
+    font-size: 1.5rem;
+  }
+
+  .operations-dashboard .dashboard-icon {
+    width: 42px;
+    height: 42px;
+    font-size: 22px;
+  }
+}
+
+@media (max-width: 576px) {
+  .operations-dashboard {
+    padding: 12px;
+  }
+
+  .operations-dashboard .card-header {
+    padding: 14px;
+  }
+
+  .operations-dashboard .table {
+    font-size: 0.85rem;
+  }
+}
+
+
+/* ==========================================
+   LIGHT THEME — SCREENSHOT STYLE
+========================================== */
+
+/* Dashboard background and main heading */
+:host-context(.light-theme) .operations-dashboard {
+  background-color: #f5f7fb;
+  color: #263238;
+}
+
+:host-context(.light-theme) .operations-dashboard h1,
+:host-context(.light-theme) .operations-dashboard h2,
+:host-context(.light-theme) .operations-dashboard h3,
+:host-context(.light-theme) .operations-dashboard h4,
+:host-context(.light-theme) .operations-dashboard h5,
+:host-context(.light-theme) .operations-dashboard h6 {
+  color: #172033 !important;
+}
+
+/* Summary cards */
+:host-context(.light-theme) .operations-dashboard .card,
+:host-context(.light-theme) .operations-dashboard .dashboard-card {
+  background-color: #102647 !important;
+  color: #f8fafc !important;
+  border: 1px solid #203858 !important;
+  border-radius: 8px;
+}
+
+/* Summary card text */
+:host-context(.light-theme) .operations-dashboard .card-body,
+:host-context(.light-theme) .operations-dashboard .dashboard-card p,
+:host-context(.light-theme) .operations-dashboard .dashboard-card small,
+:host-context(.light-theme) .operations-dashboard .dashboard-card h1,
+:host-context(.light-theme) .operations-dashboard .dashboard-card h2,
+:host-context(.light-theme) .operations-dashboard .dashboard-card h3,
+:host-context(.light-theme) .operations-dashboard .dashboard-card h4,
+:host-context(.light-theme) .operations-dashboard .dashboard-card h5,
+:host-context(.light-theme) .operations-dashboard .dashboard-card h6 {
+  color: #e2eaf5 !important;
+}
+
+/* Keep the recent bookings panel light */
+:host-context(.light-theme) .operations-dashboard .card-header {
+  background-color: #ffffff !important;
+  color: #64748b !important;
+  border-bottom: 1px solid #e2e8f0 !important;
+}
+
+/* Table header */
+:host-context(.light-theme) .operations-dashboard .table thead th,
+:host-context(.light-theme) .operations-dashboard .table .table-light th {
+  background-color: #f8fafc !important;
+  color: #172033 !important;
+  border-color: #334155 !important;
+}
+
+/* Table rows */
+:host-context(.light-theme) .operations-dashboard .table tbody td {
+  background-color: #102647 !important;
+  color: #f8fafc !important;
+  border-color: #29415f !important;
+  vertical-align: middle;
+}
+
+/* Table row hover */
+:host-context(.light-theme) .operations-dashboard .table-hover tbody tr:hover td {
+  background-color: #1b365b !important;
+  color: #ffffff !important;
+}
+
+/* Table badges remain readable */
+:host-context(.light-theme) .operations-dashboard .badge {
+  color: #334155;
+}
+
+/* Summary card hover */
+:host-context(.light-theme) .operations-dashboard .dashboard-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.15) !important;
+}

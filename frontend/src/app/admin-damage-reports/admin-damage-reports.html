@@ -1,0 +1,1226 @@
+<div class="admin-damage-page">
+
+  <!-- HEADER -->
+
+  <div class="page-header">
+
+    <div>
+
+      <h1>Damage Reports</h1>
+
+      <p>
+        Monitor equipment damage reports and settlements.
+      </p>
+
+    </div>
+
+
+    <div class="header-actions">
+
+      <button
+        type="button"
+        class="create-btn"
+        (click)="openCreateModal()">
+
+        <span>+</span>
+        Create Damage Report
+
+      </button>
+
+
+      <button
+        type="button"
+        class="refresh-btn"
+        (click)="loadReports()"
+        [disabled]="loading">
+
+        <span>↻</span>
+        Refresh
+
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <!-- ALERT -->
+
+  <div
+    class="alert error-alert"
+    *ngIf="errorMessage">
+
+    {{ errorMessage }}
+
+  </div>
+
+
+  <div
+    class="alert success-alert"
+    *ngIf="successMessage">
+
+    {{ successMessage }}
+
+  </div>
+
+
+  <!-- FILTERS -->
+
+  <div class="filter-card">
+
+    <div class="search-box">
+
+      <span class="search-icon">⌕</span>
+
+      <input
+        type="text"
+        placeholder="Search customer, report, booking or equipment..."
+        [(ngModel)]="searchText"
+        (input)="onSearch()"
+        autocomplete="off">
+
+    </div>
+
+
+    <div class="filter-group">
+
+      <label>Status</label>
+
+      <select
+        [(ngModel)]="selectedStatus"
+        (change)="applyFilters()">
+
+        <option value="all">
+          All Status
+        </option>
+
+        <option value="reported">
+          Reported
+        </option>
+
+        <option value="reviewed">
+          Reviewed
+        </option>
+
+        <option value="resolved">
+          Resolved
+        </option>
+
+      </select>
+
+    </div>
+
+  </div>
+
+
+  <!-- SUMMARY -->
+
+  <div class="summary-row">
+
+    <div class="summary-card">
+
+      <span>Total Reports</span>
+
+      <strong>
+        {{ reports.length }}
+      </strong>
+
+    </div>
+
+
+    <div class="summary-card reported">
+
+      <span>Reported</span>
+
+      <strong>
+        {{ getReportedCount() }}
+      </strong>
+
+    </div>
+
+
+    <div class="summary-card reviewed">
+
+      <span>Reviewed</span>
+
+      <strong>
+        {{ getReviewedCount() }}
+      </strong>
+
+    </div>
+
+
+    <div class="summary-card resolved">
+
+      <span>Resolved</span>
+
+      <strong>
+        {{ getResolvedCount() }}
+      </strong>
+
+    </div>
+
+  </div>
+
+
+  <!-- DAMAGE TOTAL -->
+
+  <div
+    class="financial-row"
+    *ngIf="!loading">
+
+    <div class="financial-item">
+
+      <div>
+
+        <span>Total Damage Amount</span>
+
+        <small>
+          Reported damage value
+        </small>
+
+      </div>
+
+      <strong>
+        ₹{{ formatAmount(getTotalDamageAmount()) }}
+      </strong>
+
+    </div>
+
+
+    <div class="financial-item">
+
+      <div>
+
+        <span>Additional Amount</span>
+
+        <small>
+          Amount payable beyond deposit
+        </small>
+
+      </div>
+
+      <strong>
+        ₹{{ formatAmount(getTotalAdditionalAmount()) }}
+      </strong>
+
+    </div>
+
+  </div>
+
+
+  <!-- LOADING -->
+
+  <div
+    class="loading-container"
+    *ngIf="loading">
+
+    <div class="spinner"></div>
+
+    <p>
+      Loading damage reports...
+    </p>
+
+  </div>
+
+
+  <!-- EMPTY -->
+
+  <div
+    class="empty-state"
+    *ngIf="
+      !loading &&
+      filteredReports.length === 0
+    ">
+
+    <div class="empty-icon">
+      ⚠
+    </div>
+
+    <h3>
+      No damage reports found
+    </h3>
+
+    <p>
+      No damage reports match your current search or filter.
+    </p>
+
+  </div>
+
+
+  <!-- TABLE -->
+
+  <div
+    class="table-card"
+    *ngIf="
+      !loading &&
+      filteredReports.length > 0
+    ">
+
+    <div class="table-wrapper">
+
+      <table>
+
+        <thead>
+
+          <tr>
+
+            <th>ID</th>
+
+            <th>CUSTOMER</th>
+
+            <th>BOOKING</th>
+
+            <th>EQUIPMENT</th>
+
+            <th>DAMAGE</th>
+
+            <th>DEPOSIT DEDUCTED</th>
+
+            <th>ADDITIONAL</th>
+
+            <th>REFUNDABLE (PENDING)</th>
+
+            <th>STATUS</th>
+
+            <th>ACTION</th>
+
+          </tr>
+
+        </thead>
+
+
+        <tbody>
+
+          <tr
+            *ngFor="
+              let report of filteredReports;
+              let i = index
+            ">
+
+            <!-- ID -->
+
+            <td>
+
+              <span class="serial-number">
+                {{ report.id }}
+              </span>
+
+            </td>
+
+
+            <!-- CUSTOMER -->
+
+            <td>
+
+              <div class="customer-cell">
+
+                <div class="avatar">
+
+                  {{
+                    getCustomerName(report)
+                      .charAt(0)
+                      .toUpperCase()
+                  }}
+
+                </div>
+
+
+                <div class="customer-info">
+
+                  <span class="customer-name">
+
+                    {{ getCustomerName(report) }}
+
+                  </span>
+
+                </div>
+
+              </div>
+
+            </td>
+
+
+            <!-- BOOKING -->
+
+            <td>
+
+              <strong class="booking-id">
+
+                Booking ID : {{ report.booking }}
+
+              </strong>
+
+            </td>
+
+
+            <!-- EQUIPMENT -->
+
+            <td>
+
+              <div class="equipment-cell">
+
+                <strong>
+                  {{ report.equipment_name }}
+                </strong>
+
+                <small>
+
+                  {{
+                    report.customer_return_condition === 'good'
+                      ? 'Good condition'
+                      : report.customer_return_condition === 'damaged'
+                        ? 'Damaged'
+                        : 'Condition not specified'
+                  }}
+
+                </small>
+
+              </div>
+
+            </td>
+
+
+            <!-- DAMAGE -->
+
+            <td>
+
+              <strong class="damage-amount">
+
+                ₹{{ formatAmount(report.damage_amount) }}
+
+              </strong>
+
+            </td>
+
+
+            <!-- DEPOSIT -->
+
+            <td>
+
+              <strong>
+
+                ₹{{
+                  formatAmount(
+                    report.deposit_deducted
+                  )
+                }}
+
+              </strong>
+
+            </td>
+
+
+            <!-- ADDITIONAL -->
+
+            <td>
+
+              <strong
+                [class.additional-positive]="
+                  Number(report.additional_amount || 0) > 0
+                ">
+
+                ₹{{
+                  formatAmount(
+                    report.additional_amount
+                  )
+                }}
+
+              </strong>
+
+            </td>
+
+            <td>
+              <strong>
+                ₹{{ formatAmount(report.refundable_amount) }}
+              </strong>
+            </td>
+
+
+            <!-- STATUS -->
+
+            <td>
+
+              <span
+                class="status-badge"
+                [ngClass]="
+                  getStatusClass(report.status)
+                ">
+
+                {{
+                  getStatusLabel(report.status)
+                }}
+
+              </span>
+
+            </td>
+
+
+            <!-- ACTION -->
+
+            <!-- ACTION -->
+
+            <td>
+
+              <div class="action-buttons">
+
+                <button
+                  type="button"
+                  class="view-btn"
+                  (click)="viewReport(report)">
+
+                  View
+
+                </button>
+
+                <button
+                  *ngIf="report.status !== 'resolved'"
+                  type="button"
+                  class="resolve-btn"
+                  (click)="resolveDamageReport(report)">
+
+                  Resolve
+
+                </button>
+
+              </div>
+
+            </td>
+
+          </tr>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- ==========================================
+     CREATE DAMAGE REPORT MODAL
+     ========================================== -->
+
+<div
+  class="modal-backdrop"
+  *ngIf="showCreateModal">
+
+  <div
+    class="details-modal create-modal"
+    (click)="$event.stopPropagation()">
+
+
+    <!-- HEADER -->
+
+    <div class="modal-header">
+
+      <div>
+
+        <span class="modal-label">
+          Admin Action
+        </span>
+
+        <h2>
+          Create Damage Report
+        </h2>
+
+      </div>
+
+
+      <button
+        type="button"
+        class="close-btn"
+        (click)="closeCreateModal()">
+
+        ×
+
+      </button>
+
+    </div>
+
+
+    <!-- BODY -->
+
+    <div class="modal-body">
+
+
+      <!-- ERROR -->
+
+      <div
+        class="alert error-alert"
+        *ngIf="createError">
+
+        {{ createError }}
+
+      </div>
+
+
+      <!-- BOOKING -->
+
+      <div class="detail-section">
+
+        <h3>
+          Booking Information
+        </h3>
+
+
+        <div class="form-group">
+
+          <label>
+            Select Booking or
+          </label>
+
+          <label for="manualBookingId" class="d-block mt-2">
+            Enter Booking ID
+          </label>
+
+          <input
+            id="manualBookingId"
+            name="manualBookingId"
+            type="text"
+            inputmode="numeric"
+            class="form-control"
+            placeholder="Enter an eligible Booking ID"
+            [(ngModel)]="manualBookingId"
+            (ngModelChange)="onManualBookingIdChange($event)"
+            [disabled]="loadingBookings || creatingReport"
+            autocomplete="off">
+
+          <small *ngIf="loadingBookings">
+            Loading eligible booking details...
+          </small>
+
+          <small
+            class="text-danger"
+            *ngIf="!loadingBookings && bookingSelectionTouched && bookingSelectionError">
+            {{ bookingSelectionError }}
+          </small>
+
+          <select
+            id="eligibleBooking"
+            name="eligibleBooking"
+            [(ngModel)]="createForm.booking"
+            (change)="onBookingChange()"
+            [disabled]="loadingBookings || creatingReport">
+
+            <option value="">
+              Select a completed damaged booking
+            </option>
+
+            <option
+              *ngFor="let booking of bookings"
+              [value]="booking.id">
+
+              Booking #{{ booking.id }}
+              -
+              {{ booking.equipment_name }}
+              -
+              {{ booking.customer_name }}
+
+            </option>
+
+          </select>
+
+          <small *ngIf="loadingBookings">
+            Loading eligible bookings...
+          </small>
+
+          <small
+            class="text-danger"
+            *ngIf="!loadingBookings && bookingsError">
+
+            {{ bookingsError }}
+
+          </small>
+
+          <small
+            *ngIf="
+              !loadingBookings &&
+              !bookingsError &&
+              bookings.length === 0
+            ">
+
+            No eligible bookings are available for a new damage report.
+
+          </small>
+
+        </div>
+
+
+        <!-- SELECTED BOOKING -->
+
+        <div
+          class="detail-grid"
+          *ngIf="selectedBooking">
+
+          <div class="detail-item">
+
+            <span>
+              Customer
+            </span>
+
+            <strong>
+              {{ selectedBooking.customer_name || 'Unknown Customer' }}
+            </strong>
+
+          </div>
+
+
+          <div class="detail-item">
+
+            <span>
+              Equipment
+            </span>
+
+            <strong>
+              {{ selectedBooking.equipment_name || 'Unknown Equipment' }}
+            </strong>
+
+          </div>
+
+
+          <div class="detail-item">
+
+            <span>
+              Booking ID
+            </span>
+
+            <strong>
+              {{ selectedBooking.id }}
+            </strong>
+
+          </div>
+
+
+          <div class="detail-item">
+
+            <span>
+              Confirmed Return Condition
+            </span>
+
+            <strong>
+              {{ selectedBooking.equipment_condition_after || 'Unknown' }}
+            </strong>
+
+          </div>
+
+          <div class="detail-item">
+            <span>Inspection Notes</span>
+            <strong>{{ selectedBooking.damage_description || 'No notes recorded' }}</strong>
+          </div>
+
+          <div class="detail-item">
+            <span>Maintenance Status</span>
+            <strong>{{ selectedBooking.maintenance_status }}</strong>
+          </div>
+
+          <div class="detail-item">
+            <span>Maintenance Details</span>
+            <strong>{{ selectedBooking.maintenance_description }}</strong>
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- REPAIR COST -->
+
+      <div
+        class="detail-section"
+        *ngIf="selectedBooking">
+
+        <h3>Damage Assessment</h3>
+
+
+        <div class="amount-grid">
+
+          <div class="amount-box">
+
+            <span>
+              Repair Cost
+            </span>
+
+            <strong>
+              ₹{{ formatAmount(maintenanceRepairCost) }}
+            </strong>
+
+          </div>
+
+
+          <div class="amount-box">
+
+            <span>Final Damage Amount</span>
+            <label class="form-group mb-0">
+              <span class="visually-hidden">Final Damage Amount</span>
+              <span class="input-group">
+                <span class="input-group-text">₹</span>
+                <input
+                  type="text"
+                  inputmode="decimal"
+                  class="form-control"
+                  [(ngModel)]="createForm.damage_amount"
+                  [disabled]="creatingReport"
+                  aria-label="Final damage amount">
+              </span>
+            </label>
+
+          </div>
+
+        </div>
+
+
+        <p>Enter the final assessed damage amount. Calculations are verified by the server.</p>
+
+      </div>
+
+
+      <!-- DESCRIPTION -->
+
+      <div class="detail-section">
+
+        <h3>
+          Damage Description
+        </h3>
+
+
+        <div class="form-group">
+
+          <label>
+            Description
+          </label>
+
+          <textarea
+            rows="5"
+            placeholder="Enter the damage details..."
+            [(ngModel)]="createForm.description"
+            [disabled]="creatingReport">
+          </textarea>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- FOOTER -->
+
+    <div class="modal-footer">
+
+      <button
+        type="button"
+        class="close-modal-btn"
+        (click)="closeCreateModal()"
+        [disabled]="creatingReport">
+
+        Cancel
+
+      </button>
+
+
+      <button
+        type="button"
+        class="create-btn"
+        (click)="createDamageReport()"
+        [disabled]="
+          creatingReport ||
+          loadingBookings ||
+          !selectedBooking ||
+          !!bookingSelectionError ||
+          !createForm.description.trim() ||
+          !createForm.damage_amount.trim()
+        ">
+
+        <span *ngIf="!creatingReport">
+          Create Damage Report
+        </span>
+
+        <span *ngIf="creatingReport">
+          Creating...
+        </span>
+
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- ==========================================
+     DETAILS MODAL
+     ========================================== -->
+
+<div
+  class="modal-backdrop"
+  *ngIf="showDetailsModal"
+  (click)="closeDetails()">
+
+
+  <div
+    class="details-modal"
+    (click)="$event.stopPropagation()">
+
+
+    <!-- HEADER -->
+
+    <div class="modal-header">
+
+      <div>
+
+        <span class="modal-label">
+          Damage Report
+        </span>
+
+        <h2>
+          #{{ selectedReport?.id }}
+        </h2>
+
+      </div>
+
+
+      <button
+        type="button"
+        class="close-btn"
+        (click)="closeDetails()">
+
+        ×
+
+      </button>
+
+    </div>
+
+
+    <!-- BODY -->
+
+    <div
+      class="modal-body"
+      *ngIf="selectedReport">
+
+
+      <!-- STATUS -->
+
+      <div class="status-header">
+
+        <span
+          class="status-badge large"
+          [ngClass]="
+            getStatusClass(
+              selectedReport.status
+            )
+          ">
+
+          {{
+            getStatusLabel(
+              selectedReport.status
+            )
+          }}
+
+        </span>
+
+      </div>
+
+
+      <!-- CUSTOMER -->
+
+      <div class="detail-section">
+
+        <h3>
+          Customer Information
+        </h3>
+
+        <div class="detail-grid">
+
+          <div class="detail-item">
+
+            <span>
+              Customer
+            </span>
+
+            <strong>
+              {{ getCustomerName(selectedReport) }}
+            </strong>
+
+          </div>
+
+
+          <div class="detail-item">
+
+            <span>
+              Reported By
+            </span>
+
+            <strong>
+              #{{ selectedReport.reported_by }}
+            </strong>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- BOOKING -->
+
+      <div class="detail-section">
+
+        <h3>
+          Booking Information
+        </h3>
+
+        <div class="detail-grid">
+
+          <div class="detail-item">
+
+            <span>
+              Booking
+            </span>
+
+            <strong>
+              {{ selectedReport.booking }}
+            </strong>
+
+          </div>
+
+
+          <div class="detail-item">
+
+            <span>
+              Equipment
+            </span>
+
+            <strong>
+              {{ selectedReport.equipment_name }}
+            </strong>
+
+          </div>
+
+
+          <div class="detail-item">
+
+            <span>
+              Return Condition
+            </span>
+
+            <strong>
+
+              {{
+                selectedReport.customer_return_condition === 'good'
+                  ? 'Good Condition'
+                  : selectedReport.customer_return_condition === 'damaged'
+                    ? 'Damaged'
+                    : 'Not Specified'
+              }}
+
+            </strong>
+
+          </div>
+
+
+          <div class="detail-item">
+
+            <span>
+              Report Date
+            </span>
+
+            <strong>
+
+              {{
+                formatDateTime(
+                  selectedReport.created_at
+                )
+              }}
+
+            </strong>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- DESCRIPTION -->
+
+      <div class="detail-section">
+
+        <h3>
+          Damage Description
+        </h3>
+
+        <div class="description-box">
+
+          {{
+            selectedReport.description ||
+            'No description provided.'
+          }}
+
+        </div>
+
+      </div>
+
+
+      <!-- FINANCIAL DETAILS -->
+
+      <div class="detail-section">
+
+        <h3>
+          Damage Settlement
+        </h3>
+
+        <div class="amount-grid">
+
+          <div class="amount-box">
+
+            <span>
+              Damage Amount
+            </span>
+
+            <strong>
+              ₹{{
+                formatAmount(
+                  selectedReport.damage_amount
+                )
+              }}
+            </strong>
+
+          </div>
+
+
+          <div class="amount-box">
+
+            <span>
+              Deposit Deducted
+            </span>
+
+            <strong>
+              ₹{{
+                formatAmount(
+                  selectedReport.deposit_deducted
+                )
+              }}
+            </strong>
+
+          </div>
+
+
+          <div class="amount-box additional-box">
+
+            <span>
+              Additional Amount
+            </span>
+
+            <strong>
+              ₹{{
+                formatAmount(
+                  selectedReport.additional_amount
+                )
+              }}
+            </strong>
+
+          </div>
+
+          <div class="amount-box">
+            <span>Refundable Balance (Pending)</span>
+            <strong>
+              ₹{{ formatAmount(selectedReport.refundable_amount - (selectedReport.refund_provider_reference_valid ? selectedReport.refunded_amount : 0)) }}
+            </strong>
+          </div>
+
+        </div>
+
+        <p *ngIf="Number(selectedReport.refundable_amount || 0) > 0 && !selectedReport.refund_provider_reference_valid">
+          The refund has not been confirmed by Stripe.
+        </p>
+
+        <p
+          class="text-danger"
+          *ngIf="['refunded', 'partially_refunded'].includes(selectedReport.refund_status) && !selectedReport.refund_provider_reference_valid">
+          This legacy refund record has no verifiable Stripe reference. Manual reconciliation is required.
+        </p>
+
+        <button
+          *ngIf="Number(selectedReport.refundable_amount || 0) > 0 && selectedReport.refund_status !== 'refunded' && selectedReport.refund_status !== 'partially_refunded'"
+          type="button"
+          class="btn btn-outline-primary mt-3"
+          [disabled]="processingRefundReportId === selectedReport.id"
+          (click)="processDepositRefund(selectedReport)">
+          <span *ngIf="processingRefundReportId === selectedReport.id" class="spinner-border spinner-border-sm me-2"></span>
+          {{ selectedReport.refund_status === 'pending' ? 'Check / Process Deposit Refund' : 'Process Deposit Refund' }}
+        </button>
+
+      </div>
+
+
+      <!-- VENDOR -->
+
+      <div class="detail-section">
+
+        <h3>
+          Vendor Information
+        </h3>
+
+        <div class="detail-grid">
+
+          <div class="detail-item">
+
+            <span>
+              Vendor
+            </span>
+
+            <strong>
+              {{ selectedReport.vendor_name || 'Not available' }}
+            </strong>
+
+          </div>
+
+
+          <div class="detail-item">
+
+            <span>
+              Report Status
+            </span>
+
+            <strong>
+
+              {{
+                getStatusLabel(
+                  selectedReport.status
+                )
+              }}
+
+            </strong>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- FOOTER -->
+
+    <div class="modal-footer">
+
+      <button
+        type="button"
+        class="close-modal-btn"
+        (click)="closeDetails()">
+
+        Close
+
+      </button>
+
+    </div>
+
+  </div>
+
+</div>

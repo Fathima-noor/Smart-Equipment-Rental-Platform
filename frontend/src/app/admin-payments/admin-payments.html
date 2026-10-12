@@ -1,0 +1,847 @@
+<div class="admin-payments-page">
+
+  <!-- HEADER -->
+
+  <div class="page-header">
+
+    <div>
+      <h1>Payments</h1>
+
+      <p>
+        Monitor rental payments, deposits and refunds.
+      </p>
+    </div>
+
+    <button
+      class="refresh-btn"
+      type="button"
+      (click)="loadPayments()"
+      [disabled]="loading">
+
+      <span>↻</span>
+      Refresh
+
+    </button>
+
+  </div>
+
+
+  <!-- ALERTS -->
+
+  <div
+    class="alert success-alert"
+    *ngIf="successMessage">
+
+    {{ successMessage }}
+
+  </div>
+
+
+  <div
+    class="alert error-alert"
+    *ngIf="errorMessage">
+
+    {{ errorMessage }}
+
+  </div>
+
+
+  <!-- FILTERS -->
+
+  <div class="filter-card">
+
+    <div class="search-box">
+
+      <span class="search-icon">⌕</span>
+
+      <input
+        type="text"
+        placeholder="Search payment, customer, booking or equipment..."
+        [(ngModel)]="searchText"
+        (input)="onSearch()"
+        autocomplete="off">
+
+    </div>
+
+
+    <div class="filter-group">
+
+      <label>Payment Status</label>
+
+      <select
+        [(ngModel)]="selectedPaymentStatus"
+        (change)="applyFilters()">
+
+        <option value="all">
+          All Payments
+        </option>
+
+        <option value="pending">
+          Pending
+        </option>
+
+        <option value="paid">
+          Paid
+        </option>
+
+        <option value="failed">
+          Failed
+        </option>
+
+      </select>
+
+    </div>
+
+
+    <div class="filter-group">
+
+      <label>Refund Status</label>
+
+      <select
+        [(ngModel)]="selectedRefundStatus"
+        (change)="applyFilters()">
+
+        <option value="all">
+          All Refunds
+        </option>
+
+        <option value="not_applicable">
+          Not Applicable
+        </option>
+
+        <option value="pending">
+          Pending
+        </option>
+
+        <option value="refunded">
+          Refunded
+        </option>
+
+        <option value="partially_refunded">
+          Partially Refunded
+        </option>
+
+      </select>
+
+    </div>
+
+  </div>
+
+
+  <!-- SUMMARY -->
+
+  <div class="summary-row">
+
+    <div class="summary-item">
+
+      <span>Total Payments</span>
+
+      <strong>
+        {{ payments.length }}
+      </strong>
+
+    </div>
+
+
+    <div class="summary-item pending">
+
+      <span>Pending</span>
+
+      <strong>
+        {{ getPendingCount() }}
+      </strong>
+
+    </div>
+
+
+    <div class="summary-item paid">
+
+      <span>Paid</span>
+
+      <strong>
+        {{ getPaidCount() }}
+      </strong>
+
+    </div>
+
+
+    <div class="summary-item refunded">
+
+      <span>Refunded</span>
+
+      <strong>
+        {{ getRefundedCount() }}
+      </strong>
+
+    </div>
+
+  </div>
+
+
+  <!-- TOTAL COLLECTION -->
+
+  <div
+    class="collection-card"
+    *ngIf="!loading">
+
+    <div>
+
+      <span>Total Collected</span>
+
+      <small>
+        From completed payments
+      </small>
+
+    </div>
+
+    <strong>
+      ₹{{ formatAmount(getTotalCollected()) }}
+    </strong>
+
+  </div>
+
+
+  <!-- LOADING -->
+
+  <div
+    class="loading-container"
+    *ngIf="loading">
+
+    <div class="spinner"></div>
+
+    <p>Loading payments...</p>
+
+  </div>
+
+
+  <!-- EMPTY -->
+
+  <div
+    class="empty-state"
+    *ngIf="!loading && filteredPayments.length === 0">
+
+    <div class="empty-icon">
+      💳
+    </div>
+
+    <h3>No payments found</h3>
+
+    <p>
+      No payments match your current search or filters.
+    </p>
+
+  </div>
+
+
+  <!-- TABLE -->
+
+  <div
+    class="table-card"
+    *ngIf="!loading && filteredPayments.length > 0">
+
+    <div class="table-wrapper">
+
+      <table>
+
+        <thead>
+
+          <tr>
+
+            <th>ID</th>
+
+            <th>CUSTOMER</th>
+
+            <th>BOOKING</th>
+
+            <th>EQUIPMENT</th>
+
+            <th>TOTAL</th>
+
+            <th>PAYMENT</th>
+
+            <th>REFUND</th>
+
+            <th>ACTION</th>
+
+          </tr>
+
+        </thead>
+
+
+        <tbody>
+
+          <tr
+            *ngFor="
+              let payment of filteredPayments;
+              let i = index
+            ">
+
+            <!-- SL NO -->
+
+            <td>
+
+              <span class="payment-id">
+                {{ payment.id }}
+              </span>
+
+            </td>
+
+
+            <!-- CUSTOMER -->
+
+            <td>
+
+              <div class="customer-cell">
+
+                <div class="avatar">
+
+                  {{
+                    getCustomerName(payment)
+                      .charAt(0)
+                      .toUpperCase()
+                  }}
+
+                </div>
+
+
+                <div class="customer-info">
+
+                  <span class="customer-name">
+
+                    {{ getCustomerName(payment) }}
+
+                  </span>
+
+                  
+
+                </div>
+
+              </div>
+
+            </td>
+
+
+            <!-- BOOKING -->
+
+            <td>
+
+              <div class="booking-cell">
+
+                <strong>
+                  Booking ID : {{ payment.booking }}
+                </strong>
+
+              </div>
+
+            </td>
+
+
+            <!-- EQUIPMENT -->
+
+            <td>
+
+              <div class="equipment-cell">
+
+                <strong>
+                  {{ payment.booking_equipment }}
+                </strong>
+
+              </div>
+
+            </td>
+
+
+            <!-- TOTAL -->
+
+            <td>
+
+              <strong class="amount">
+
+                ₹{{ formatAmount(payment.total_amount) }}
+
+              </strong>
+
+              <small class="amount-breakdown">
+
+                Rental ₹{{ formatAmount(payment.rental_amount) }}
+                +
+                Deposit ₹{{ formatAmount(payment.deposit_amount) }}
+
+              </small>
+
+            </td>
+
+
+            <!-- PAYMENT STATUS -->
+
+            <td>
+
+              <span
+                class="payment-badge"
+                [ngClass]="
+                  getPaymentStatusClass(
+                    payment.payment_status
+                  )
+                ">
+
+                {{
+                  getPaymentStatusLabel(
+                    payment.payment_status
+                  )
+                }}
+
+              </span>
+
+            </td>
+
+
+            <!-- REFUND -->
+
+            <td>
+
+              <span
+                class="refund-badge"
+                [ngClass]="
+                  getRefundStatusClass(
+                    payment.refund_status
+                  )
+                ">
+
+                {{
+                  getRefundStatusLabel(
+                    payment.refund_status
+                  )
+                }}
+
+              </span>
+
+            </td>
+
+
+            <!-- ACTION -->
+
+            <td>
+
+              <button
+                type="button"
+                class="view-btn"
+                (click)="viewPayment(payment)">
+
+                View
+
+              </button>
+
+            </td>
+
+          </tr>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- ==============================
+     PAYMENT DETAILS MODAL
+     ============================== -->
+
+<div
+  class="modal-backdrop"
+  *ngIf="showDetailsModal"
+  (click)="closeDetails()">
+
+
+  <div
+    class="details-modal"
+    (click)="$event.stopPropagation()">
+
+
+    <!-- HEADER -->
+
+    <div class="modal-header">
+
+      <div>
+
+        <span class="modal-label">
+          Payment
+        </span>
+
+        <h2>
+          #{{ selectedPayment?.id }}
+        </h2>
+
+      </div>
+
+
+      <button
+        type="button"
+        class="close-btn"
+        (click)="closeDetails()">
+
+        ×
+
+      </button>
+
+    </div>
+
+
+    <!-- BODY -->
+
+    <div
+      class="modal-body"
+      *ngIf="selectedPayment">
+
+
+      <!-- STATUS -->
+
+      <div class="status-header">
+
+        <span
+          class="payment-badge large"
+          [ngClass]="
+            getPaymentStatusClass(
+              selectedPayment.payment_status
+            )
+          ">
+
+          Payment:
+          {{
+            getPaymentStatusLabel(
+              selectedPayment.payment_status
+            )
+          }}
+
+        </span>
+
+
+        <span
+          class="refund-badge large"
+          [ngClass]="
+            getRefundStatusClass(
+              selectedPayment.refund_status
+            )
+          ">
+
+          Refund:
+          {{
+            getRefundStatusLabel(
+              selectedPayment.refund_status
+            )
+          }}
+
+        </span>
+
+      </div>
+
+
+      <!-- CUSTOMER -->
+
+      <div class="detail-section">
+
+        <h3>Customer Information</h3>
+
+        <div class="detail-grid">
+
+          <div class="detail-item">
+
+            <span class="detail-label">
+              Customer
+            </span>
+
+            <strong>
+              {{ getCustomerName(selectedPayment) }}
+            </strong>
+
+          </div>
+
+
+          <div class="detail-item">
+
+            <span class="detail-label">
+              Customer ID
+            </span>
+
+            <strong>
+              #{{ selectedPayment.customer }}
+            </strong>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- BOOKING -->
+
+      <div class="detail-section">
+
+        <h3>Booking Information</h3>
+
+        <div class="detail-grid">
+
+          <div class="detail-item">
+
+            <span class="detail-label">
+              Booking
+            </span>
+
+            <strong>
+              #{{ selectedPayment.booking }}
+            </strong>
+
+          </div>
+
+
+          <div class="detail-item">
+
+            <span class="detail-label">
+              Equipment
+            </span>
+
+            <strong>
+              {{ selectedPayment.booking_equipment }}
+            </strong>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- PAYMENT AMOUNTS -->
+
+      <div class="detail-section">
+
+        <h3>Payment Amount</h3>
+
+        <div class="amount-grid">
+
+          <div class="amount-box">
+
+            <span>
+              Rental Amount
+            </span>
+
+            <strong>
+              ₹{{ formatAmount(selectedPayment.rental_amount) }}
+            </strong>
+
+          </div>
+
+
+          <div class="amount-box">
+
+            <span>
+              Security Deposit
+            </span>
+
+            <strong>
+              ₹{{ formatAmount(selectedPayment.deposit_amount) }}
+            </strong>
+
+          </div>
+
+
+          <div class="amount-box total-box">
+
+            <span>
+              Total Amount
+            </span>
+
+            <strong>
+              ₹{{ formatAmount(selectedPayment.total_amount) }}
+            </strong>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- TRANSACTION -->
+
+      <div class="detail-section">
+
+        <h3>Transaction Information</h3>
+
+        <div class="detail-grid">
+
+          <div class="detail-item">
+
+            <span class="detail-label">
+              Payment Date
+            </span>
+
+            <strong>
+              {{
+                formatDateTime(
+                  selectedPayment.payment_date
+                )
+              }}
+            </strong>
+
+          </div>
+
+
+          <div class="detail-item">
+
+            <span class="detail-label">
+              Transaction ID
+            </span>
+
+            <strong class="transaction-id">
+
+              {{
+                selectedPayment.transaction_id ||
+                'Not available'
+              }}
+
+            </strong>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- DEPOSIT SETTLEMENT -->
+
+      <div class="detail-section">
+
+        <h3>Deposit Settlement</h3>
+
+        <div class="amount-grid">
+
+          <div class="amount-box">
+
+            <span>
+              Deposit Deducted
+            </span>
+
+            <strong>
+              ₹{{
+                formatAmount(
+                  selectedPayment.deposit_deducted
+                )
+              }}
+            </strong>
+
+          </div>
+
+
+          <div class="amount-box">
+
+            <span>
+              Deposit Refunded
+            </span>
+
+            <strong>
+              ₹{{
+                formatAmount(
+                  selectedPayment.deposit_refunded
+                )
+              }}
+            </strong>
+
+          </div>
+
+
+          <div class="amount-box">
+
+            <span>
+              Additional Damage Payment
+            </span>
+
+            <strong>
+              ₹{{
+                formatAmount(
+                  selectedPayment.additional_damage_payment
+                )
+              }}
+            </strong>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- REFUND -->
+
+      <div class="detail-section">
+
+        <h3>Refund Information</h3>
+
+        <div class="detail-grid">
+
+          <div class="detail-item">
+
+            <span class="detail-label">
+              Refund Status
+            </span>
+
+            <strong>
+
+              {{
+                getRefundStatusLabel(
+                  selectedPayment.refund_status
+                )
+              }}
+
+            </strong>
+
+          </div>
+
+
+          <div class="detail-item">
+
+            <span class="detail-label">
+              Refund Transaction ID
+            </span>
+
+            <strong class="transaction-id">
+
+              {{
+                selectedPayment.refund_transaction_id ||
+                'Not available'
+              }}
+
+            </strong>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- FOOTER -->
+
+    <div class="modal-footer">
+
+      <button
+        type="button"
+        class="close-modal-btn"
+        (click)="closeDetails()">
+
+        Close
+
+      </button>
+
+    </div>
+
+  </div>
+
+</div>

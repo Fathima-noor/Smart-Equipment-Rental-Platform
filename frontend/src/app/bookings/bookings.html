@@ -1,0 +1,595 @@
+<div class="bookings-page">
+
+  <!-- Page Header -->
+  <div class="page-header mb-4">
+
+    <div>
+      <h2 class="fw-bold mb-1">
+        My Bookings
+      </h2>
+
+      <p class="text-muted mb-0">
+        View and manage your equipment rentals
+      </p>
+    </div>
+
+    <a
+      routerLink="/equipment"
+      class="btn btn-primary"
+    >
+      <i class="bi bi-plus-lg me-2"></i>
+      New Booking
+    </a>
+
+  </div>
+
+
+  <!-- Loading -->
+  <div
+    *ngIf="loading"
+    class="loading-box text-center py-5"
+  >
+
+    <div
+      class="spinner-border text-primary mb-3"
+      role="status"
+    ></div>
+
+    <p class="text-muted mb-0">
+      Loading your bookings...
+    </p>
+
+  </div>
+
+
+  <!-- Error -->
+  <div
+    *ngIf="!loading && errorMessage"
+    class="alert alert-danger"
+  >
+
+    <i class="bi bi-exclamation-circle me-2"></i>
+
+    {{ errorMessage }}
+
+    <button
+      class="btn btn-sm btn-outline-danger ms-3"
+      (click)="loadBookings()"
+    >
+      Try Again
+    </button>
+
+  </div>
+
+
+  <!-- Empty -->
+  <div
+    *ngIf="
+      !loading &&
+      !errorMessage &&
+      bookings.length === 0
+    "
+    class="empty-box text-center"
+  >
+
+    <div class="empty-icon">
+      <i class="bi bi-calendar-x"></i>
+    </div>
+
+    <h5 class="fw-bold mt-3">
+      No bookings yet
+    </h5>
+
+    <p class="text-muted">
+      You haven't rented any equipment yet.
+    </p>
+
+    <a
+      routerLink="/equipment"
+      class="btn btn-primary"
+    >
+      Browse Equipment
+    </a>
+
+  </div>
+
+
+  <!-- Booking List -->
+  <div
+    *ngIf="
+      !loading &&
+      !errorMessage &&
+      bookings.length > 0
+    "
+    class="booking-list"
+  >
+
+    <div
+      class="booking-card card border-0 shadow-sm mb-3"
+      *ngFor="let booking of bookings"
+    >
+
+      <div class="card-body p-4">
+
+        <div
+          class="row align-items-center g-4"
+        >
+
+          <!-- Equipment -->
+          <div class="col-lg-4">
+
+            <div class="d-flex align-items-center">
+
+              <div class="equipment-icon">
+
+                <i
+                  class="bi"
+                  [ngClass]="
+                    getEquipmentIcon(booking)
+                  "
+                ></i>
+
+              </div>
+
+              <div class="ms-3">
+
+                <h5 class="fw-bold mb-1">
+                  {{ getEquipmentName(booking) }}
+                </h5>
+
+                <small class="text-muted">
+                  Booking ID: {{ booking.id }}
+                </small>
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <!-- Dates -->
+          <div class="col-lg-3">
+
+            <div class="booking-info">
+
+              <div class="info-label">
+                <i class="bi bi-calendar3 me-1"></i>
+                Rental Period
+              </div>
+
+              <div class="fw-semibold">
+
+                {{ booking.start_date | date:'dd MMM yyyy' }}
+
+                <span class="text-muted mx-1">
+                  →
+                </span>
+
+                {{ booking.end_date | date:'dd MMM yyyy' }}
+
+              </div>
+
+              <small class="text-muted">
+
+                {{
+                  getRentalDays(
+                    booking.start_date,
+                    booking.end_date
+                  )
+                }}
+
+                {{
+                  getRentalDays(
+                    booking.start_date,
+                    booking.end_date
+                  ) === 1
+                    ? 'day'
+                    : 'days'
+                }}
+
+              </small>
+
+            </div>
+
+          </div>
+
+
+          <!-- Amount -->
+          <div class="col-lg-2">
+
+            <div class="booking-info">
+
+              <div class="info-label">
+                Total Amount
+              </div>
+
+              <div class="amount">
+                ₹{{ booking.total_amount | number:'1.2-2' }}
+              </div>
+
+              <small class="text-muted">
+                Deposit:
+                ₹{{ booking.deposit | number:'1.2-2' }}
+              </small>
+
+            </div>
+
+          </div>
+
+
+          <!-- Status -->
+          <div class="col-lg-3">
+
+            <div class="status-area">
+
+              <div class="mb-2">
+
+                <span
+                  class="badge rounded-pill"
+                  [ngClass]="
+                    getStatusClass(
+                      booking.status
+                    )
+                  "
+                >
+                  {{ formatStatus(booking.status) }}
+                </span>
+
+              </div>
+
+
+              <div>
+
+                <small class="text-muted me-2">
+                  Payment:
+                </small>
+
+                <span
+                  class="badge rounded-pill"
+                  [ngClass]="
+                    getPaymentStatusClass(
+                      booking.payment_status
+                    )
+                  "
+                >
+                  {{
+                    formatStatus(
+                      booking.payment_status
+                    )
+                  }}
+                </span>
+
+              </div>
+
+
+              <!-- Payment button -->
+              <div
+                *ngIf="
+                  booking.payment_status !== 'paid' &&
+                  booking.status === 'approved'
+                "
+                class="mt-3"
+              >
+
+                <a
+                  routerLink="/payments"
+                  [queryParams]="{ booking: booking.id }"
+                  class="btn btn-sm btn-outline-primary"
+                >
+                  <i class="bi bi-credit-card me-1"></i>
+                  Make Payment
+                </a>
+
+              </div>
+              <!-- Return Equipment button -->
+        <div
+          *ngIf="isReturnAvailable(booking)"
+          class="mt-3"
+        >
+          <button
+            type="button"
+            class="btn btn-sm btn-success"
+            (click)="openReturnModal(booking)"
+          >
+            <i class="bi bi-arrow-return-left me-1"></i>
+            Return Equipment
+          </button>
+        </div>
+
+
+        <!-- Returned - Awaiting Inspection -->
+        <div
+          *ngIf="booking.equipment_workflow_status === 'awaiting_inspection'"
+          class="mt-3"
+        >
+          <span class="badge rounded-pill bg-info">
+            Returned — Awaiting Inspection
+          </span>
+          <div class="small text-muted mt-2">
+            <i class="bi bi-clock me-1"></i>
+            Operations Staff inspection is pending.
+          </div>
+        </div>
+
+        <!-- Inspection Completed - No Damage -->
+        <div
+          *ngIf="booking.equipment_workflow_status === 'no_damage'"
+          class="mt-3"
+        >
+          <span class="badge rounded-pill bg-success">
+            Inspection Completed — No Damage
+          </span>
+          <div class="small text-muted mt-2">
+            <i class="bi bi-check-circle me-1"></i>
+            Equipment was inspected and no damage was found.
+          </div>
+        </div>
+
+        <!-- Inspection Completed - Damaged -->
+        <div
+          *ngIf="booking.equipment_workflow_status === 'damaged'"
+          class="mt-3"
+        >
+          <span class="badge rounded-pill bg-warning text-dark">
+            Inspection Completed — Damage Found
+          </span>
+          <div class="small text-muted mt-2">
+            <i class="bi bi-exclamation-triangle me-1"></i>
+            Equipment damage was found during inspection.
+          </div>
+        </div>
+
+        <!-- Equipment Returned to Vendor -->
+        <div
+          *ngIf="booking.equipment_workflow_status === 'returned_to_vendor'"
+          class="mt-3"
+        >
+          <span class="badge rounded-pill bg-success">
+            Returned to Vendor
+          </span>
+        </div>
+
+        <!-- Rental still active -->
+        <div
+          *ngIf="
+            booking.status === 'approved' &&
+            booking.payment_status === 'paid' &&
+            booking.equipment_workflow_status === 'handed_over' &&
+            !isReturnAvailable(booking)
+          "
+          class="mt-3"
+>
+          <small class="text-muted">
+            <i class="bi bi-clock me-1"></i>
+            Return available after
+            {{ booking.end_date | date:'dd MMM yyyy' }}
+          </small>
+        </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<!-- Return Equipment Modal -->
+<div
+  *ngIf="showReturnModal"
+  class="return-modal-backdrop"
+  (click)="closeReturnModal()"
+>
+
+  <div
+    class="return-modal"
+    (click)="$event.stopPropagation()"
+  >
+
+    <!-- Modal Header -->
+    <div class="return-modal-header">
+
+      <div>
+        <h5 class="fw-bold mb-1">
+          Return Equipment
+        </h5>
+
+        <small class="text-muted">
+          Booking ID :{{ selectedBooking?.id }}
+        </small>
+      </div>
+
+      <button
+        type="button"
+        class="btn-close"
+        [disabled]="returning"
+        (click)="closeReturnModal()"
+      ></button>
+
+    </div>
+
+
+    <!-- Equipment -->
+    <div class="return-equipment-info">
+
+      <div class="equipment-icon">
+        <i
+          class="bi"
+          [ngClass]="getEquipmentIcon(selectedBooking)"
+        ></i>
+      </div>
+
+      <div class="ms-3">
+
+        <div class="fw-bold">
+          {{ getEquipmentName(selectedBooking) }}
+        </div>
+
+        <small class="text-muted">
+          Rental period:
+          {{ selectedBooking?.start_date | date:'dd MMM yyyy' }}
+          →
+          {{ selectedBooking?.end_date | date:'dd MMM yyyy' }}
+        </small>
+
+      </div>
+
+    </div>
+
+
+    <!-- Condition -->
+    <div class="mt-4">
+
+      <label class="form-label fw-semibold">
+        Equipment Condition
+      </label>
+
+      <div class="condition-options">
+
+        <!-- Good -->
+        <label
+          class="condition-card"
+          [class.selected]="returnCondition === 'good'"
+        >
+
+          <input
+            type="radio"
+            name="returnCondition"
+            value="good"
+            [(ngModel)]="returnCondition"
+          >
+
+          <div class="condition-content">
+
+            <div class="condition-icon good">
+              <i class="bi bi-check-circle"></i>
+            </div>
+
+            <div>
+              <div class="fw-semibold">
+                Good Condition
+              </div>
+
+              <small class="text-muted">
+                Equipment is returned without damage.
+              </small>
+            </div>
+
+          </div>
+
+        </label>
+
+
+        <!-- Damaged -->
+        <label
+          class="condition-card"
+          [class.selected]="returnCondition === 'damaged'"
+        >
+
+          <input
+            type="radio"
+            name="returnCondition"
+            value="damaged"
+            [(ngModel)]="returnCondition"
+          >
+
+          <div class="condition-content">
+
+            <div class="condition-icon damaged">
+              <i class="bi bi-exclamation-triangle"></i>
+            </div>
+
+            <div>
+              <div class="fw-semibold">
+                Damaged
+              </div>
+
+              <small class="text-muted">
+                Equipment has damage that needs inspection.
+              </small>
+            </div>
+
+          </div>
+
+        </label>
+
+      </div>
+
+    </div>
+
+
+    <!-- Damage Warning -->
+    <div
+      *ngIf="returnCondition === 'damaged'"
+      class="alert alert-warning mt-3 mb-0"
+    >
+
+      <i class="bi bi-exclamation-triangle me-2"></i>
+
+      <strong>Damage reported.</strong> 
+
+      The equipment will be inspected after return
+      any applicable damage charges will be determined based on the inspection
+
+    </div>
+
+
+    <!-- Error -->
+    <div
+      *ngIf="returnError"
+      class="alert alert-danger mt-3 mb-0"
+    >
+
+      <i class="bi bi-exclamation-circle me-2"></i>
+
+      {{ returnError }}
+
+    </div>
+
+
+    <!-- Actions -->
+    <div class="return-modal-actions mt-4">
+
+      <button
+        type="button"
+        class="btn btn-outline-secondary"
+        [disabled]="returning"
+        (click)="closeReturnModal()"
+      >
+        Cancel
+      </button>
+
+
+      <button
+        type="button"
+        class="btn btn-success"
+        [disabled]="returning"
+        (click)="submitReturn()"
+      >
+
+        <span
+          *ngIf="returning"
+          class="spinner-border spinner-border-sm me-2"
+        ></span>
+
+        <i
+          *ngIf="!returning"
+          class="bi bi-arrow-return-left me-2"
+        ></i>
+
+        {{ returning ? 'Returning...' : 'Confirm Return' }}
+
+      </button>
+
+    </div>
+
+  </div>
+
+</div>

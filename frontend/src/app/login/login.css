@@ -1,0 +1,326 @@
+
+/* Main Login Page */
+
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  background: #f8fafc;
+}
+
+
+/* Left Branding Section */
+
+.login-brand {
+  width: 50%;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  padding: 70px;
+  background: linear-gradient(135deg, #172554, #2563eb);
+  color: white;
+}
+
+.brand-content {
+  max-width: 500px;
+  margin: auto;
+}
+
+
+/* Logo */
+
+.brand-logo,
+.mobile-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.brand-logo i,
+.mobile-logo i {
+  font-size: 30px;
+}
+
+
+/* Brand Message */
+
+.brand-message {
+  margin-top: 150px;
+}
+
+.brand-label {
+  margin-bottom: 20px;
+  color: #bfdbfe;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+
+.brand-message h1 {
+  margin: 0;
+  font-size: 46px;
+  line-height: 1.15;
+  font-weight: 700;
+}
+
+.brand-message h1 span {
+  color: #93c5fd;
+}
+
+.brand-description {
+  max-width: 400px;
+  margin-top: 25px;
+  color: #dbeafe;
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+
+/* Brand Footer */
+
+.brand-footer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 100px;
+  color: #dbeafe;
+  font-size: 14px;
+}
+
+.brand-footer i {
+  color: #86efac;
+  font-size: 18px;
+}
+
+
+/* Right Login Section */
+
+.login-section {
+  width: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  background: #ffffff;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 430px;
+}
+
+
+/* Mobile Logo */
+
+.mobile-logo {
+  display: none;
+  margin-bottom: 40px;
+  color: #172554;
+}
+
+
+/* Login Heading */
+
+.login-heading {
+  margin-bottom: 35px;
+}
+
+.welcome-text {
+  margin-bottom: 12px;
+  color: #2563eb;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+
+.login-heading h2 {
+  margin: 0;
+  color: #172554;
+  font-size: 32px;
+  font-weight: 700;
+}
+
+.login-subtitle {
+  margin-top: 12px;
+  color: #64748b;
+  font-size: 14px;
+}
+
+
+/* Form */
+
+.form-group {
+  margin-bottom: 22px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  color: #334155;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+
+/* Input Wrapper */
+
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-wrapper i {
+  position: absolute;
+  left: 15px;
+  color: #64748b;
+  font-size: 17px;
+  pointer-events: none;
+}
+
+.input-wrapper input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 14px 15px 14px 45px;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  outline: none;
+  color: #172554;
+  background: #ffffff;
+  font-size: 14px;
+  transition: 0.2s ease;
+}
+
+.input-wrapper input::placeholder {
+  color: #94a3b8;
+}
+
+.input-wrapper input:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px #dbeafe;
+}
+
+
+/* Error Message */
+
+.error-message {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 20px;
+  padding: 12px;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  background: #fef2f2;
+  color: #dc2626;
+  font-size: 13px;
+}
+
+.error-message i {
+  font-size: 16px;
+}
+
+
+/* Login Button */
+
+.login-button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 15px;
+  border: none;
+  border-radius: 10px;
+  background: #2563eb;
+  color: white;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.login-button:hover:not(:disabled) {
+  background: #1d4ed8;
+  transform: translateY(-1px);
+}
+
+.login-button:disabled {
+  background: #94a3b8;
+  cursor: not-allowed;
+}
+
+
+/* Bottom Section */
+
+.login-bottom {
+  margin-top: 30px;
+  text-align: center;
+}
+
+.login-bottom p {
+  color: #64748b;
+  font-size: 14px;
+}
+
+.login-bottom a {
+  color: #2563eb;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.login-bottom a:hover {
+  text-decoration: underline;
+}
+
+
+/* Responsive Design */
+
+@media (max-width: 900px) {
+
+  .login-brand {
+    padding: 40px;
+  }
+
+  .brand-message {
+    margin-top: 100px;
+  }
+
+  .brand-message h1 {
+    font-size: 36px;
+  }
+
+  .login-section {
+    padding: 30px;
+  }
+
+}
+
+
+@media (max-width: 700px) {
+
+  .login-page {
+    display: block;
+  }
+
+  .login-brand {
+    display: none;
+  }
+
+  .login-section {
+    width: 100%;
+    min-height: 100vh;
+    box-sizing: border-box;
+    padding: 30px 24px;
+  }
+
+  .mobile-logo {
+    display: flex;
+  }
+
+  .login-heading h2 {
+    font-size: 28px;
+  }
+
+}
